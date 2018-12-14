@@ -41,7 +41,13 @@ const RestaurantCard = function(props) {
             alt=""
           />
           <hr className="custom-horizontal-rule" />
-          {image.restaurantName}
+                <span>
+                    {image.restaurantName}:
+                </span>
+          
+          
+          {/* {image.categories.map((category, i) => category + ",")} */}
+          {image.categories}
           <br />
 {/*           
           <hr className="custom-horizontal-rule" />
