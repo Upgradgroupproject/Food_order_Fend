@@ -4,7 +4,7 @@ import "./RestaurantCard.css";
 // import * as Utils from "../../common/Utils";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-// import CardContent from "@material-ui/core/CardContent";
+import CardContent from "@material-ui/core/CardContent";
 // import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 // import Favorite from "@material-ui/icons/Favorite";
 // import FormControl from "@material-ui/core/FormControl";
@@ -16,32 +16,34 @@ import CardHeader from "@material-ui/core/CardHeader";
  * Functional component for displaying an image card
  * @param props properties passed by parent component to child component
  */
-const ImageCard = function(props) {
+const RestaurantCard = function(props) {
   const image = props.image;
   const index = props.index;
   const classes = props.classes;
 
   return (
-    <Card className={classes.imageCard} key={image.id}>
+    <Card className={classes.RestaurantCard} key={image.id}>
       <CardHeader
-        avatar={
+        //   < img
+        //     src={image.photoUrl}
+        //     className="user-profile-image"
+        //     alt=""
+        //   />
+        
+        //subheader={Utils.formatDate(image.created_time)}
+      />
+
+      <CardContent>
+        <div>
           <img
             src={image.photoUrl}
             className="user-profile-image"
             alt=""
           />
-        }
-        title={image.restaurantName}
-        //subheader={Utils.formatDate(image.created_time)}
-      />
-
-      {/* <CardContent>
-        <div>
-          <img
-            className="image-card"
-            src={image.images.standard_resolution.url}
-            alt=""
-          />
+          <hr className="custom-horizontal-rule" />
+          {image.restaurantName}
+          <br />
+{/*           
           <hr className="custom-horizontal-rule" />
           {image.caption === null ? "" : image.caption.text.split("#")[0]}
           <br />
@@ -104,11 +106,11 @@ const ImageCard = function(props) {
             >
               ADD
             </Button>
-          </div>
+          </div> */}
         </div>
-      </CardContent> */}
+      </CardContent>
     </Card>
   );
 };
 
-export default ImageCard;
+export default RestaurantCard;
