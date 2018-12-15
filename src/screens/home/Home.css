@@ -21,15 +21,21 @@ img {
     color: #0AA9D8;
 }
 
-.rating{
-    background-color: #CCCC00;
+.rest-rating{
+    float: left;
+    background-color: rgb(192, 192, 50);
     color: white;
+}
+
+.rest-avg-price{
+    float: right;
 }
 
 .images-main-container {
     display: flex;
     margin-left: 100px;
     margin-right: 100px;
+    
   }
   
 .left-column {

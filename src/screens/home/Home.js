@@ -10,14 +10,24 @@ import RestaurantCard from "./RestaurantCard";
 import {GridListTile} from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
 
-const styles = theme => ({
-    image: {
-        flex: 1,
-        width: 50,
-        height: 50,
-        resizeMode: 'contain' 
-    }
-});
+
+    const styles = {
+        headerImage: {
+            flex: 1,
+            width: 50,
+            height: 50,
+            resizeMode: 'contain' 
+        },
+        restaurantImage: {
+            flex: 1,
+            width: 250,
+            height: 200,
+            resizeMode: 'contain' 
+        },
+        restaurantCard: {
+          marginBottom: 40
+        },
+    };
 
 class Home extends Component {
     constructor() {
@@ -63,7 +73,7 @@ class Home extends Component {
         const dataSource = this.state.restaurantsArray;
         return (
             <div className="home">
-                <img src={logo}  className={classes.image} alt="AppLogo"/>
+                <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
                   ---------------------Check Food App  
                 <br></br>  
 
@@ -80,12 +90,12 @@ class Home extends Component {
             enableMyAccount={true}
             /> */}
           <div className="images-main-container">
-            <GridList cellHeight={"auto"} className={classes.gridListMain} cols={4}>
+            <GridList cellHeight={"auto"} cols={4}>
                 {dataSource.map((restaurant, index) =>
                     <GridListTile key={'mykey' + index}>
                         <RestaurantCard
                             key={index}
-                            image={restaurant}
+                            rest={restaurant}
                             index={index}
                             classes={classes}
                                     // likeButtonClickHandler={this.likeButtonClickHandler}
