@@ -27,7 +27,7 @@ const RestaurantCard = function(props) {
             className={classes.restaurantImage}
             alt=""
             />
-            <Typography gutterBottom variant="h5" component="h2">
+            <Typography gutterBottom variant="h5" component="h2" className={classes.restaurantName}>
             {rest.restaurantName}
             </Typography>
             <p>{rest.categories}</p>

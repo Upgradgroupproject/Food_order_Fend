@@ -12,6 +12,7 @@ import GridList from '@material-ui/core/GridList';
 
 
     const styles = {
+        
         headerImage: {
             flex: 1,
             width: 50,
@@ -20,12 +21,18 @@ import GridList from '@material-ui/core/GridList';
         },
         restaurantImage: {
             flex: 1,
-            width: 250,
+            width: '95%',
             height: 200,
             resizeMode: 'contain' 
         },
+        restaurantName: {
+            flex: 1,
+            height: 50,
+            resizeMode: 'contain' 
+        },
         restaurantCard: {
-          marginBottom: 40
+          marginBottom: 40,
+          margintop: 40
         },
     };
 
