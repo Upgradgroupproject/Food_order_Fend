@@ -9,9 +9,24 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import RestaurantCard from "./RestaurantCard";
 import {GridListTile} from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
+import { white } from 'material-ui/styles/colors';
 
 
     const styles = {
+        root: {
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-around',
+            overflow: 'hidden',
+            backgroundColor: white,
+            width:'95%',
+            
+          },
+          gridList: {
+            flexWrap: 'nowrap',
+            // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+            transform: 'translateZ(0)',
+          },
         headerImage: {
             flex: 1,
             width: 50,
@@ -20,12 +35,18 @@ import GridList from '@material-ui/core/GridList';
         },
         restaurantImage: {
             flex: 1,
-            width: 250,
+            width: '95%',
             height: 200,
             resizeMode: 'contain' 
         },
+        restaurantName: {
+            flex: 1,
+            height: 50,
+            resizeMode: 'contain' 
+        },
         restaurantCard: {
-          marginBottom: 40
+          marginBottom: 40,
+          margintop: 40
         },
     };
 
@@ -89,8 +110,8 @@ class Home extends Component {
             showProfile={true}
             enableMyAccount={true}
             /> */}
-          <div className="images-main-container">
-            <GridList cellHeight={"auto"} cols={4}>
+          <div className= {classes.root}>
+            <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
                 {dataSource.map((restaurant, index) =>
                     <GridListTile key={'mykey' + index}>
                         <RestaurantCard
