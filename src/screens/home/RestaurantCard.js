@@ -33,8 +33,8 @@ const RestaurantCard = function(props) {
         //subheader={Utils.formatDate(image.created_time)}
       />
 
-      <CardContent>
-        <div>
+      <CardContent key={index}>
+        
           <img
             src={image.photoUrl}
             className="user-profile-image"
@@ -113,7 +113,7 @@ const RestaurantCard = function(props) {
               ADD
             </Button>
           </div> */}
-        </div>
+        
       </CardContent>
     </Card>
   );

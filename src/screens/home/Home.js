@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
 import './Home.css';
 //import Header from '../../common/header/Header';
 import logo from '../../assets/FastFood.svg';
 import { withStyles } from '@material-ui/core/styles';
-import * as Utils from "../../common/Utils";
-import * as Constants from "../../common/Constants";
-
-
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import ImageCard from "./RestaurantCard";
+import RestaurantCard from "./RestaurantCard";
+import {GridListTile} from '@material-ui/core';
+import GridList from '@material-ui/core/GridList';
 
 const styles = theme => ({
     image: {
@@ -35,15 +33,10 @@ class Home extends Component {
             address : "" ,
             categories : [],
             restaurantsArray : [],
-            isDataLoaded:false
+            //isDataLoaded:false
         }
     }
     
-    componentDidMount() {
-
-          //this.getAllImageData();
-        
-      }
 
       componentWillMount() {
 
@@ -56,8 +49,7 @@ class Home extends Component {
             if (this.readyState === 4) {
                 that.setState({
                     restaurantsArray : JSON.parse(this.responseText)             
-                });
-                console.log(JSON.parse(this.responseText) );         
+                });      
              }
         });
 
@@ -65,33 +57,6 @@ class Home extends Component {
         xhrRestaurant.send(reataurantData);
         
     }
-
-    // getAllImageData = () => {
-    //       const requestUrl = this.props.baseUrl + "/restaurant";
-    //       const that = this;
-    //       Utils.makeApiCall(
-    //         requestUrl,
-    //         null,
-    //         null,
-    //         Constants.ApiRequestTypeEnum.GET,
-    //         null,
-    //         responseText => {
-    //           that.setState(
-    //             {
-    //               imageData: JSON.parse(responseText).data
-    //               // imageData: ImageData.data
-    //             },
-    //             function() {
-    //               that.setState({
-    //                 isDataLoaded: true
-    //               });
-    //             }
-    //           );
-    //         },
-    //         () => {}
-    //       );
-        
-    //   };
 
     render() {
         const { classes } = this.props;
@@ -103,8 +68,8 @@ class Home extends Component {
                 <br></br>  
 
                 <MuiThemeProvider>
-        <div>
-          {/* <Header
+            <div>
+            {/* <Header
             showLink={false}
             history={this.props.history}
             showSearch={true}
@@ -113,38 +78,38 @@ class Home extends Component {
             uploadNewImage={this.uploadNewImage}
             showProfile={true}
             enableMyAccount={true}
-          /> */}
+            /> */}
           <div className="images-main-container">
-            <div className="left-column">
-              {dataSource.map((image, index) =>
-                index % 2 === 0 ? (
-                  <ImageCard
+            <GridList cellHeight={"auto"} className={classes.gridListMain} cols={4}>
+                {dataSource.map((restaurant, index) =>
+                    <GridListTile key={'mykey' + index}>
+                        <RestaurantCard
+                            key={index}
+                            image={restaurant}
+                            index={index}
+                            classes={classes}
+                                    // likeButtonClickHandler={this.likeButtonClickHandler}
+                                    // commentChangeHandler={this.commentChangeHandler}
+                                    // addCommentClickHandler={this.addCommentClickHandler}
+                                />
+                    </GridListTile>
+                )}
+            </GridList>
+            {/* <div className="left-column">
+              {dataSource.map((restaurant, index) =>
+                // index % 2 === 0 ? (
+                  <RestaurantCard
                     key={index}
-                    image={image}
+                    image={restaurant}
                     index={index}
                     classes={classes}
-                    likeButtonClickHandler={this.likeButtonClickHandler}
-                    commentChangeHandler={this.commentChangeHandler}
-                    addCommentClickHandler={this.addCommentClickHandler}
+                    // likeButtonClickHandler={this.likeButtonClickHandler}
+                    // commentChangeHandler={this.commentChangeHandler}
+                    // addCommentClickHandler={this.addCommentClickHandler}
                   />
-                ) : null
+                // ) : null
               )}
-            </div>
-            <div className="right-column">
-              {dataSource.map((image, index) =>
-                index % 2 !== 0 ? (
-                  <ImageCard
-                    key={index}
-                    image={image}
-                    index={index}
-                    classes={classes}
-                    likeButtonClickHandler={this.likeButtonClickHandler}
-                    commentChangeHandler={this.commentChangeHandler}
-                    addCommentClickHandler={this.addCommentClickHandler}
-                  />
-                ) : null
-              )}
-            </div>
+            </div> */}
           </div>
         </div>
       </MuiThemeProvider>
