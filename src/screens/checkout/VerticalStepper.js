@@ -13,6 +13,11 @@ import Typography from '@material-ui/core/Typography';
 // import AddressCard from './AddressCard';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import FormControl from '@material-ui/core/FormControl';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 
 
@@ -47,6 +52,7 @@ function getStepContent(step) {
   }
 }
 
+
 class VerticalLinearStepper extends React.Component {
   
     constructor() {
@@ -62,8 +68,16 @@ class VerticalLinearStepper extends React.Component {
                                 {"id":13,"flat_buil_number":"1","locality":"11","city":"11","zipcode":"560102","state_id":12},
                                 {"id":14,"flat_buil_number":"2","locality":"12","city":"11","zipcode":"560102","state_id":12},
                             ],
+                paymentOptions: [
+                                {"id": 1,"paymentName": "Cash on Delivery"},
+                                {"id": 2,"paymentName": "Wallet"},
+                                {"id": 3,"paymentName": "Net Banking"},
+                                {"id": 4,"paymentName": "COD"},
+                                {"id": 5,"paymentName": "Debit/Credit Card"}
+                                ],
                 activeStep: 0,
                 value: 0,
+                paymentMode:0,
             }
         
   };
@@ -114,6 +128,11 @@ class VerticalLinearStepper extends React.Component {
     this.setState({ value });
   };
 
+  /* Function For material Radio button selection change handler*/
+  handleChange = event => {
+    this.setState({ paymentMode: event.target.value });
+  };
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
@@ -129,9 +148,7 @@ class VerticalLinearStepper extends React.Component {
                 <StepLabel>check{label}</StepLabel>
                 <StepContent>
                     {index === 0 && <div>
-                                <Tabs tabItemContainerStyle={{width: 'auto'}}
-                                      style={{background: '#1231dd',color:'white'}}
-                                      contentContainerStyle={{background: '#FFF'}}
+                                <Tabs className="addressTabs"
                                       value={this.state.value} onChange={this.handleTabChange}>
                                     <Tab label="EXISTING ADDRESS" />
                                     <Tab label="NEW ADDRESS" />
@@ -140,10 +157,26 @@ class VerticalLinearStepper extends React.Component {
                                 
                                 }
                     {index === 1 && <div>
-                                <h4>Select Mode of Payment</h4>
-                                </div>
+                                {/* referenced from radio-btn demo -> https://material-ui.com/demos/selection-controls/ */}
                                 
-                                }
+                                    <FormControl component="fieldset" className={classes.formControl}>
+                                    <FormLabel component="legend">Select Mode of Payment</FormLabel>
+                                    <RadioGroup
+                                        aria-label="payment"
+                                        name="payment1"
+                                        className={classes.group}
+                                        value={this.state.paymentMode}
+                                        onChange={this.handleChange}
+                                    >
+                                    {this.state.paymentOptions.map((payBy,index) => {
+                                        return (
+                                        <FormControlLabel key={'mykey' + index} value={payBy.paymentName} control={<Radio />} label={payBy.paymentName} />
+                                        )
+                                    })}
+                                    </RadioGroup>
+                                    </FormControl>
+                                    </div>
+                    }
 
                   {/* <Typography>{getStepContent(index)}</Typography> */}
                     {/* <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
