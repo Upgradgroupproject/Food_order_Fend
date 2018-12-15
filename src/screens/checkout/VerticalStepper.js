@@ -8,6 +8,13 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+// import {GridListTile} from '@material-ui/core';
+// import GridList from '@material-ui/core/GridList';
+// import AddressCard from './AddressCard';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+
 
 const styles = theme => ({
   root: {
@@ -41,9 +48,49 @@ function getStepContent(step) {
 }
 
 class VerticalLinearStepper extends React.Component {
-  state = {
-    activeStep: 0,
+  
+    constructor() {
+        super();
+            this.state = {
+                id: "",
+                flat_buil_number: "",
+                locality: "",
+                city: "",
+                zipcode: "",
+                state_id: "",
+                addressList:[
+                                {"id":13,"flat_buil_number":"1","locality":"11","city":"11","zipcode":"560102","state_id":12},
+                                {"id":14,"flat_buil_number":"2","locality":"12","city":"11","zipcode":"560102","state_id":12},
+                            ],
+                activeStep: 0,
+                value: 0,
+            }
+        
   };
+
+  componentWillMount() {
+
+        
+    let adressData = null;
+    let xhrRestaurant = new XMLHttpRequest();
+    let that = this;
+    
+    xhrRestaurant.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            that.setState({
+                addressList : JSON.parse(this.responseText)             
+            });      
+         }
+        //printing array but json transfe to prop is giving error
+         // console.log(JSON.parse(this.responseText));
+    });
+
+    xhrRestaurant.open("GET", "http://localhost:8080/api/address/user?accessToken=205802dd-84f0-42ff-abb8-947d120669a0");
+    xhrRestaurant.send(adressData);
+    
+    console.log(this.state.addressList);
+    
+}
 
   handleNext = () => {
     this.setState(state => ({
@@ -63,10 +110,15 @@ class VerticalLinearStepper extends React.Component {
     });
   };
 
+  handleTabChange = (event, value) => {
+    this.setState({ value });
+  };
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
+    const userAddressSource = this.state.addressList;
 
     return (
       <div className={classes.root}>
@@ -74,9 +126,46 @@ class VerticalLinearStepper extends React.Component {
           {steps.map((label, index) => {
             return (
               <Step key={label}>
-                <StepLabel>{label}</StepLabel>
+                <StepLabel>check{label}</StepLabel>
                 <StepContent>
-                  <Typography>{getStepContent(index)}</Typography>
+                    {index === 0 && <div>
+                                <Tabs tabItemContainerStyle={{width: 'auto'}}
+                                      style={{background: '#1231dd',color:'white'}}
+                                      contentContainerStyle={{background: '#FFF'}}
+                                      value={this.state.value} onChange={this.handleTabChange}>
+                                    <Tab label="EXISTING ADDRESS" />
+                                    <Tab label="NEW ADDRESS" />
+                                </Tabs>
+                                </div>
+                                
+                                }
+                    {index === 1 && <div>
+                                <h4>Select Mode of Payment</h4>
+                                </div>
+                                
+                                }
+
+                  {/* <Typography>{getStepContent(index)}</Typography> */}
+                    {/* <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
+                        {userAddressSource.map((address, index) =>
+                        <GridListTile key={'mykey' + index}> */}
+                        {/* <AddressCard
+                            key={index}
+                            address={address}
+                            index={index}
+                            classes={classes}
+                                    // likeButtonClickHandler={this.likeButtonClickHandler}
+                                    // commentChangeHandler={this.commentChangeHandler}
+                                    // addCommentClickHandler={this.addCommentClickHandler}
+                                /> */}
+
+
+                                
+                        {/* </GridListTile>
+                    )}
+                    </GridList> */}
+
+
                   <div className={classes.actionsContainer}>
                     <div>
                       <Button
