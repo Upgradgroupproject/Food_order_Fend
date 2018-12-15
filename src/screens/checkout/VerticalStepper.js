@@ -194,7 +194,7 @@ class VerticalLinearStepper extends React.Component {
           <Paper square elevation={0} className={classes.resetContainer}>
             <Typography>View the summary and place your order now!</Typography>
             <Button onClick={this.handleReset} className={classes.button}>
-              Reset
+              Change
             </Button>
           </Paper>
         )}
