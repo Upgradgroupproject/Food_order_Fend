@@ -34,7 +34,7 @@ const RestaurantCard = function(props) {
             <div>
                 <span className="rest-rating"><i className="fa fa-star"aria-hidden="true"></i>
                             {rest.userRating} ({rest.numberUsersRated})</span>
-                <span className="rest-avg-price"> <i className="fa fa-inr" aria-hidden="true"></i> {rest.avgPrice * 2} for two</span>
+                <span className="rest-avg-price"> <i className="fa fa-inr" aria-hidden="true"></i> {rest.avgPrice} for two</span>
             </div>
       </CardContent>
     </Card>
