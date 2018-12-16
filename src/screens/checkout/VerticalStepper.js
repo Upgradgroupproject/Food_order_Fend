@@ -24,6 +24,8 @@ import ReactDOM from 'react-dom';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 // const styles = theme => ({
@@ -151,6 +153,8 @@ class VerticalLinearStepper extends React.Component {
                 toggleCityHelper: "displayNothing",
                 toggleZipcodeHelper: "displayNothing",
                 toggleStateIdHelper: "displayNothing",
+                stateList:[],
+                toggleZipcodeValidator:"displayNothing",
 
 
             }
@@ -159,25 +163,41 @@ class VerticalLinearStepper extends React.Component {
 
   componentWillMount() {
 
+
+    let statesData = null;
+        let xhrRestaurant = new XMLHttpRequest();
+        let stateThat = this;
+        
+        xhrRestaurant.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                stateThat.setState({
+                    stateList : JSON.parse(this.responseText)             
+                });      
+             }
+        });
+
+        xhrRestaurant.open("GET", "http://localhost:8080/api/states");
+        xhrRestaurant.send(statesData);
+
     // access-Token to be set from session-storage    
     
     let adressData = null;
-    let xhrRestaurant = new XMLHttpRequest();
-    let that = this;
+    let xhrAddress = new XMLHttpRequest();
+    let addThat = this;
     
-    xhrRestaurant.addEventListener("readystatechange", function () {
+    xhrAddress.addEventListener("readystatechange", function () {
         if (this.readyState === 4) {
-            that.setState({
+            addThat.setState({
                 allAddress : JSON.parse(this.responseText)           
             });      
          }    
         
     });
     
-    xhrRestaurant.open("GET", "http://localhost:8080/api/address/user?accessToken=62f43a69-e749-4a6a-ac58-536b19ce5630");
-    xhrRestaurant.setRequestHeader("Cache-Control", "no-cache");
-    xhrRestaurant.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
-    xhrRestaurant.send(adressData);
+    xhrAddress.open("GET", "http://localhost:8080/api/address/user?accessToken=62f43a69-e749-4a6a-ac58-536b19ce5630");
+    xhrAddress.setRequestHeader("Cache-Control", "no-cache");
+    xhrAddress.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
+    xhrAddress.send(adressData);
     
     let paymentData = null;
     let xhrPayment = new XMLHttpRequest();
@@ -196,6 +216,8 @@ class VerticalLinearStepper extends React.Component {
     xhrPayment.setRequestHeader("Cache-Control", "no-cache");
     xhrPayment.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
     xhrPayment.send(paymentData);
+
+
 
 
     let req = "http://localhost:8080/api/address?flatBuilNo=%23342&locality=makwoood%20aprtments&city=bangalore&zipcode=560102&type=perm&stateId=21";
@@ -280,7 +302,10 @@ class VerticalLinearStepper extends React.Component {
 
         this.state.zipcode === "" ? 
                         this.setState({ invalidAddress:true,toggleZipcodeHelper:"displayRequired",zipcode:""}) 
-                             : this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing"});
+                             : 
+                             
+                             this.state.zipcode.length < 6 ? this.setState({ invalidAddress:true,toggleZipcodeValidator:"displayRequired",toggleZipcodeHelper:"displayNothing",zipcode:""}):
+                             this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing",toggleZipcodeValidator:"displayNothing"});                      
 
     }
     else{
@@ -303,6 +328,7 @@ class VerticalLinearStepper extends React.Component {
     const steps = getSteps();
     const { activeStep } = this.state;
     const userAddressSource = this.state.allAddress;
+    const stateCodes = this.state.stateList;
 
     return (
       <div className={classes.root}>
@@ -388,15 +414,34 @@ class VerticalLinearStepper extends React.Component {
                                             </FormHelperText>
                                         </FormControl>
                                             <br></br>
-                                        <FormControl required>
+                                        {/* <FormControl required>
                                             <InputLabel htmlFor="state">State</InputLabel>
                                             <Input id="state" type="Select" value={this.state.state_id} onChange={this.stateChangeHandler} />
                                             <FormHelperText className={this.state.toggleStateIdHelper}>
                                                 <span className="fieldRequired">required</span>
                                             </FormHelperText>
-                                        </FormControl>
+                                        </FormControl> */}
 
-                                        {/* state selection API */}
+                                        <FormControl required>
+                                            <InputLabel htmlFor="state">State</InputLabel>
+                                            <Select
+                                                value={this.state.state_id}
+                                                onChange={this.stateChangeHandler}
+                                            >
+                                                {stateCodes.map(states => (
+                                                    <MenuItem key={"states" + states.id} value={states.id}>
+                                                        {states.stateName}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                                <FormHelperText className={this.state.toggleStateIdHelper}>
+                                                    <span className="fieldRequired">required</span>
+                                                </FormHelperText>
+                                            </FormControl>
+
+
+
+                                        {/* selection API */}
                                         
                                         {/* <FormControl variant="filled" className={classes.formControl}>
                                             <InputLabel htmlFor="filled-age-simple">Age</InputLabel>
@@ -421,7 +466,10 @@ class VerticalLinearStepper extends React.Component {
                                             <InputLabel htmlFor="zipcode">Zipcode</InputLabel>
                                             <Input id="zipcode" type="text" value={this.state.zipcode} onChange={this.zipcodeChangeHandler} />
                                             <FormHelperText className={this.state.toggleZipcodeHelper}>
-                                                <span className="fieldRequired">required</span>
+                                                <span className="fieldRequired">Required</span>
+                                            </FormHelperText>
+                                            <FormHelperText className={this.state.toggleZipcodeValidator}>
+                                                <span className="fieldRequired">Zipcode must contain only numbers and must be 6 digits long</span>
                                             </FormHelperText>
                                         </FormControl>
 
