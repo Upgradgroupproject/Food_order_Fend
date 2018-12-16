@@ -8,8 +8,10 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-// import {GridListTile} from '@material-ui/core';
-// import GridList from '@material-ui/core/GridList';
+import {GridListTile} from '@material-ui/core';
+import GridList from '@material-ui/core/GridList';
+import IconButton from '@material-ui/core/IconButton';
+import CheckCircle from '@material-ui/icons/CheckCircle';
 // import AddressCard from './AddressCard';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -21,21 +23,89 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 
 
+// const styles = theme => ({
+//   root: {
+//     width: '90%',
+//     flexGrow: 1,
+//     backgroundColor: theme.palette.background.paper
+//   },
+//   button: {
+//     marginTop: theme.spacing.unit,
+//     marginRight: theme.spacing.unit,
+//   },
+//   actionsContainer: {
+//     marginBottom: theme.spacing.unit * 2,
+//   },
+//   resetContainer: {
+//     padding: theme.spacing.unit * 3,
+//   },
+//   gridListMain: {
+//     flexWrap: 'nowrap',
+//     transform: 'translateZ(0)',
+//     },
+//   card: {
+//     maxWidth: 560,
+//     margin: 10,
+// },
+// });
+function TabContainer(props) {
+    return (
+      <Typography component="div" style={{ padding: 8 * 3 }}>
+        {props.children}
+      </Typography>
+    );
+  }
+  
+  TabContainer.propTypes = {
+    children: PropTypes.node.isRequired,
+  };
+
+
+
+
 const styles = theme => ({
-  root: {
-    width: '90%',
-  },
-  button: {
-    marginTop: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-  },
-  actionsContainer: {
-    marginBottom: theme.spacing.unit * 2,
-  },
-  resetContainer: {
-    padding: theme.spacing.unit * 3,
-  },
+    root: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.paper
+    },
+    gridListMain: {
+        flexWrap: 'nowrap',
+        transform: 'translateZ(0)',
+    },
+    card: {
+        maxWidth: 560,
+        margin: 10,
+    },
+    media: {
+        height: 0,
+        paddingTop: '56.25%', // 16:9
+    },
+    title: {
+        fontWeight: 'strong',
+        color: 'red',
+    },
+    actions: {
+        display: 'flex',
+    },
+    expand: {
+        transform: 'rotate(0deg)',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+        marginLeft: 'auto',
+        [theme.breakpoints.up('sm')]: {
+            marginRight: -8,
+        },
+    },
+    expandOpen: {
+        transform: 'rotate(180deg)',
+    },
+    button: {
+        margin: '20px'
+    }
 });
+
+
 
 function getSteps() {
   return ['Delivery', 'Payment',];
@@ -78,6 +148,9 @@ class VerticalLinearStepper extends React.Component {
                 activeStep: 0,
                 value: 0,
                 paymentMode:0,
+                addressTab: 0,
+                noAddressMessage:"There are no saved addresses! You can save an address using your ‘Profile’ menu option.",
+
             }
         
   };
@@ -92,11 +165,12 @@ class VerticalLinearStepper extends React.Component {
     xhrRestaurant.addEventListener("readystatechange", function () {
         if (this.readyState === 4) {
             that.setState({
-                addressList : JSON.parse(this.responseText)             
+                addressList : JSON.parse(this.responseText)           
             });      
          }
         //printing array but json transfe to prop is giving error
-         // console.log(JSON.parse(this.responseText));
+        //that.setState(this.state.id, JSON.parse(this.responseText));    
+        //console.log(JSON.parse(this.responseText));
     });
 
     xhrRestaurant.open("GET", "http://localhost:8080/api/address/user?accessToken=205802dd-84f0-42ff-abb8-947d120669a0");
@@ -124,8 +198,8 @@ class VerticalLinearStepper extends React.Component {
     });
   };
 
-  handleTabChange = (event, value) => {
-    this.setState({ value });
+  handleTabChange = (event, addressTab) => {
+    this.setState({ addressTab });
   };
 
   /* Function For material Radio button selection change handler*/
@@ -149,10 +223,30 @@ class VerticalLinearStepper extends React.Component {
                 <StepContent>
                     {index === 0 && <div>
                                 <Tabs className="addressTabs"
-                                      value={this.state.value} onChange={this.handleTabChange}>
+                                      value={this.state.addressTab} onChange={this.handleTabChange}>
                                     <Tab label="EXISTING ADDRESS" />
+                                    
                                     <Tab label="NEW ADDRESS" />
+                                    
                                 </Tabs>
+                                {this.state.addressTab === 0 && 
+                                    <GridList cellHeight={"auto"} className={classes.gridListMain}>
+                                        {userAddressSource.map((userAdd,index) =>
+                                            <GridListTile key={'mykey' + index}>
+                                            <div style={{ padding:'10px' }}>
+                                                <Typography >{userAdd.flat_buil_number}</Typography>
+                                                <Typography >{userAdd.locality}</Typography>
+                                                <Typography >{userAdd.city}</Typography>
+                                                <Typography >{userAdd.state_id}</Typography>
+                                                <Typography >{userAdd.zipcode}</Typography>
+                                                <IconButton style={{marginLeft:'60%'}}>
+                                                    <CheckCircle/>
+                                                </IconButton>
+                                    </div>
+                                    </GridListTile>
+                                    )}
+                                    </GridList>
+                                }
                                 </div>
                                 
                                 }
