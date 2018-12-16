@@ -357,7 +357,7 @@ class Header extends Component {
     }
     else{
       searchBoxToRender = (
-                    <div class="fill-remaining-space"></div>
+                    <div className="fill-remaining-space"></div>
                     
                     
       );
@@ -385,7 +385,7 @@ class Header extends Component {
     let profileIconButtonToRender = null;
     if (this.props.showProfile || !this.props.showProfile) {
       profileIconButtonToRender = (
-        <div paddingTop="20px">
+        <div paddingtop="20px">
         <div className="header-profile-btn-container">
           <IconButton
             key="close"
