@@ -366,7 +366,7 @@ class VerticalLinearStepper extends React.Component {
                                     <div >
                                         <FormControl required>
                                             <InputLabel htmlFor="flatBuilNo">Flat/Building No.</InputLabel>
-                                            <Input id="flatBuilNo" type="text" flat={this.state.flatbuilnumber} onChange={this.flatBuildChangeHandler} />
+                                            <Input id="flatBuilNo" type="text" value={this.state.flatbuilnumber} onChange={this.flatBuildChangeHandler} />
                                             <FormHelperText className={this.state.toggleFlatHelper}>
                                                 <span className="fieldRequired">required</span>
                                             </FormHelperText>
@@ -374,7 +374,7 @@ class VerticalLinearStepper extends React.Component {
                                             <br></br>
                                         <FormControl required>
                                             <InputLabel htmlFor="locality">Locality</InputLabel>
-                                            <Input id="locality" type="text" flat={this.state.locality} onChange={this.localityChangeHandler} />
+                                            <Input id="locality" type="text" value={this.state.locality} onChange={this.localityChangeHandler} />
                                             <FormHelperText className={this.state.toggleLocalityHelper}>
                                                 <span className="fieldRequired">required</span>
                                             </FormHelperText>
@@ -382,7 +382,7 @@ class VerticalLinearStepper extends React.Component {
                                             <br></br>
                                             <FormControl required>
                                             <InputLabel htmlFor="city">City</InputLabel>
-                                            <Input id="city" type="text" flat={this.state.city} onChange={this.cityChangeHandler} />
+                                            <Input id="city" type="text" value={this.state.city} onChange={this.cityChangeHandler} />
                                             <FormHelperText className={this.state.toggleCityHelper}>
                                                 <span className="fieldRequired">required</span>
                                             </FormHelperText>
@@ -390,15 +390,36 @@ class VerticalLinearStepper extends React.Component {
                                             <br></br>
                                         <FormControl required>
                                             <InputLabel htmlFor="state">State</InputLabel>
-                                            <Input id="state" type="text" flat={this.state.state_id} onChange={this.stateChangeHandler} />
+                                            <Input id="state" type="Select" value={this.state.state_id} onChange={this.stateChangeHandler} />
                                             <FormHelperText className={this.state.toggleStateIdHelper}>
                                                 <span className="fieldRequired">required</span>
                                             </FormHelperText>
                                         </FormControl>
+                                        
+                                        {/* state selection API */}
+                                        
+                                        {/* <FormControl variant="filled" className={classes.formControl}>
+                                            <InputLabel htmlFor="filled-age-simple">Age</InputLabel>
+                                            <Select
+                                                value={this.state.age}
+                                                onChange={this.handleChange}
+                                                input={<FilledInput name="age" id="filled-age-simple" />}
+                                            >
+                                                <MenuItem value="">
+                                                <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={10}>Ten</MenuItem>
+                                                <MenuItem value={20}>Twenty</MenuItem>
+                                                <MenuItem value={30}>Thirty</MenuItem>
+                                            </Select>
+                                        </FormControl> */}
+
+
+
                                             <br></br>
                                         <FormControl required>
                                             <InputLabel htmlFor="zipcode">Zipcode</InputLabel>
-                                            <Input id="zipcode" type="text" flat={this.state.zipcode} onChange={this.zipcodeChangeHandler} />
+                                            <Input id="zipcode" type="text" value={this.state.zipcode} onChange={this.zipcodeChangeHandler} />
                                             <FormHelperText className={this.state.toggleZipcodeHelper}>
                                                 <span className="fieldRequired">required</span>
                                             </FormHelperText>
