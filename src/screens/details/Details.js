@@ -94,8 +94,7 @@ render() {
     const { classes } = this.props;
     const dataSource = this.state.restaurantsArray;
     return (
-        <div className="Details
-        ">
+        <div className="Details">
             <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
               ---------------------Check Food App  
             <br></br>  
