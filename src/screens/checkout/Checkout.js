@@ -59,10 +59,10 @@ class Checkout extends Component {
         const { classes } = this.props;
         
         return (
-            <div className="home">
-                <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
-                  ---------------------Check Food App  
-                <br></br>  
+             <div className="home">
+            {/*      <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
+                   ---------------------Check Food App  
+                <br></br>   */}
                 
 
                 <MuiThemeProvider>
@@ -70,16 +70,17 @@ class Checkout extends Component {
             
              {/* To be integrated later */}
             
-            {/* <Header
-            // showLink={false}
-            // history={this.props.history}
-            // showSearch={false}
-            // searchImageByDescription={this.searchImageByDescription}
-            // showUpload={true}
-            // uploadNewImage={this.uploadNewImage}
-            // showProfile={false}
-            // enableMyAccount={true}
-            /> */}
+            <Header
+               showLink={false}
+               history={this.props.history}
+               showSearch={false}
+               //searchImageByDescription={this.searchImageByDescription}
+               showUpload={false}
+               // uploadNewImage={this.uploadNewImage}
+               //showProfile={false}
+               //enableMyAccount={true}
+            />
+            
           <div className= {classes.root}>
             
                 <Stepper >

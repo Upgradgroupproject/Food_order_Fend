@@ -338,7 +338,8 @@ class Header extends Component {
 
     // search box to be rendered inside the header
     let searchBoxToRender = null;
-    if (this.props.showSearch || !this.props.showSearch) {
+    // if (this.props.showSearch || !this.props.showSearch) {
+    if (this.props.showSearch) {
       searchBoxToRender = (
         <div className="header-search-container">
           <div className="search-icon">
@@ -354,10 +355,18 @@ class Header extends Component {
       );
     
     }
+    else{
+      searchBoxToRender = (
+                    <div class="fill-remaining-space"></div>
+                    
+                    
+      );
+    }
 
     // upload button to be rendered inside the header
     let uploadButtonToRender = null;
-    if (this.props.showUpload || !this.props.showUpload) {
+    // if (this.props.showUpload || !this.props.showUpload) {
+    if (this.props.showUpload) {
       uploadButtonToRender = (
         <div className="header-upload-btn-container">
          <Toolbar variant="dense">
