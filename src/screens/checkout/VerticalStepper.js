@@ -134,17 +134,8 @@ class VerticalLinearStepper extends React.Component {
                 city: "",
                 zipcode: "",
                 state_id: "",
-                addressList:[
-                                {"id":13,"flat_buil_number":"1","locality":"11","city":"11","zipcode":"560102","state_id":12},
-                                {"id":14,"flat_buil_number":"2","locality":"12","city":"11","zipcode":"560102","state_id":12},
-                            ],
-                paymentOptions: [
-                                {"id": 1,"paymentName": "Cash on Delivery"},
-                                {"id": 2,"paymentName": "Wallet"},
-                                {"id": 3,"paymentName": "Net Banking"},
-                                {"id": 4,"paymentName": "COD"},
-                                {"id": 5,"paymentName": "Debit/Credit Card"}
-                                ],
+                allAddress:[],
+                paymentOptions:[],
                 activeStep: 0,
                 value: 0,
                 paymentMode:0,
@@ -157,7 +148,8 @@ class VerticalLinearStepper extends React.Component {
 
   componentWillMount() {
 
-        
+    // access-Token to be set from session-storage    
+    
     let adressData = null;
     let xhrRestaurant = new XMLHttpRequest();
     let that = this;
@@ -165,19 +157,34 @@ class VerticalLinearStepper extends React.Component {
     xhrRestaurant.addEventListener("readystatechange", function () {
         if (this.readyState === 4) {
             that.setState({
-                addressList : JSON.parse(this.responseText)           
+                allAddress : JSON.parse(this.responseText)           
             });      
-         }
-        //printing array but json transfe to prop is giving error
-        //that.setState(this.state.id, JSON.parse(this.responseText));    
-        //console.log(JSON.parse(this.responseText));
+         }    
+        
     });
-
-    xhrRestaurant.open("GET", "http://localhost:8080/api/address/user?accessToken=205802dd-84f0-42ff-abb8-947d120669a0");
+    
+    xhrRestaurant.open("GET", "http://localhost:8080/api/address/user?accessToken=62f43a69-e749-4a6a-ac58-536b19ce5630");
+    xhrRestaurant.setRequestHeader("Cache-Control", "no-cache");
+    xhrRestaurant.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
     xhrRestaurant.send(adressData);
     
-    console.log(this.state.addressList);
+    let paymentData = null;
+    let xhrPayment = new XMLHttpRequest();
+    let payThat = this;
     
+    xhrPayment.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            payThat.setState({
+                paymentOptions : JSON.parse(this.responseText)           
+            });      
+         }    
+        
+    });
+    
+    xhrPayment.open("GET", "http://localhost:8080/api/payment");
+    xhrPayment.setRequestHeader("Cache-Control", "no-cache");
+    xhrPayment.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
+    xhrPayment.send(paymentData);
 }
 
   handleNext = () => {
@@ -211,7 +218,7 @@ class VerticalLinearStepper extends React.Component {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-    const userAddressSource = this.state.addressList;
+    const userAddressSource = this.state.allAddress;
 
     return (
       <div className={classes.root}>
@@ -230,16 +237,16 @@ class VerticalLinearStepper extends React.Component {
                                     
                                 </Tabs>
                                 {this.state.addressTab === 0 && 
-                                    <GridList cellHeight={"auto"} className={classes.gridListMain}>
+                                    <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                         {userAddressSource.map((userAdd,index) =>
                                             <GridListTile key={'mykey' + index}>
                                             <div style={{ padding:'10px' }}>
-                                                <Typography >{userAdd.flat_buil_number}</Typography>
+                                                <Typography >{userAdd.flatBuilNo}</Typography>
                                                 <Typography >{userAdd.locality}</Typography>
                                                 <Typography >{userAdd.city}</Typography>
-                                                <Typography >{userAdd.state_id}</Typography>
+                                                <Typography >{userAdd.states.stateName}</Typography>
                                                 <Typography >{userAdd.zipcode}</Typography>
-                                                <IconButton style={{marginLeft:'60%'}}>
+                                                <IconButton style={{marginLeft:'20%'}}>
                                                     <CheckCircle/>
                                                 </IconButton>
                                     </div>

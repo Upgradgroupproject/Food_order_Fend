@@ -6,6 +6,7 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { white } from 'material-ui/styles/colors';
 import Stepper from "./VerticalStepper";
 import "./Checkout.css";
+import Header from '../../common/header/header'
 
     const styles = {
         root: {
@@ -62,18 +63,22 @@ class Checkout extends Component {
                 <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
                   ---------------------Check Food App  
                 <br></br>  
+                
 
                 <MuiThemeProvider>
             <div className={classes.root}>
+            
+             {/* To be integrated later */}
+            
             {/* <Header
-            showLink={false}
-            history={this.props.history}
-            showSearch={true}
-            searchImageByDescription={this.searchImageByDescription}
-            showUpload={true}
-            uploadNewImage={this.uploadNewImage}
-            showProfile={true}
-            enableMyAccount={true}
+            // showLink={false}
+            // history={this.props.history}
+            // showSearch={false}
+            // searchImageByDescription={this.searchImageByDescription}
+            // showUpload={true}
+            // uploadNewImage={this.uploadNewImage}
+            // showProfile={false}
+            // enableMyAccount={true}
             /> */}
           <div className= {classes.root}>
             
