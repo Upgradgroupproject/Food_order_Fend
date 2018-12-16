@@ -69,7 +69,7 @@ function TabContainer(props) {
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.paper,    
     },
     gridListMain: {
         flexWrap: 'nowrap',
@@ -146,7 +146,11 @@ class VerticalLinearStepper extends React.Component {
                 addressTab: 0,
                 noAddressMessage:"There are no saved addresses! You can save an address using your ‘Profile’ menu option.",
                 invalidAddress:"false",
-                toggleflatHelper:"displayNothing",
+                toggleFlatHelper:"displayNothing",
+                toggleLocalityHelper: "displayNothing",
+                toggleCityHelper: "displayNothing",
+                toggleZipcodeHelper: "displayNothing",
+                toggleStateIdHelper: "displayNothing",
 
 
             }
@@ -233,6 +237,11 @@ class VerticalLinearStepper extends React.Component {
       
   }
 
+  localityChangeHandler = (e) =>{
+    this.setState({locality: e.target.value});
+    
+}
+
   handleNext = () => {
     
     if (this.state.addressTab === 1) {
@@ -243,8 +252,12 @@ class VerticalLinearStepper extends React.Component {
                "className" is defined in CSS
         */
         this.state.flatbuilnumber === "" ? 
-                   this.setState({ invalidAddress:true,toggleflatHelper:"displayRequired",flatbuilnumber:""}) 
-                        : this.setState({  invalidAddress:false,toggleflatHelper:"displayNothing"});
+                   this.setState({ invalidAddress:true,toggleFlatHelper:"displayRequired",flatbuilnumber:""}) 
+                        : this.setState({  invalidAddress:false,toggleFlatHelper:"displayNothing"});
+        
+        this.state.locality === "" ? 
+                        this.setState({ invalidAddress:true,toggleLocalityHelper:"displayRequired",locality:""}) 
+                             : this.setState({  invalidAddress:false,toggleLocalityHelper:"displayNothing"});
 
     }
     else{
@@ -327,13 +340,24 @@ class VerticalLinearStepper extends React.Component {
                                     </GridList>
                                 }
                                 {(this.state.addressTab === 1) && 
-                                    <FormControl required>
-                                        <InputLabel htmlFor="flat">Flat/Building No.</InputLabel>
-                                        <Input id="flatBuilNo" type="text" flat={this.state.flatbuilnumber} onChange={this.flatBuildChangeHandler} />
-                                        <FormHelperText className={this.state.toggleflatHelper}>
-                                            <span className="fieldRequired">required</span>
-                                        </FormHelperText>
-                                    </FormControl>
+                                    <div >
+                                        <FormControl required>
+                                            <InputLabel htmlFor="flatBuilNo">Flat/Building No.</InputLabel>
+                                            <Input id="flatBuilNo" type="text" flat={this.state.flatbuilnumber} onChange={this.flatBuildChangeHandler} />
+                                            <FormHelperText className={this.state.toggleFlatHelper}>
+                                                <span className="fieldRequired">required</span>
+                                            </FormHelperText>
+                                        </FormControl>
+                                            <br></br>
+                                        <FormControl required>
+                                            <InputLabel htmlFor="locality">Locality</InputLabel>
+                                            <Input id="locality" type="text" flat={this.state.locality} onChange={this.localityChangeHandler} />
+                                            <FormHelperText className={this.state.toggleLocalityHelper}>
+                                                <span className="fieldRequired">required</span>
+                                            </FormHelperText>
+                                        </FormControl>
+
+                                    </div>  
                                 
                                 }
                                 </div>
