@@ -118,12 +118,7 @@ const styles = theme => ({
             onExited={this.handleExited}
             ContentProps={{
               'aria-describedby': 'message-id',
-            }}
-            message={<span id="message-id">{message}</span>}
-            action={[
-              <Button key="undo" color="secondary" size="small" onClick={this.handleClose}>
-                UNDO
-              </Button>,
+            }
               <IconButton
                 key="close"
                 aria-label="Close"
