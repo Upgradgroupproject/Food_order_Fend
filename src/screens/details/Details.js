@@ -126,4 +126,4 @@ render() {
     ) }
 
 }
-export default withStyles(styles)(Details);
+export default withStyles(styles)(Details); 
