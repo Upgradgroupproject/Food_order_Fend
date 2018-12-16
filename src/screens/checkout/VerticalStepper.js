@@ -21,6 +21,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ReactDOM from 'react-dom';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 
 // const styles = theme => ({
@@ -129,11 +132,12 @@ class VerticalLinearStepper extends React.Component {
         super();
             this.state = {
                 id: "",
-                flat_buil_number: "",
+                flatbuilnumber: "",
                 locality: "",
                 city: "",
                 zipcode: "",
                 state_id: "",
+                addType:"",
                 allAddress:[],
                 paymentOptions:[],
                 activeStep: 0,
@@ -141,6 +145,9 @@ class VerticalLinearStepper extends React.Component {
                 paymentMode:0,
                 addressTab: 0,
                 noAddressMessage:"There are no saved addresses! You can save an address using your ‘Profile’ menu option.",
+                invalidAddress:"false",
+                toggleflatHelper:"displayNothing",
+
 
             }
         
@@ -185,13 +192,13 @@ class VerticalLinearStepper extends React.Component {
     xhrPayment.setRequestHeader("Cache-Control", "no-cache");
     xhrPayment.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
     xhrPayment.send(paymentData);
+
+
+    let req = "http://localhost:8080/api/address?flatBuilNo=%23342&locality=makwoood%20aprtments&city=bangalore&zipcode=560102&type=perm&stateId=21";
+
+
 }
 
-  handleNext = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep + 1,
-    }));
-  };
 
   handleBack = () => {
     this.setState(state => ({
@@ -205,8 +212,8 @@ class VerticalLinearStepper extends React.Component {
     });
   };
 
-  handleTabChange = (event, addressTab) => {
-    this.setState({ addressTab });
+  handleTabChange = (e,addressTab) => {
+    this.setState({ addressTab});
   };
 
   /* Function For material Radio button selection change handler*/
@@ -218,10 +225,42 @@ class VerticalLinearStepper extends React.Component {
   iconClickHandler = event => {
 
         event.target.style.color = 'green';
-        //ReactDOM.findDOMNode(GridList).getElementsByClassName("check").style.border = '';
-        
-    
+        //ReactDOM.findDOMNode(GridList).getElementsByClassName("check").style.border = ''; 
+
 }
+  flatBuildChangeHandler = (e) =>{
+      this.setState({flatbuilnumber: e.target.value});
+      
+  }
+
+  handleNext = () => {
+    
+    if (this.state.addressTab === 1) {
+       /* 
+        Below code to check user entry available or not, 
+         and displays helper text accordingly
+           @param toggleflatHelper is a state which will be set to a "className"
+               "className" is defined in CSS
+        */
+        this.state.flatbuilnumber === "" ? 
+                   this.setState({ invalidAddress:true,toggleflatHelper:"displayRequired",flatbuilnumber:""}) 
+                        : this.setState({  invalidAddress:false,toggleflatHelper:"displayNothing"});
+
+    }
+    else{
+        this.setState(state => ({
+            activeStep: state.activeStep + 1,
+        }));
+    }
+
+    if(this.state.invalidAddress === false){
+        this.setState(state => ({
+            activeStep: state.activeStep + 1,
+        }));
+    }
+    
+  };
+    
 
   render() {
     const { classes } = this.props;
@@ -250,6 +289,25 @@ class VerticalLinearStepper extends React.Component {
                                         <Typography >{this.state.noAddressMessage}</Typography> 
                                    </div>     
                                 }
+                                {/* <Typography>{getStepContent(index)}</Typography> */}
+                                    {/* <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
+                                        {userAddressSource.map((address, index) =>
+                                        <GridListTile key={'mykey' + index}> */}
+                                        {/* <AddressCard
+                                            key={index}
+                                            address={address}
+                                            index={index}
+                                            classes={classes}
+                                                    // likeButtonClickHandler={this.likeButtonClickHandler}
+                                                    // commentChangeHandler={this.commentChangeHandler}
+                                                    // addCommentClickHandler={this.addCommentClickHandler}
+                                                /> */}
+
+
+                                                
+                                        {/* </GridListTile>
+                                    )}
+                                    </GridList> */}
                                 {((this.state.addressTab === 0)&& (userAddressSource.length > 0)) && 
                                     <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                         {userAddressSource.map((userAdd,index) =>
@@ -267,6 +325,16 @@ class VerticalLinearStepper extends React.Component {
                                     </GridListTile>
                                     )}
                                     </GridList>
+                                }
+                                {(this.state.addressTab === 1) && 
+                                    <FormControl required>
+                                        <InputLabel htmlFor="flat">Flat/Building No.</InputLabel>
+                                        <Input id="flatBuilNo" type="text" flat={this.state.flatbuilnumber} onChange={this.flatBuildChangeHandler} />
+                                        <FormHelperText className={this.state.toggleflatHelper}>
+                                            <span className="fieldRequired">required</span>
+                                        </FormHelperText>
+                                    </FormControl>
+                                
                                 }
                                 </div>
                                 
@@ -292,26 +360,6 @@ class VerticalLinearStepper extends React.Component {
                                     </FormControl>
                                     </div>
                     }
-
-                  {/* <Typography>{getStepContent(index)}</Typography> */}
-                    {/* <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
-                        {userAddressSource.map((address, index) =>
-                        <GridListTile key={'mykey' + index}> */}
-                        {/* <AddressCard
-                            key={index}
-                            address={address}
-                            index={index}
-                            classes={classes}
-                                    // likeButtonClickHandler={this.likeButtonClickHandler}
-                                    // commentChangeHandler={this.commentChangeHandler}
-                                    // addCommentClickHandler={this.addCommentClickHandler}
-                                /> */}
-
-
-                                
-                        {/* </GridListTile>
-                    )}
-                    </GridList> */}
 
 
                   <div className={classes.actionsContainer}>
