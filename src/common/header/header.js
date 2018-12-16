@@ -1,232 +1,416 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+import React, { Component } from "react";
+import "./Header.css";
+import * as Constants from "../../common/Constants";
+import * as Utils from "../../common/Utils";
+import * as UtilsUI from "../../common/UtilsUI";
+import { withStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import IconButton from "@material-ui/core/IconButton";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import SearchIcon from "@material-ui/icons/Search";
+import Button from "@material-ui/core/Button";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import Typography from "@material-ui/core/Typography";
+import Modal from "react-modal";
+import Input from "@material-ui/core/Input";
+import { Link } from "react-router-dom";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import LogoImage from "../../assets/FastFood.svg";
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import SaveIcon from '@material-ui/icons/Save';
-import Button from '@material-ui/core/Button';
-import logo from '../../assets/FastFood.svg';
-import image from './Header.css';
+import Toolbar from '@material-ui/core/Toolbar';
+import MenuIcon from '@material-ui/icons/Menu';
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing.unit * 2,
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit * 3,
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
-    width: '120%',
-    [theme.breakpoints.up('md')]: {
-      width: 200,
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
-  leftIcon: {
-    marginRight: theme.spacing.unit,
-  },
-  rightIcon: {
-    marginLeft: theme.spacing.unit,
-  },
-  iconSmall: {
-    fontSize: 20,
-  },
-});
+// custom styles for upload modal
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)"
+  }
+};
 
-class header extends React.Component {
+// inline styles for Material-UI components
+const styles = {
+  searchInput: {
+    width: "80%"
+  },
+  uploadIcon: {
+    paddingLeft: 10
+  },
+  profileIconButton: {
+    padding: 0
+  }
+};
+
+/**
+ * Class component for the header
+ * @class Header
+ * @extends {Component}
+ */
+class Header extends Component {
+  constructor() {
+    super();
+
+    this.state={
+      modalIsOpen:false
+    };
+    this.openUploadImageModal = this.openUploadImageModal.bind(this);
+    this.closeUploadImageModal = this.closeUploadImageModal.bind(this);
+    this.selectImageForUpload = this.selectImageForUpload.bind(this);
+    this.changeDescriptionHandlerInUploadImageModal = this.changeDescriptionHandlerInUploadImageModal.bind(
+      this
+    );
+    this.changeHashtagsHandlerInUploadImageModal = this.changeHashtagsHandlerInUploadImageModal.bind(
+      this
+    );
+    this.uploadClickHandlerInUploadModal = this.uploadClickHandlerInUploadModal.bind(
+      this
+    );
+    this.profileIconClickHandler = this.profileIconClickHandler.bind(this);
+    this.logoutClickHandler = this.logoutClickHandler.bind(this);
+  }
+
   state = {
-    anchorEl: null,
-    mobileMoreAnchorEl: null,
+    currentUserDetails: {
+      // object containing details of the currently logged-in user
+      profileImage: "", // profile picture URL of the currently logged-in user
+      username: "" // username of the currently logged-in user
+    },
+    showUserProfileDropDown: false, // boolean value indicating if the user profile dropdown is open; TRUE for open and FALSE for closed
+    isUploadModalOpen: false, // boolean value indicating if the upload image modal is open; TRUE for open and FALSE for closed
+    uploadImageFormValues: {
+      // object containing values filled by the user in the upload image modal
+      imageFile: {}, // image file containing the new image selected by the user from the system
+      imagePreviewUrl: "", // preview URL the new image file selected by the user from the system
+      description: "", // description for the new image to be uploaded
+      hashtags: "" // hashtags for the new image to be uploaded
+    },
+    uploadImageFormValidationClassnames: {
+      // object containing validation classnames for the form fields inside the upload image modal
+      image: Constants.DisplayClassname.DISPLAY_NONE,
+      description: Constants.DisplayClassname.DISPLAY_NONE,
+      hashtags: Constants.DisplayClassname.DISPLAY_NONE
+    }
   };
 
-  handleProfileMenuOpen = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  /**
+   * Function called before the render method
+   * @memberof Header
+   */
+  componentDidMount() {
+    this.getUserInformation();
+  }
+
+  /**
+   * Function to get all the information about the currently logged-in user
+   * @memberof Header
+   */
+  getUserInformation = () => {
+    if (
+      !Utils.isUndefinedOrNullOrEmpty(sessionStorage.getItem("access-token"))
+    ) {
+      const requestUrl =
+        "https://api.instagram.com/v1/users/self/?access_token=" +
+        sessionStorage.getItem("access-token");
+      const that = this;
+      Utils.makeApiCall(
+        requestUrl,
+        null,
+        null,
+        Constants.ApiRequestTypeEnum.GET,
+        null,
+        responseText => {
+          const userDetails = { ...this.state.currentUserDetails };
+          userDetails.profileImage = JSON.parse(
+            responseText
+          ).data.profile_picture;
+          userDetails.username = JSON.parse(responseText).data.username;
+          that.setState({
+            currentUserDetails: userDetails
+          });
+          sessionStorage.setItem(
+            "user-details",
+            JSON.parse(responseText).data.username
+          );
+        },
+        () => {}
+      );
+    }
   };
 
-  handleMenuClose = () => {
-    this.setState({ anchorEl: null });
-    this.handleMobileMenuClose();
+  /**
+   * Event handler called when the upload button inside the header is clicked to open the upload image modal
+   * @memberof Header
+   */
+  openUploadImageModal = () => {
+    this.setState({
+      isUploadModalOpen: true
+    });
   };
 
-  handleMobileMenuOpen = event => {
-    this.setState({ mobileMoreAnchorEl: event.currentTarget });
+  /**
+   * Event handler called to close upload image modal
+   * @memberof Header
+   */
+  closeUploadImageModal = () => {
+    let newUploadImageModalFormValues = { ...this.state.uploadImageFormValues };
+    Utils.assignEmptyStringToAllKeysInObj(newUploadImageModalFormValues);
+    const currentUploadImageFormValidationClassnames = {
+      ...this.uploadImageFormValidationClassnames
+    };
+
+    currentUploadImageFormValidationClassnames.image =
+      Constants.DisplayClassname.DISPLAY_NONE;
+    currentUploadImageFormValidationClassnames.description =
+      Constants.DisplayClassname.DISPLAY_NONE;
+    currentUploadImageFormValidationClassnames.hashtags =
+      Constants.DisplayClassname.DISPLAY_NONE;
+
+    this.setState({
+      isUploadModalOpen: false,
+      uploadImageFormValues: newUploadImageModalFormValues,
+      uploadImageFormValidationClassnames: currentUploadImageFormValidationClassnames
+    });
   };
 
-  handleMobileMenuClose = () => {
-    this.setState({ mobileMoreAnchorEl: null });
+  /**
+   * Event handler called when an image is selected by a user to be uploaded
+   * @param event default parameter on which the event handler is called
+   * @memberof Header
+   */
+  selectImageForUpload = event => {
+    event.preventDefault();
+
+    const reader = new FileReader();
+    const file = event.target.files[0];
+
+    reader.onloadend = () => {
+      const currentUploadImageFormValues = {
+        ...this.state.uploadImageFormValues
+      };
+      currentUploadImageFormValues.imageFile = file;
+      currentUploadImageFormValues.imagePreviewUrl = reader.result;
+      this.setState({
+        uploadImageFormValues: currentUploadImageFormValues
+      });
+    };
+
+    reader.readAsDataURL(file);
   };
 
+  /**
+   * Event handler called when the description input field is changed inside the upload image modal
+   * @param event default parameter on which the event handler is called
+   * @memberof Header
+   */
+  changeDescriptionHandlerInUploadImageModal = event => {
+    let currentUploadImageFormValues = { ...this.state.uploadImageFormValues };
+    currentUploadImageFormValues.description = event.target.value;
+    this.setState({
+      uploadImageFormValues: currentUploadImageFormValues
+    });
+  };
+
+  /**
+   * Event handler called when the hashtags input field is changed inside the upload image modal
+   * @param event default parameter on which the event handler is called
+   * @memberof Header
+   */
+  changeHashtagsHandlerInUploadImageModal = event => {
+    let currentUploadImageFormValues = { ...this.state.uploadImageFormValues };
+    currentUploadImageFormValues.hashtags = event.target.value;
+    this.setState({
+      uploadImageFormValues: currentUploadImageFormValues
+    });
+  };
+
+  /**
+   * Event handler called when the 'Upload' button inside the upload image modal is clicked
+   * @memberof Header
+   */
+  uploadClickHandlerInUploadModal = () => {
+    // finding the class names for the desciption and hashtags validation messages - to be displayed or not
+    const image_validation_classname = UtilsUI.findValidationMessageClassname(
+      this.state.uploadImageFormValues.imagePreviewUrl,
+      Constants.ValueTypeEnum.FORM_FIELD
+    );
+    const description_validation_classname = UtilsUI.findValidationMessageClassname(
+      this.state.uploadImageFormValues.description,
+      Constants.ValueTypeEnum.FORM_FIELD
+    );
+    const hashtags_validation_classname = UtilsUI.findValidationMessageClassname(
+      this.state.uploadImageFormValues.hashtags,
+      Constants.ValueTypeEnum.FORM_FIELD
+    );
+
+    // setting the class names for the desciption and hashtags validation messages - to be displayed or not
+    let currentUploadImageFormValidationClassnames = {
+      ...this.state.uploadImageFormValidationClassnames
+    };
+    currentUploadImageFormValidationClassnames.image = image_validation_classname;
+    currentUploadImageFormValidationClassnames.description = description_validation_classname;
+    currentUploadImageFormValidationClassnames.hashtags = hashtags_validation_classname;
+
+    if (
+      Utils.isAnyValueOfObjectUndefinedOrNullOrEmpty(
+        this.state.uploadImageFormValues
+      )
+    ) {
+      this.setState({
+        uploadImageFormValidationClassnames: currentUploadImageFormValidationClassnames
+      });
+    } else {
+      const imageDetails = {
+        id: Math.floor(new Date().getTime() / 1000),
+        caption: { text: this.state.uploadImageFormValues.description },
+        tags: this.state.uploadImageFormValues.hashtags.split(","),
+        images: {
+          standard_resolution: {
+            url: this.state.uploadImageFormValues.imagePreviewUrl
+          }
+        },
+        user: {
+          profile_picture: this.state.currentUserDetails.profileImage,
+          username: this.state.currentUserDetails.username
+        },
+        likes: { count: 0 },
+        created_time: Math.floor(new Date().getTime() / 1000)
+      };
+
+      this.props.uploadNewImage(imageDetails);
+      this.closeUploadImageModal();
+    }
+  };
+
+  /**
+   * Event handler called when the profile icon inside the header is clicked to toggle the user profile dropdown
+   * @memberof Header
+   */
+  profileIconClickHandler = () => {
+    this.setState({
+      showUserProfileDropDown: !this.state.showUserProfileDropDown
+    });
+  };
+  
+  openModalHandler =() =>{
+    this.setState({modalIsOpen:true})
+  }
+
+  closeModalHandler=() =>{
+    this.setState({modalIsOpen:false})
+  }
+  /**
+   * Event handler called when the logout menu item is clicked inside the user profile dropdown to log a user out of the application
+   * @memberof Header
+   */
+  logoutClickHandler = () => {
+    sessionStorage.removeItem("access-token");
+    sessionStorage.removeItem("user-details");
+    this.props.history.push({
+      pathname: "/"
+    });
+  };
+
+
+  /**
+   * Function called when the component is rendered
+   * @memberof Header
+   */
   render() {
-    const { anchorEl, mobileMoreAnchorEl } = this.state;
     const { classes } = this.props;
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-    const renderMenu = (
-      <Menu
-        anchorEl={anchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={isMenuOpen}
-        onClose={this.handleMenuClose}
-      >
-        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
-      </Menu>
-    );
+    // logo to be rendered inside the header
+    let logoToRender = null;
+    if (this.props.showLink) {
+      logoToRender = (
+        <Link to="/home" className="logo">
+          <img src={LogoImage} className="logo"/>
+        </Link>
+      );
+    } else {
+      logoToRender = <img src={LogoImage} className="logo"/>;
+    }
 
-    const renderMobileMenu = (
-      <Menu
-        anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={isMobileMenuOpen}
-        onClose={this.handleMobileMenuClose}
-      >
-        <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <MailIcon />
-            </Badge>
+    // search box to be rendered inside the header
+    let searchBoxToRender = null;
+    if (this.props.showSearch || !this.props.showSearch) {
+      searchBoxToRender = (
+        <div className="header-search-container">
+          <div className="search-icon">
+            <SearchIcon />
+          </div>
+          <Input
+            
+            className={classes.searchInput}
+            placeholder="Search by Restaurant Name"
+            disableUnderline
+          />
+        </div>
+      );
+    
+    }
+
+    // upload button to be rendered inside the header
+    let uploadButtonToRender = null;
+    if (this.props.showUpload || !this.props.showUpload) {
+      uploadButtonToRender = (
+        <div className="header-upload-btn-container">
+         <Toolbar variant="dense">
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <MenuIcon />
           </IconButton>
-          <p>Messages</p>
-        </MenuItem>
-        <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
-        <MenuItem onClick={this.handleProfileMenuOpen}>
-          <IconButton color="inherit">
+          <Typography variant="h6" color="inherit">
+            Categories
+          </Typography>
+        </Toolbar>
+        </div>
+        );
+    }
+
+    // user profile icon to be rendered inside the header
+    let profileIconButtonToRender = null;
+    if (this.props.showProfile || !this.props.showProfile) {
+      profileIconButtonToRender = (
+        <div paddingTop="20px">
+        <div className="header-profile-btn-container">
+          <IconButton
+            key="close"
+            aria-label="Close"
+            className={classes.profileIconButton}
+          >
+            <Button variant="contained" size="small" className={classes.button} onClick={this.openModalHandler}>
             <AccountCircle />
+                Login
+             </Button>
           </IconButton>
-          <p>Profile</p>
-        </MenuItem>
-      </Menu>
-    );
+          
+        </div>
+        <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel="Login"onRequestClose={this.closeModalHandler}>
+        </Modal>
+        </div>
+      );
+    }
 
     return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-          <img src={logo} height="50px" width="50px"/>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search by Restaurant Name "
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-            </div>
-            <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
-              <MenuIcon />Categories
-            </IconButton>
-              
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                
-                color="inherit"
-              >
-              <Button variant="contained" size="small" className={classes.button}>
-              <AccountCircle />
-                    Login
-               </Button>
-                
-              </IconButton>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-        {renderMenu}
-        {renderMobileMenu}
-      </div>
+      <MuiThemeProvider>
+        <div className="header-main-container">
+          <div className="header-logo-container">{logoToRender}</div>
+          {searchBoxToRender}
+          {uploadButtonToRender}
+          {profileIconButtonToRender}
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
 
-header.propTypes = {
-  classes: PropTypes.object.isRequired,
+Header.propTypes = {
+  classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(header);
+export default withStyles(styles)(Header);
