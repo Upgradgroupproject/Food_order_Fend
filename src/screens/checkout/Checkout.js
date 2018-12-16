@@ -6,7 +6,7 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { white } from 'material-ui/styles/colors';
 import Stepper from "./VerticalStepper";
 import "./Checkout.css";
-import Header from '../../common/header/header'
+import Header from '../../common/header/Header'
 
     const styles = {
         root: {

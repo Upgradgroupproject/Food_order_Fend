@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import "./Header.css";
-import * as Constants from "../../common/Constants";
-import * as Utils from "../../common/Utils";
-import * as UtilsUI from "../../common/UtilsUI";
+import * as Constants from "../Constants";
+import * as Utils from "../Utils";
+import * as UtilsUI from "../UtilsUI";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
