@@ -301,11 +301,18 @@ class VerticalLinearStepper extends React.Component {
                                        : this.setState({  invalidAddress:false,toggleStateIdHelper:"displayNothing"});
 
         this.state.zipcode === "" ? 
-                        this.setState({ invalidAddress:true,toggleZipcodeHelper:"displayRequired",zipcode:""}) 
+                        this.setState({ invalidAddress:true,toggleZipcodeHelper:"displayRequired",toggleZipcodeValidator:"displayNothing",zipcode:""}) 
                              : 
-                             
-                             this.state.zipcode.length < 6 ? this.setState({ invalidAddress:true,toggleZipcodeValidator:"displayRequired",toggleZipcodeHelper:"displayNothing",zipcode:""}):
+                             isNaN(this.state.zipcode)? 
+                             this.setState({ invalidAddress:true,toggleZipcodeValidator:"displayRequired",toggleZipcodeHelper:"displayNothing",zipcode:""})
+                             :
+                             this.state.zipcode.length !== 6?
+                             this.setState({ invalidAddress:true,toggleZipcodeValidator:"displayRequired",toggleZipcodeHelper:"displayNothing",zipcode:""})
+                             :
                              this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing",toggleZipcodeValidator:"displayNothing"});                      
+
+
+                              
 
     }
     else{
