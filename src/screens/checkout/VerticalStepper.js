@@ -242,6 +242,17 @@ class VerticalLinearStepper extends React.Component {
     
 }
 
+    cityChangeHandler = (e) =>{
+        this.setState({city: e.target.value});
+}
+    stateChangeHandler = (e) =>{
+        this.setState({state_id: e.target.value});
+}
+    zipcodeChangeHandler = (e) =>{
+        this.setState({zipcode: e.target.value});
+    }
+
+
   handleNext = () => {
     
     if (this.state.addressTab === 1) {
@@ -258,6 +269,18 @@ class VerticalLinearStepper extends React.Component {
         this.state.locality === "" ? 
                         this.setState({ invalidAddress:true,toggleLocalityHelper:"displayRequired",locality:""}) 
                              : this.setState({  invalidAddress:false,toggleLocalityHelper:"displayNothing"});
+
+        this.state.city === "" ? 
+                             this.setState({ invalidAddress:true,toggleCityHelper:"displayRequired",city:""}) 
+                                  : this.setState({  invalidAddress:false,toggleCityHelper:"displayNothing"});
+
+        this.state.state_id === "" ? 
+                                  this.setState({ invalidAddress:true,toggleStateIdHelper:"displayRequired",state_id:""}) 
+                                       : this.setState({  invalidAddress:false,toggleStateIdHelper:"displayNothing"});
+
+        this.state.zipcode === "" ? 
+                        this.setState({ invalidAddress:true,toggleZipcodeHelper:"displayRequired",zipcode:""}) 
+                             : this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing"});
 
     }
     else{
@@ -353,6 +376,30 @@ class VerticalLinearStepper extends React.Component {
                                             <InputLabel htmlFor="locality">Locality</InputLabel>
                                             <Input id="locality" type="text" flat={this.state.locality} onChange={this.localityChangeHandler} />
                                             <FormHelperText className={this.state.toggleLocalityHelper}>
+                                                <span className="fieldRequired">required</span>
+                                            </FormHelperText>
+                                        </FormControl>
+                                            <br></br>
+                                            <FormControl required>
+                                            <InputLabel htmlFor="city">City</InputLabel>
+                                            <Input id="city" type="text" flat={this.state.city} onChange={this.cityChangeHandler} />
+                                            <FormHelperText className={this.state.toggleCityHelper}>
+                                                <span className="fieldRequired">required</span>
+                                            </FormHelperText>
+                                        </FormControl>
+                                            <br></br>
+                                        <FormControl required>
+                                            <InputLabel htmlFor="state">State</InputLabel>
+                                            <Input id="state" type="text" flat={this.state.state_id} onChange={this.stateChangeHandler} />
+                                            <FormHelperText className={this.state.toggleStateIdHelper}>
+                                                <span className="fieldRequired">required</span>
+                                            </FormHelperText>
+                                        </FormControl>
+                                            <br></br>
+                                        <FormControl required>
+                                            <InputLabel htmlFor="zipcode">Zipcode</InputLabel>
+                                            <Input id="zipcode" type="text" flat={this.state.zipcode} onChange={this.zipcodeChangeHandler} />
+                                            <FormHelperText className={this.state.toggleZipcodeHelper}>
                                                 <span className="fieldRequired">required</span>
                                             </FormHelperText>
                                         </FormControl>
