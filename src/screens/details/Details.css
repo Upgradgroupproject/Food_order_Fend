@@ -1,0 +1,73 @@
+.logo {
+  width: 50px !important;
+}
+
+/* Restaurant info */
+
+.restaurant-info {
+  background: #e6e6e6;
+  padding: 30px;
+  display: flex;
+}
+
+.restaurant-img img {
+  width: 300px;
+  height: auto;
+}
+
+.restaurant-text-info {
+  padding-left: 60px;
+  width: 700px;
+  align-self: center;
+}
+
+.restaurant-name {
+  font-weight: bold;
+  font-size: 35px;
+}
+
+.restaurant-locality {
+  text-transform: uppercase;
+  font-size: 20px;
+  margin-top: 18px;
+}
+
+.restaurant-categories {
+  margin-top: 20px;
+}
+
+.restaurant-info-footer {
+  margin-top: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.restaurant-rating-text, .restaurant-avg-cost-text {
+  font-size: 13px;
+  color: #868686;
+}
+
+.restaurant-rating-text > span {
+  color: #666666;
+  font-weight: bold;
+}
+
+
+.details-bottom {
+  display: flex;
+  margin-top: 30px;
+  justify-content: space-around;
+}
+
+/* Menu */
+
+.restaurant-menu {
+  width: 45%;
+}
+
+/* Cart */
+
+.cart {
+  width: 45%;
+}

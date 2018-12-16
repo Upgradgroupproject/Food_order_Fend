@@ -1,128 +1,147 @@
 import React, { Component } from 'react';
-//import ReactDOM from 'react-dom';
-import './Home.css';
-//import Header from '../../common/header/Header';
 import logo from '../../assets/FastFood.svg';
-import { withStyles } from '@material-ui/core/styles';
-//import PropTypes from "prop-types";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import RestaurantCard from "./RestaurantCard";
-import {GridListTile} from '@material-ui/core';   
+import "./Details.css";
+
+import mock from "../../assets/mock.jpg";
+
+import Header from '../../common/header/header';
+import { List, ListItemText, ListItemSecondaryAction, Card, CardContent, Badge } from '@material-ui/core';
+import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
-import HomeHeader from '../../common/header/Header';
-import { grey } from '@material-ui/core/colors';
+import Add from '@material-ui/icons/Add';
+import ShoppingCart from '@material-ui/icons/ShoppingCart';
+import IconButton from '@material-ui/core/IconButton';
 
+export default class Details extends Component {
+  render () {
 
-const styles = {
-    root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        overflow: 'hidden',
-        backgroundColor: grey,
-        width:'95%',
-        
-      },
-      gridList: {
-        flexWrap: 'nowrap',
-        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-        transform: 'translateZ(0)',
-      },
-    headerImage: {
-        flex: 1,
-        width: 50,
-        height: 50,
-        resizeMode: 'contain' 
-    },
-    restaurantImage: {
-        flex: 1,
-        width: '95%',
-        height: 200,
-        resizeMode: 'contain' 
-    },
-    restaurantName: {
-        flex: 1,
-        height: 50,
-        resizeMode: 'contain' 
-    },
-    restaurantCard: {
-      marginBottom: 40,
-      margintop: 40
-    },
-};
+    const mockPrice = 123;
 
-class Details extends Component {
-constructor() {
-    super();
-    
-    this.state = {
-        id : "",
-        restaurantName : "" ,
-        photoUrl : "" ,
-        userRating : "" ,
-        avgPrice : "" ,
-        numberUsersRated : "" ,
-        address : "" ,
-        categories : [],
-        restaurantsArray : [],
-        //isDataLoaded:false
-    }
-}
-
-
-  componentWillMount() {
-
-    
-    let reataurantData = null;
-    let xhrRestaurant = new XMLHttpRequest();
-    let that = this;
-    
-    xhrRestaurant.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            that.setState({
-                restaurantsArray : JSON.parse(this.responseText)             
-            });      
-         }
-    });
-
-    xhrRestaurant.open("GET", "http://localhost:8080/api/restaurant/{restaurantID}");
-    xhrRestaurant.send(reataurantData);
-    
-}
-
-render() {
-    const { classes } = this.props;
-    const dataSource = this.state.restaurantsArray;
     return (
-        <div className="Details">
-            <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
-              ---------------------Check Food App  
-            <br></br>  
+      <React.Fragment>
+        {/* header */}
+        <Header isDetails = {true} />
 
-            <MuiThemeProvider>
-        <div>
-      <div className= {classes.root}>
-        <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
-            {dataSource.map((restaurant, index) =>
-                <GridListTile key={'mykey' + index}>
-                    <RestaurantCard
-                        key={index}
-                        rest={restaurant}
-                        index={index}
-                        classes={classes}
-                                // likeButtonClickHandler={this.likeButtonClickHandler}
-                                // commentChangeHandler={this.commentChangeHandler}
-                                // addCommentClickHandler={this.addCommentClickHandler}
-                            />
-                </GridListTile>
-            )}
-        </GridList>
-      </div>
-    </div>
-  </MuiThemeProvider>
+        {/* Restaurant info */}
+        <div className = "restaurant-info">
+          <div className = "restaurant-img">
+            <img src = {mock} />
+          </div>
 
+          <div className = "restaurant-text-info">
+            <div className = "restaurant-name">Loud Silence</div>
+            <div className = "restaurant-locality">cbd-belapur</div>
+            <div className = "restaurant-categories">Chinese, Continental, Indian, Italian</div>
+            <div className = "restaurant-info-footer">
+              <div className = "restaurant-rating"><i class="fa fa-star" aria-hidden="true"></i> 4.4
+                <br />
+                <span className = "restaurant-rating-text">
+                  AVERAGE RATING BY
+                  <br />
+                  <span>123</span> USERS
+                </span>
+              </div>
+              <div className = "restaurant-avg-cost">&#8377; 600
+                <br />
+                <span className = "restaurant-avg-cost-text">
+                  AVERAGE COST FOR
+                  <br />
+                  TWO PEOPLE
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-    ) }
 
+        <div className = "details-bottom">
+          {/* Menu */}
+          <div className = "restaurant-menu">
+            <List component = "div">
+              <ListItem>
+                <ListItemText primary = "Chinese" />
+              </ListItem>
+              <Divider />
+              <List component = "div">
+                <ListItem>
+                  <i style = {{color: "green"}} class="fa fa-circle" aria-hidden="true"></i>
+                  <ListItemText primary = "hakka noodles" />
+                  <ListItemSecondaryAction>
+                    <i class="fa fa-inr" aria-hidden="true"></i> {mockPrice.toFixed(2)}
+                    <IconButton aria-label = "Add">
+                      <Add />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+
+                <ListItem>
+                  <i style = {{color: "red"}} class="fa fa-circle" aria-hidden="true"></i>
+                  <ListItemText primary = "hakka noodles" />
+                  <ListItemSecondaryAction>
+                    <i class="fa fa-inr" aria-hidden="true"></i> {mockPrice.toFixed(2)}
+                    <IconButton aria-label = "Add">
+                      <Add />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+
+              <ListItem>
+                <ListItemText primary = "Chinese" />
+              </ListItem>
+              <Divider />
+              <List component = "div">
+                <ListItem>
+                  <i style = {{color: "red"}} class="fa fa-circle" aria-hidden="true"></i>
+                  <ListItemText primary = "hakka noodles" />
+                  <ListItemSecondaryAction>
+                    <i class="fa fa-inr" aria-hidden="true"></i> {mockPrice.toFixed(2)}
+                    <IconButton aria-label = "Add">
+                      <Add />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+
+                <ListItem>
+                  <i style = {{color: "red"}} class="fa fa-circle" aria-hidden="true"></i>
+                  <ListItemText primary = "hakka noodles" />
+                  <ListItemSecondaryAction>
+                    <i class="fa fa-inr" aria-hidden="true"></i> {mockPrice.toFixed(2)}
+                    <IconButton aria-label = "Add">
+                      <Add />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+            </List>
+          </div>
+
+          {/* Cart */}
+          <div className = "cart">
+          <Card>
+            <CardContent>
+              <Badge badgeContent = {4} color = "primary">
+                <ShoppingCart />
+              </Badge>
+              <span style = {{ fontWeight: "bold", fontSize: "20px", paddingLeft: "25px" }}>My Cart</span>
+
+              <List component = "div">
+                <ListItem>
+                  <i style = {{color: "red"}} class="fa fa-stop-circle-o" aria-hidden="true"></i>
+                  <ListItemText primary = "hakka noodles" />
+                  <ListItemSecondaryAction>
+                    <IconButton aria-label = "Add">
+                      <Add />
+                    </IconButton>
+                    <i class="fa fa-inr" aria-hidden="true"></i> {mockPrice.toFixed(2)}
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+
+            </CardContent>
+          </Card>
+        </div>
+        </div>
+      </React.Fragment>
+    )
+  }
 }
-export default withStyles(styles)(Details); 
