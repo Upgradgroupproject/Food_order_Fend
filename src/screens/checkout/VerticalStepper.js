@@ -20,7 +20,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+import ReactDOM from 'react-dom';
 
 
 // const styles = theme => ({
@@ -214,6 +214,15 @@ class VerticalLinearStepper extends React.Component {
     this.setState({ paymentMode: event.target.value });
   };
 
+  /* click handler for address-selector icon */
+  iconClickHandler = event => {
+
+        event.target.style.color = 'green';
+        //ReactDOM.findDOMNode(GridList).getElementsByClassName("check").style.border = '';
+        
+    
+}
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
@@ -244,14 +253,14 @@ class VerticalLinearStepper extends React.Component {
                                 {((this.state.addressTab === 0)&& (userAddressSource.length > 0)) && 
                                     <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                         {userAddressSource.map((userAdd,index) =>
-                                            <GridListTile key={'mykey' + index}>
+                                            <GridListTile className="check" key={'mykey' + index}>
                                             <div style={{ padding:'10px' }}>
                                                 <Typography >{userAdd.flatBuilNo}</Typography>
                                                 <Typography >{userAdd.locality}</Typography>
                                                 <Typography >{userAdd.city}</Typography>
                                                 <Typography >{userAdd.states.stateName}</Typography>
                                                 <Typography >{userAdd.zipcode}</Typography>
-                                                <IconButton style={{marginLeft:'20%'}}>
+                                                <IconButton style={{marginLeft:'20%'}} onClick={this.iconClickHandler}>
                                                     <CheckCircle/>
                                                 </IconButton>
                                     </div>
