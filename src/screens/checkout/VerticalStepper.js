@@ -310,7 +310,7 @@ class VerticalLinearStepper extends React.Component {
           {steps.map((label, index) => {
             return (
               <Step key={label}>
-                <StepLabel>check{label}</StepLabel>
+                <StepLabel>{label}</StepLabel>
                 <StepContent>
                     {index === 0 && <div>
                                 <Tabs className="addressTabs"
@@ -395,7 +395,7 @@ class VerticalLinearStepper extends React.Component {
                                                 <span className="fieldRequired">required</span>
                                             </FormHelperText>
                                         </FormControl>
-                                        
+
                                         {/* state selection API */}
                                         
                                         {/* <FormControl variant="filled" className={classes.formControl}>
