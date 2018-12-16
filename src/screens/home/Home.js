@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import './Home.css';
 import Header from '../../common/header/Header';
 import { withStyles } from '@material-ui/core/styles';
@@ -9,6 +9,7 @@ import RestaurantCard from "./RestaurantCard";
 import {GridListTile} from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
 import { white } from 'material-ui/styles/colors';
+import Details from '../details/Details';
 
 
     const styles = {
@@ -88,6 +89,10 @@ class Home extends Component {
         
     }
 
+    getRestaurantDetails(restaurantId){
+        ReactDOM.render(<Details   id={restaurantId}  />, document.getElementById('root'));
+    }
+
     render() {
         const { classes } = this.props;
         const dataSource = this.state.restaurantsArray;
@@ -110,9 +115,9 @@ class Home extends Component {
             enableMyAccount={true}
             />
           <div className= {classes.root}>
-            <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
+            <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15} >
                 {dataSource.map((restaurant, index) =>
-                    <GridListTile key={'mykey' + index}>
+                    <GridListTile key={'mykey' + index} onClick={() => this.getRestaurantDetails(restaurant.id)}>
                         <RestaurantCard
                             key={index}
                             rest={restaurant}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../../assets/FastFood.svg';
 import "./Details.css";
-
+import ReactDOM from 'react-dom';
 //import mock from "../../assets/mock.jpg";
 
 import Header from '../../common/header/Header';
@@ -11,8 +11,18 @@ import Divider from '@material-ui/core/Divider';
 import Add from '@material-ui/icons/Add';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import IconButton from '@material-ui/core/IconButton';
+import Checkout from '../checkout/Checkout';
+
 
 export default class Details extends Component {
+
+
+
+
+  getCheckoutPage = state => () => {
+ ReactDOM.render(<Checkout/>, document.getElementById('root'));
+};
+
   render () {
 
     const mockPrice = 123;
@@ -116,8 +126,8 @@ export default class Details extends Component {
           </div>
 
           {/* Cart */}
-          <div className = "cart">
-          <Card>
+          <div className = "cart" >
+          <Card >
             <CardContent>
               <Badge badgeContent = {4} color = "primary">
                 <ShoppingCart />
@@ -125,7 +135,7 @@ export default class Details extends Component {
               <span style = {{ fontWeight: "bold", fontSize: "20px", paddingLeft: "25px" }}>My Cart</span>
 
               <List component = "div">
-                <ListItem>
+                <ListItem >
                   <i style = {{color: "red"}} className="fa fa-stop-circle-o" aria-hidden="true"></i>
                   <ListItemText primary = "hakka noodles" />
                   <ListItemSecondaryAction>
