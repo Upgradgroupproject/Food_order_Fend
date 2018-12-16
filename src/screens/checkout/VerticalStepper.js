@@ -278,7 +278,8 @@ class VerticalLinearStepper extends React.Component {
   handleNext = () => {
     
     if (this.state.addressTab === 1) {
-       /* 
+       
+        /*    form-control checks in NEW ADDRESS
         Below code to check user entry available or not, 
          and displays helper text accordingly
            @param toggleflatHelper is a state which will be set to a "className"
@@ -311,15 +312,13 @@ class VerticalLinearStepper extends React.Component {
                              :
                              this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing",toggleZipcodeValidator:"displayNothing"});                      
 
-
-                              
-
     }
-    else{
+    else{ //checks to be added for existing address
         this.setState(state => ({
             activeStep: state.activeStep + 1,
         }));
     }
+
 
     if(this.state.invalidAddress === false){
         this.setState(state => ({
