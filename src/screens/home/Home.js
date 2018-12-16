@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 //import ReactDOM from 'react-dom';
 import './Home.css';
-//import Header from '../../common/header/Header';
-import logo from '../../assets/FastFood.svg';
+import Header from '../../common/header/Header';
 import { withStyles } from '@material-ui/core/styles';
 //import PropTypes from "prop-types";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -94,13 +93,13 @@ class Home extends Component {
         const dataSource = this.state.restaurantsArray;
         return (
             <div className="home">
-                <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
+                {/* <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
                   ---------------------Check Food App  
-                <br></br>  
+                <br></br>   */}
 
-                <MuiThemeProvider>
+            <MuiThemeProvider>
             <div>
-            {/* <Header
+            <Header
             showLink={false}
             history={this.props.history}
             showSearch={true}
@@ -109,7 +108,7 @@ class Home extends Component {
             uploadNewImage={this.uploadNewImage}
             showProfile={true}
             enableMyAccount={true}
-            /> */}
+            />
           <div className= {classes.root}>
             <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
                 {dataSource.map((restaurant, index) =>

@@ -3,3 +3,15 @@
     color: white;
     width: '70%'
 }
+
+.fieldRequired {
+    color:red;
+}
+
+.displayRequired{
+    display: block;
+}
+
+.displayNothing{
+    display: none;
+}

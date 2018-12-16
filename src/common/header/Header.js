@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import "./Header.css";
-import * as Constants from "../../common/Constants";
-import * as Utils from "../../common/Utils";
-import * as UtilsUI from "../../common/UtilsUI";
+import * as Constants from "../Constants";
+import * as Utils from "../Utils";
+import * as UtilsUI from "../UtilsUI";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
@@ -338,7 +338,8 @@ class Header extends Component {
 
     // search box to be rendered inside the header
     let searchBoxToRender = null;
-    if (this.props.showSearch || !this.props.showSearch) {
+    // if (this.props.showSearch || !this.props.showSearch) {
+    if (this.props.showSearch) {
       searchBoxToRender = (
         <div className="header-search-container">
           <div className="search-icon">
@@ -354,10 +355,18 @@ class Header extends Component {
       );
     
     }
+    else{
+      searchBoxToRender = (
+                    <div className="fill-remaining-space"></div>
+                    
+                    
+      );
+    }
 
     // upload button to be rendered inside the header
     let uploadButtonToRender = null;
-    if (this.props.showUpload || !this.props.showUpload) {
+    // if (this.props.showUpload || !this.props.showUpload) {
+    if (this.props.showUpload) {
       uploadButtonToRender = (
         <div className="header-upload-btn-container">
          <Toolbar variant="dense">
@@ -376,7 +385,7 @@ class Header extends Component {
     let profileIconButtonToRender = null;
     if (this.props.showProfile || !this.props.showProfile) {
       profileIconButtonToRender = (
-        <div paddingTop="20px">
+        <div paddingtop="20px">
         <div className="header-profile-btn-container">
           <IconButton
             key="close"
