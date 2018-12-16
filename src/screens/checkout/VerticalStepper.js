@@ -236,7 +236,12 @@ class VerticalLinearStepper extends React.Component {
                                     <Tab label="NEW ADDRESS" />
                                     
                                 </Tabs>
-                                {this.state.addressTab === 0 && 
+                                {((this.state.addressTab === 0)&& (userAddressSource.length === 0)) && 
+                                   <div style={{ padding:'10px' }}>
+                                        <Typography >{this.state.noAddressMessage}</Typography> 
+                                   </div>     
+                                }
+                                {((this.state.addressTab === 0)&& (userAddressSource.length > 0)) && 
                                     <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                         {userAddressSource.map((userAdd,index) =>
                                             <GridListTile key={'mykey' + index}>
