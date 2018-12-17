@@ -5,6 +5,7 @@
 /* Restaurant info */
 
 .restaurant-info {
+  width: 100%;
   background: #e6e6e6;
   padding: 30px;
   display: flex;
@@ -55,6 +56,7 @@
 
 
 .details-bottom {
+  width: 100%;
   display: flex;
   margin-top: 30px;
   justify-content: space-around;
@@ -70,4 +72,47 @@
 
 .cart {
   width: 45%;
+}
+
+.cart-item-quantity {
+  padding-right: 150px;
+}
+
+.hover-yellow-icon:hover {
+  background: yellow !important;
+}
+
+@media all and (max-width: 800px) {
+  .restaurant-info {
+    flex-direction: column;
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .restaurant-text-info {
+    padding: 0;
+  }
+
+  .restaurant-text-info {
+    width: 100%;
+    text-align: center;
+  }
+
+  .restaurant-info-footer {
+    justify-content: space-around;
+  }
+
+  .details-bottom {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .restaurant-menu, .cart {
+    width: 90%;
+  }
+
+  .cart-item-quantity {
+    padding-right: 0;
+  }
 }
