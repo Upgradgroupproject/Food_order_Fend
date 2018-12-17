@@ -20,7 +20,12 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+import ReactDOM from 'react-dom';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 // const styles = theme => ({
@@ -66,7 +71,7 @@ function TabContainer(props) {
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.paper,    
     },
     gridListMain: {
         flexWrap: 'nowrap',
@@ -129,11 +134,12 @@ class VerticalLinearStepper extends React.Component {
         super();
             this.state = {
                 id: "",
-                flat_buil_number: "",
+                flatbuilnumber: "",
                 locality: "",
                 city: "",
                 zipcode: "",
                 state_id: "",
+                addType:"",
                 allAddress:[],
                 paymentOptions:[],
                 activeStep: 0,
@@ -141,6 +147,21 @@ class VerticalLinearStepper extends React.Component {
                 paymentMode:0,
                 addressTab: 0,
                 noAddressMessage:"There are no saved addresses! You can save an address using your ‘Profile’ menu option.",
+                invalidAddress:"false",
+                toggleFlatHelper:"displayNothing",
+                toggleLocalityHelper: "displayNothing",
+                toggleCityHelper: "displayNothing",
+                toggleZipcodeHelper: "displayNothing",
+                toggleStateIdHelper: "displayNothing",
+                stateList:[],
+                toggleZipcodeValidator:"displayNothing",
+                addressProvidedByUser:[],
+                addressSelected:"false",
+                addressSelectedIndex: '',
+                newAddressEnteredByUser: [],
+
+                dummycheck: "hello+you",
+
 
             }
         
@@ -148,25 +169,41 @@ class VerticalLinearStepper extends React.Component {
 
   componentWillMount() {
 
+
+    let statesData = null;
+        let xhrRestaurant = new XMLHttpRequest();
+        let stateThat = this;
+        
+        xhrRestaurant.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                stateThat.setState({
+                    stateList : JSON.parse(this.responseText)             
+                });      
+             }
+        });
+
+        xhrRestaurant.open("GET", "http://localhost:8080/api/states");
+        xhrRestaurant.send(statesData);
+
     // access-Token to be set from session-storage    
     
     let adressData = null;
-    let xhrRestaurant = new XMLHttpRequest();
-    let that = this;
+    let xhrAddress = new XMLHttpRequest();
+    let addThat = this;
     
-    xhrRestaurant.addEventListener("readystatechange", function () {
+    xhrAddress.addEventListener("readystatechange", function () {
         if (this.readyState === 4) {
-            that.setState({
+            addThat.setState({
                 allAddress : JSON.parse(this.responseText)           
             });      
          }    
         
     });
     
-    xhrRestaurant.open("GET", "http://localhost:8080/api/address/user?accessToken=62f43a69-e749-4a6a-ac58-536b19ce5630");
-    xhrRestaurant.setRequestHeader("Cache-Control", "no-cache");
-    xhrRestaurant.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
-    xhrRestaurant.send(adressData);
+    xhrAddress.open("GET", "http://localhost:8080/api/address/user?accessToken=62f43a69-e749-4a6a-ac58-536b19ce5630");
+    xhrAddress.setRequestHeader("Cache-Control", "no-cache");
+    xhrAddress.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
+    xhrAddress.send(adressData);
     
     let paymentData = null;
     let xhrPayment = new XMLHttpRequest();
@@ -185,13 +222,15 @@ class VerticalLinearStepper extends React.Component {
     xhrPayment.setRequestHeader("Cache-Control", "no-cache");
     xhrPayment.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
     xhrPayment.send(paymentData);
+
+
+
+
+    let req = "http://localhost:8080/api/address?flatBuilNo=%23342&locality=makwoood%20aprtments&city=bangalore&zipcode=560102&type=perm&stateId=21";
+
+
 }
 
-  handleNext = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep + 1,
-    }));
-  };
 
   handleBack = () => {
     this.setState(state => ({
@@ -205,8 +244,8 @@ class VerticalLinearStepper extends React.Component {
     });
   };
 
-  handleTabChange = (event, addressTab) => {
-    this.setState({ addressTab });
+  handleTabChange = (e,addressTab) => {
+    this.setState({ addressTab});
   };
 
   /* Function For material Radio button selection change handler*/
@@ -214,11 +253,125 @@ class VerticalLinearStepper extends React.Component {
     this.setState({ paymentMode: event.target.value });
   };
 
+  /* click handler for address-selector icon 
+     all cards are selected by document.getElementsByClassName
+     then indexes are match and styling is set/reset
+  */
+
+  iconClickHandler = (index)=>(e) =>{
+
+        const selectedIcon = document.getElementsByClassName('selectIcon');
+        const selectedAddress = document.getElementsByClassName('selectAddress');
+
+        for(var i = 0;i < selectedAddress.length; i++){
+   
+            if(i===index){
+                selectedAddress[i].style.border = '2px solid red';
+                selectedIcon[i].style.color = 'green';   
+            }
+            else{
+                selectedAddress[i].style.border = '';
+                selectedIcon[i].style.color = 'grey';  
+            }
+
+        }
+        this.setState.addressProvidedByUser =[];
+        this.setState.addressProvidedByUser = this.state.allAddress[index];
+        console.log(this.state.addressProvidedByUser);
+        this.state.addressSelected = true;
+        this.state.addressSelectedIndex= index;
+}
+
+  flatBuildChangeHandler = (e) =>{
+      this.setState({flatbuilnumber: e.target.value});
+      
+  }
+
+  localityChangeHandler = (e) =>{
+    this.setState({locality: e.target.value});
+    
+}
+
+    cityChangeHandler = (e) =>{
+        this.setState({city: e.target.value});
+}
+    stateChangeHandler = (e) =>{
+        this.setState({state_id: e.target.value});
+}
+    zipcodeChangeHandler = (e) =>{
+        this.setState({zipcode: e.target.value});
+    }
+
+
+  handleNext = () => {
+    
+    if (this.state.addressTab === 1) {
+       
+        /*    form-control checks in NEW ADDRESS
+        Below code to check user entry available or not, 
+         and displays helper text accordingly
+           @param toggleflatHelper is a state which will be set to a "className"
+               "className" is defined in CSS
+        */
+        this.state.flatbuilnumber === "" ? 
+                   this.setState({ invalidAddress:true,toggleFlatHelper:"displayRequired",flatbuilnumber:""}) 
+                        : this.setState({  invalidAddress:false,toggleFlatHelper:"displayNothing"});
+        
+        this.state.locality === "" ? 
+                        this.setState({ invalidAddress:true,toggleLocalityHelper:"displayRequired",locality:""}) 
+                             : this.setState({  invalidAddress:false,toggleLocalityHelper:"displayNothing"});
+
+        this.state.city === "" ? 
+                             this.setState({ invalidAddress:true,toggleCityHelper:"displayRequired",city:""}) 
+                                  : this.setState({  invalidAddress:false,toggleCityHelper:"displayNothing"});
+
+        this.state.state_id === "" ? 
+                                  this.setState({ invalidAddress:true,toggleStateIdHelper:"displayRequired",state_id:""}) 
+                                       : this.setState({  invalidAddress:false,toggleStateIdHelper:"displayNothing"});
+
+        this.state.zipcode === "" ? 
+                        this.setState({ invalidAddress:true,toggleZipcodeHelper:"displayRequired",toggleZipcodeValidator:"displayNothing",zipcode:""}) 
+                             : 
+                             isNaN(this.state.zipcode)? 
+                             this.setState({ invalidAddress:true,toggleZipcodeValidator:"displayRequired",toggleZipcodeHelper:"displayNothing",zipcode:""})
+                             :
+                             this.state.zipcode.length !== 6?
+                             this.setState({ invalidAddress:true,toggleZipcodeValidator:"displayRequired",toggleZipcodeHelper:"displayNothing",zipcode:""})
+                             :
+                             this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing",toggleZipcodeValidator:"displayNothing"});                      
+
+    
+        if(this.state.invalidAddress === false){
+
+            /* Save new address */
+
+            
+
+            this.setState(state => ({
+                activeStep: state.activeStep + 1,
+             }));
+        }
+
+    }
+
+    /* if address is selected then move to next Step*/
+    else { 
+ 
+        if(this.state.addressSelected === true)
+        this.setState(state => ({
+            activeStep: state.activeStep + 1,
+        }));
+    }
+    
+  };
+    
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
     const userAddressSource = this.state.allAddress;
+    const stateCodes = this.state.stateList;
 
     return (
       <div className={classes.root}>
@@ -226,7 +379,7 @@ class VerticalLinearStepper extends React.Component {
           {steps.map((label, index) => {
             return (
               <Step key={label}>
-                <StepLabel>check{label}</StepLabel>
+                <StepLabel>{label}</StepLabel>
                 <StepContent>
                     {index === 0 && <div>
                                 <Tabs className="addressTabs"
@@ -236,23 +389,135 @@ class VerticalLinearStepper extends React.Component {
                                     <Tab label="NEW ADDRESS" />
                                     
                                 </Tabs>
-                                {this.state.addressTab === 0 && 
+                                {((this.state.addressTab === 0)&& (userAddressSource.length === 0)) && 
+                                   <div style={{ padding:'10px' }}>
+                                        <Typography >{this.state.noAddressMessage}</Typography> 
+                                   </div>     
+                                }
+                                {/* <Typography>{getStepContent(index)}</Typography> */}
+                                    {/* <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
+                                        {userAddressSource.map((address, index) =>
+                                        <GridListTile key={'mykey' + index}> */}
+                                        {/* <AddressCard
+                                            key={index}
+                                            address={address}
+                                            index={index}
+                                            classes={classes}
+                                                    // likeButtonClickHandler={this.likeButtonClickHandler}
+                                                    // commentChangeHandler={this.commentChangeHandler}
+                                                    // addCommentClickHandler={this.addCommentClickHandler}
+                                                /> */}
+
+
+                                                
+                                        {/* </GridListTile>
+                                    )}
+                                    </GridList> */}
+                                {((this.state.addressTab === 0)&& (userAddressSource.length > 0)) && 
                                     <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                         {userAddressSource.map((userAdd,index) =>
-                                            <GridListTile key={'mykey' + index}>
-                                            <div style={{ padding:'10px' }}>
+                                            <GridListTile className="check" key={'mykey' + index}>
+                                            <div className="selectAddress"style={{ padding:'10px',marginTop:'5px' }}>
                                                 <Typography >{userAdd.flatBuilNo}</Typography>
                                                 <Typography >{userAdd.locality}</Typography>
                                                 <Typography >{userAdd.city}</Typography>
                                                 <Typography >{userAdd.states.stateName}</Typography>
                                                 <Typography >{userAdd.zipcode}</Typography>
-                                                <IconButton style={{marginLeft:'20%'}}>
+                                                <IconButton className="selectIcon"style={{marginLeft:'20%'}} onClick={this.iconClickHandler(index)}>
                                                     <CheckCircle/>
                                                 </IconButton>
                                     </div>
                                     </GridListTile>
                                     )}
                                     </GridList>
+                                }
+                                {(this.state.addressTab === 1) && 
+                                    <div >
+                                        <FormControl required>
+                                            <InputLabel htmlFor="flatBuilNo">Flat/Building No.</InputLabel>
+                                            <Input id="flatBuilNo" type="text" value={this.state.flatbuilnumber} onChange={this.flatBuildChangeHandler} />
+                                            <FormHelperText className={this.state.toggleFlatHelper}>
+                                                <span className="fieldRequired">required</span>
+                                            </FormHelperText>
+                                        </FormControl>
+                                            <br></br>
+                                        <FormControl required>
+                                            <InputLabel htmlFor="locality">Locality</InputLabel>
+                                            <Input id="locality" type="text" value={this.state.locality} onChange={this.localityChangeHandler} />
+                                            <FormHelperText className={this.state.toggleLocalityHelper}>
+                                                <span className="fieldRequired">required</span>
+                                            </FormHelperText>
+                                        </FormControl>
+                                            <br></br>
+                                            <FormControl required>
+                                            <InputLabel htmlFor="city">City</InputLabel>
+                                            <Input id="city" type="text" value={this.state.city} onChange={this.cityChangeHandler} />
+                                            <FormHelperText className={this.state.toggleCityHelper}>
+                                                <span className="fieldRequired">required</span>
+                                            </FormHelperText>
+                                        </FormControl>
+                                            <br></br>
+                                        {/* <FormControl required>
+                                            <InputLabel htmlFor="state">State</InputLabel>
+                                            <Input id="state" type="Select" value={this.state.state_id} onChange={this.stateChangeHandler} />
+                                            <FormHelperText className={this.state.toggleStateIdHelper}>
+                                                <span className="fieldRequired">required</span>
+                                            </FormHelperText>
+                                        </FormControl> */}
+
+                                        <FormControl required>
+                                            <InputLabel htmlFor="state">State</InputLabel>
+                                            <Select
+                                                value={this.state.state_id}
+                                                onChange={this.stateChangeHandler}
+                                            >
+                                                {stateCodes.map(states => (
+                                                    <MenuItem key={"states" + states.id} value={states.id}>
+                                                        {states.stateName}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                                <FormHelperText className={this.state.toggleStateIdHelper}>
+                                                    <span className="fieldRequired">required</span>
+                                                </FormHelperText>
+                                            </FormControl>
+
+
+
+                                        {/* selection API */}
+                                        
+                                        {/* <FormControl variant="filled" className={classes.formControl}>
+                                            <InputLabel htmlFor="filled-age-simple">Age</InputLabel>
+                                            <Select
+                                                value={this.state.age}
+                                                onChange={this.handleChange}
+                                                input={<FilledInput name="age" id="filled-age-simple" />}
+                                            >
+                                                <MenuItem value="">
+                                                <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={10}>Ten</MenuItem>
+                                                <MenuItem value={20}>Twenty</MenuItem>
+                                                <MenuItem value={30}>Thirty</MenuItem>
+                                            </Select>
+                                        </FormControl> */}
+
+
+
+                                            <br></br>
+                                        <FormControl required>
+                                            <InputLabel htmlFor="zipcode">Zipcode</InputLabel>
+                                            <Input id="zipcode" type="text" value={this.state.zipcode} onChange={this.zipcodeChangeHandler} />
+                                            <FormHelperText className={this.state.toggleZipcodeHelper}>
+                                                <span className="fieldRequired">Required</span>
+                                            </FormHelperText>
+                                            <FormHelperText className={this.state.toggleZipcodeValidator}>
+                                                <span className="fieldRequired">Zipcode must contain only numbers and must be 6 digits long</span>
+                                            </FormHelperText>
+                                        </FormControl>
+
+                                    </div>  
+                                
                                 }
                                 </div>
                                 
@@ -278,26 +543,6 @@ class VerticalLinearStepper extends React.Component {
                                     </FormControl>
                                     </div>
                     }
-
-                  {/* <Typography>{getStepContent(index)}</Typography> */}
-                    {/* <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
-                        {userAddressSource.map((address, index) =>
-                        <GridListTile key={'mykey' + index}> */}
-                        {/* <AddressCard
-                            key={index}
-                            address={address}
-                            index={index}
-                            classes={classes}
-                                    // likeButtonClickHandler={this.likeButtonClickHandler}
-                                    // commentChangeHandler={this.commentChangeHandler}
-                                    // addCommentClickHandler={this.addCommentClickHandler}
-                                /> */}
-
-
-                                
-                        {/* </GridListTile>
-                    )}
-                    </GridList> */}
 
 
                   <div className={classes.actionsContainer}>

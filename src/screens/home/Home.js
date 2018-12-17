@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-//import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import './Home.css';
-//import Header from '../../common/header/Header';
-import logo from '../../assets/FastFood.svg';
+import Header from '../../common/header/Header';
 import { withStyles } from '@material-ui/core/styles';
 //import PropTypes from "prop-types";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -10,6 +9,7 @@ import RestaurantCard from "./RestaurantCard";
 import {GridListTile} from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
 import { white } from 'material-ui/styles/colors';
+import Details from '../details/Details';
 
 
     const styles = {
@@ -89,18 +89,22 @@ class Home extends Component {
         
     }
 
+    getRestaurantDetails(restaurantId){
+        ReactDOM.render(<Details   id={restaurantId}  />, document.getElementById('root'));
+    }
+
     render() {
         const { classes } = this.props;
         const dataSource = this.state.restaurantsArray;
         return (
             <div className="home">
-                <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
+                {/* <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
                   ---------------------Check Food App  
-                <br></br>  
+                <br></br>   */}
 
-                <MuiThemeProvider>
+            <MuiThemeProvider>
             <div>
-            {/* <Header
+            <Header
             showLink={false}
             history={this.props.history}
             showSearch={true}
@@ -109,11 +113,11 @@ class Home extends Component {
             uploadNewImage={this.uploadNewImage}
             showProfile={true}
             enableMyAccount={true}
-            /> */}
+            />
           <div className= {classes.root}>
-            <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
+            <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15} >
                 {dataSource.map((restaurant, index) =>
-                    <GridListTile key={'mykey' + index}>
+                    <GridListTile key={'mykey' + index} onClick={() => this.getRestaurantDetails(restaurant.id)}>
                         <RestaurantCard
                             key={index}
                             rest={restaurant}

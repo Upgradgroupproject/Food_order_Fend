@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import logo from '../../assets/FastFood.svg';
 import "./Details.css";
+import ReactDOM from 'react-dom';
+//import mock from "../../assets/mock.jpg";
 
-import mock from "../../assets/mock.jpg";
 
-import Header from '../../common/header/header';
-import { List, ListItemText, ListItemSecondaryAction, Card, CardContent, Badge, Button, Snackbar } from '@material-ui/core';
+import Header from '../../common/header/Header';
+import { List, ListItemText, ListItemSecondaryAction, Card, CardContent, Badge } from '@material-ui/core';
+
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import Add from '@material-ui/icons/Add';
@@ -13,6 +15,8 @@ import Remove from '@material-ui/icons/Remove';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import Checkout from '../checkout/Checkout';
+
 
 import { restDetailsArray } from './data'; // JSON data
 
@@ -260,7 +264,7 @@ export default class Details extends Component {
         {/* Restaurant info */}
         <div className = "restaurant-info">
           <div className = "restaurant-img">
-            <img src = {mock} />
+            {/* <img src = {mock} /> */}
           </div>
 
           <div className = "restaurant-text-info">
@@ -296,17 +300,19 @@ export default class Details extends Component {
           {/* Menu */}
           <div className = "restaurant-menu">
             <List component = "div">
+
               {
                 menuData.map(
                   (category, index) => <MenuCategory name = {category.categoryName} items = {category.items} addItemToCart = {this.addItemToCart} categoryId = {category.id} thisReference = {this} key = {index}/>
                 )
               }
+
             </List>
           </div>
 
           {/* Cart */}
-          <div className = "cart">
-          <Card>
+          <div className = "cart" >
+          <Card >
             <CardContent>
               <Badge badgeContent = {this.state.cart.totalItems} color = "primary">
                 <ShoppingCart />
@@ -314,6 +320,7 @@ export default class Details extends Component {
               <span style = {{ fontWeight: "bold", fontSize: "20px", paddingLeft: "25px" }}>My Cart</span>
 
               <List component = "div">
+
                 {
                   this.state.cart.items.map(
                     (item, index) => React.createElement(CartItem, {...item, increaseQuantity: this.increaseCartItemQuantity.bind(this, index), decreaseQuantity: this.decreaseCartItemQuantity.bind(this, index), key: {index}})
@@ -325,6 +332,7 @@ export default class Details extends Component {
 
                   <ListItemSecondaryAction style = {{ fontWeight: "bold" }}>
                     <i className="fa fa-inr" aria-hidden="true"></i> {this.state.cart.totalPrice.toFixed(2)}
+
                   </ListItemSecondaryAction>
                 </ListItem>
               </List>

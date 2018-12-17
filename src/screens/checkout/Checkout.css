@@ -3,3 +3,31 @@
     color: white;
     width: '70%'
 }
+
+.fieldRequired {
+    color:red;
+}
+
+.displayRequired{
+    display: block;
+}
+
+.displayNothing{
+    display: none;
+}
+
+.checkSelect{
+    color: green;
+}
+
+.uncheck{
+    color: grey;
+}
+
+.addressSelected{
+    border: 2px solid red;
+}
+
+.addressNotSelected{
+    border: '';
+}
