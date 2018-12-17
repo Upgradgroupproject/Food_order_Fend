@@ -14,52 +14,23 @@ import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 
-const menu = [
-  {
-    categoryName: "chinese",
-    items: [
-      {
-        name: "hakka noodles",
-        isVeg: true,
-        price: 204
-      },
-      {
-        name: "chicken wrap",
-        isVeg: false,
-        price: 245
-      },
-      {
-        name: "chicken noodles",
-        isVeg: false,
-        price: 246
-      }
-    ]
-  },
-  {
-    categoryName: "continental",
-    items: [
-      {
-        name: "ice cream",
-        isVeg: true,
-        price: 204
-      }
-    ]
-  }
-]
+import { restDetailsArray } from './data'; // JSON data
 
 class CartItem extends Component {
   render () {
+    let isItemVeg = (this.props.type === "Veg");
+
     return (
       <ListItem>
         {
-          (this.props.isVeg
+          (isItemVeg
           &&
           <i style = {{color: "green"}} className="fa fa-stop-circle-o" aria-hidden="true"></i>)
           ||
           <i style = {{color: "red"}} className="fa fa-stop-circle-o" aria-hidden="true"></i>
         }
 
-        <ListItemText style = {{ textTransform: "capitalize" }} primary = {this.props.name} />
+        <ListItemText style = {{ textTransform: "capitalize" }} primary = {this.props.itemName} />
         <ListItemSecondaryAction>
           <span className = "cart-item-quantity">
             <IconButton aria-label = "Remove" onClick = {this.props.decreaseQuantity} className = "hover-yellow-icon">
@@ -88,7 +59,7 @@ class MenuCategory extends Component {
       <List component = "div">
         {
           this.props.items.map(
-            (item, index) => <MenuItem name = {item.name} isVeg = {item.isVeg} price = {item.price} addItemToCart = {this.props.addItemToCart.bind(this.props.thisReference, this.props.categoryIndex, index)} key = {index} />
+            (item, index) => <MenuItem name = {item.itemName} isVeg = { (item.type === "Veg") ? true : false } price = {item.price} addItemToCart = {this.props.addItemToCart.bind(this.props.thisReference, this.props.categoryId, item.id)} key = {index} />
           )
         }
       </List>
@@ -133,16 +104,52 @@ export default class Details extends Component {
         ]
       },
       isSnackBarOpen: false,
-      snackBarMsg: "Default message"
+      snackBarMsg: "Default message",
+      // default restaurant details
+      rest: {
+        restaurantName: "-",
+        photoUrl: "",
+        userRating: "-",
+        avgPrice: "-",
+        numberUsersRated: "-",
+        address: {
+          locality: "-"
+        },
+        infoCategories: [],
+        categories: []
+      }
     };
 
     this.updateTotals = this.updateTotals.bind(this);
     this.openSnackBar = this.openSnackBar.bind(this);
     this.closeSnackBar = this.closeSnackBar.bind(this);
+    this.storeRestaurantDetails = this.storeRestaurantDetails.bind(this);
+    this.checkoutHandler = this.checkoutHandler.bind(this);
   }
 
   componentDidMount () {
+    this.storeRestaurantDetails();
     this.updateTotals();
+  }
+
+  storeRestaurantDetails () {
+    let restIndex = restDetailsArray.findIndex(
+      (rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
+    );
+
+    if (restIndex >= 0) {
+      let infoCategories = [];
+      restDetailsArray[restIndex].categories.map(
+        (category) => infoCategories.push(category.categoryName)
+      );
+
+      this.setState({
+        rest: {
+          ...restDetailsArray[restIndex],
+          infoCategories
+        }
+      })
+    }
   }
 
   updateTotals () {
@@ -189,13 +196,18 @@ export default class Details extends Component {
     }
   }
 
-  addItemToCart (categoryIndex, itemIndex) {
+  addItemToCart (categoryId, itemId) {
     let currentCart = this.state.cart;
 
-    let itemToBeAdded = menu[categoryIndex].items[itemIndex];
+    let itemToBeAdded = this.state.rest.categories.find(
+      category => category.id === categoryId
+      )
+      .items.find(
+        item => item.id === itemId
+      );
 
     let itemInCartIndex = currentCart.items.findIndex(
-      (item) => (item.name === itemToBeAdded.name)
+      (item) => (item.id === itemToBeAdded.id)
     )
 
     if (itemInCartIndex > -1) {
@@ -216,6 +228,18 @@ export default class Details extends Component {
     this.updateTotals();
   }
 
+  checkoutHandler () {
+    if (this.state.cart.totalItems > 0) {
+      // items present in the cart
+
+    }
+    else {
+      // no items in the cart
+      this.setState({ snackBarMsg: "Please add an item to your cart!"});
+      this.openSnackBar();
+    }
+  }
+
   openSnackBar () {
     this.setState({ isSnackBarOpen: true });
   }
@@ -225,6 +249,9 @@ export default class Details extends Component {
   }
 
   render () {
+    const restInfo = this.state.rest;
+    const menuData = this.state.rest.categories;
+
     return (
       <React.Fragment>
         {/* header */}
@@ -237,19 +264,23 @@ export default class Details extends Component {
           </div>
 
           <div className = "restaurant-text-info">
-            <div className = "restaurant-name">Loud Silence</div>
-            <div className = "restaurant-locality">cbd-belapur</div>
-            <div className = "restaurant-categories">Chinese, Continental, Indian, Italian</div>
+            <div className = "restaurant-name">{ restInfo.restaurantName }</div>
+            <div className = "restaurant-locality">{ restInfo.address.locality }</div>
+            <div className = "restaurant-categories">{
+              restInfo.infoCategories
+              &&
+              restInfo.infoCategories.join(", ")
+            }</div>
             <div className = "restaurant-info-footer">
-              <div className = "restaurant-rating"><i className="fa fa-star" aria-hidden="true"></i> 4.4
+              <div className = "restaurant-rating"><i className="fa fa-star" aria-hidden="true"></i> { restInfo.userRating }
                 <br />
                 <span className = "restaurant-rating-text">
                   AVERAGE RATING BY
                   <br />
-                  <span>{123}</span> USERS
+                  <span>{ restInfo.numberUsersRated }</span> USERS
                 </span>
               </div>
-              <div className = "restaurant-avg-cost">&#8377; 600
+              <div className = "restaurant-avg-cost">&#8377; { restInfo.avgPrice }
                 <br />
                 <span className = "restaurant-avg-cost-text">
                   AVERAGE COST FOR
@@ -266,8 +297,8 @@ export default class Details extends Component {
           <div className = "restaurant-menu">
             <List component = "div">
               {
-                menu.map(
-                  (category, index) => <MenuCategory name = {category.categoryName} items = {category.items} addItemToCart = {this.addItemToCart} categoryIndex = {index} thisReference = {this} key = {index}/>
+                menuData.map(
+                  (category, index) => <MenuCategory name = {category.categoryName} items = {category.items} addItemToCart = {this.addItemToCart} categoryId = {category.id} thisReference = {this} key = {index}/>
                 )
               }
             </List>
@@ -298,7 +329,7 @@ export default class Details extends Component {
                 </ListItem>
               </List>
 
-              <Button variant = "contained" color = "primary" style = {{ width: "100%" }}>CHECKOUT</Button>
+              <Button variant = "contained" color = "primary" style = {{ width: "100%" }} onClick = { this.checkoutHandler }>CHECKOUT</Button>
 
             </CardContent>
           </Card>
