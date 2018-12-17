@@ -57,6 +57,15 @@
   color: #000;
   cursor: pointer;
 }
+.tabs{
+  margin-bottom: 20px;
+}
+.dispName{
+  display: none;
+}
+.red{
+  color:red;
+}
 
 .fill-remaining-space {   
   flex: 1 1 auto;

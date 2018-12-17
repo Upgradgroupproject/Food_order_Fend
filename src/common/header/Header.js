@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import "./Header.css";
-import * as Constants from "../Constants";
-import * as Utils from "../Utils";
-import * as UtilsUI from "../UtilsUI";
+
+import * as Constants from "../../common/Constants";
+import * as Utils from "../../common/Utils";
+import * as UtilsUI from "../../common/UtilsUI";
+
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
@@ -22,6 +24,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
 
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+
 // custom styles for upload modal
 const customStyles = {
   content: {
@@ -33,6 +39,18 @@ const customStyles = {
     transform: "translate(-50%, -50%)"
   }
 };
+
+const TabContainer= function(props){
+  return(
+    <Typography Component="div" style={{padding:0 ,textAlign:'center'}}>
+    {props.children}
+    </Typography>
+  );
+}
+TabContainer.propTypes = {
+  children : PropTypes.node.isRequired
+}
+
 
 // inline styles for Material-UI components
 const styles = {
@@ -57,7 +75,12 @@ class Header extends Component {
     super();
 
     this.state={
-      modalIsOpen:false
+
+      modalIsOpen:false,
+      value:0,
+      username:"",
+      usernameRequired:"dispName"
+
     };
     this.openUploadImageModal = this.openUploadImageModal.bind(this);
     this.closeUploadImageModal = this.closeUploadImageModal.bind(this);
@@ -304,6 +327,17 @@ class Header extends Component {
   closeModalHandler=() =>{
     this.setState({modalIsOpen:false})
   }
+
+  tabChangeHandler=(event,value) =>{
+    this.setState({value})
+  }
+  loginClickHandler=() =>{
+    this.state.username==="" ? this.setState({usernameRequired :"dispBlock"}) :this.setState({usernameRequired :"dispNone"})
+  }
+  inputUsernameChangeHandler =(e)=>{
+    this.setState({username:e.target.value})
+  }
+
   /**
    * Event handler called when the logout menu item is clicked inside the user profile dropdown to log a user out of the application
    * @memberof Header
@@ -338,8 +372,10 @@ class Header extends Component {
 
     // search box to be rendered inside the header
     let searchBoxToRender = null;
+
     // if (this.props.showSearch || !this.props.showSearch) {
     if (this.props.showSearch) {
+
       searchBoxToRender = (
         <div className="header-search-container">
           <div className="search-icon">
@@ -355,6 +391,7 @@ class Header extends Component {
       );
     
     }
+
     else{
       searchBoxToRender = (
                     <div className="fill-remaining-space"></div>
@@ -367,6 +404,7 @@ class Header extends Component {
     let uploadButtonToRender = null;
     // if (this.props.showUpload || !this.props.showUpload) {
     if (this.props.showUpload) {
+      
       uploadButtonToRender = (
         <div className="header-upload-btn-container">
          <Toolbar variant="dense">
@@ -385,12 +423,15 @@ class Header extends Component {
     let profileIconButtonToRender = null;
     if (this.props.showProfile || !this.props.showProfile) {
       profileIconButtonToRender = (
+
         <div paddingtop="20px">
+
         <div className="header-profile-btn-container">
           <IconButton
             key="close"
             aria-label="Close"
             className={classes.profileIconButton}
+        
           >
             <Button variant="contained" size="small" className={classes.button} onClick={this.openModalHandler}>
             <AccountCircle />
@@ -399,7 +440,28 @@ class Header extends Component {
           </IconButton>
           
         </div>
-        <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel="Login"onRequestClose={this.closeModalHandler}>
+
+        <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel="Login"onRequestClose={this.closeModalHandler} style={customStyles}>
+          <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
+              <Tab label="Login"/>
+              <Tab label="Register"/>
+           </Tabs> 
+           {this.state.value===0 &&
+           <TabContainer>
+             <FormControl required>
+                <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
+                <Input id="contactNumber" type="text" username={this.state.username} onChange
+                ={this.inputUsernameChangeHandler}/>
+                <FormHelperText className={this.state.usernameRequired}><span 
+                className="red">required</span></FormHelperText>
+              </FormControl><br/>
+              <FormControl required>
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input id="password" type="text"/>
+              </FormControl><br/><br/>
+              <Button variant="contained" color="primary" onClick={this.loginClickHandler}>Login</Button>
+             </TabContainer>}
+
         </Modal>
         </div>
       );
