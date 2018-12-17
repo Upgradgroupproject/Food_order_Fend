@@ -157,6 +157,7 @@ class VerticalLinearStepper extends React.Component {
                 toggleZipcodeValidator:"displayNothing",
                 addressProvidedByUser:[],
                 addressSelected:"false",
+                addressSelectedIndex: '',
 
 
             }
@@ -275,6 +276,7 @@ class VerticalLinearStepper extends React.Component {
         this.setState.addressProvidedByUser = this.state.allAddress[index];
         console.log(this.state.addressProvidedByUser);
         this.state.addressSelected = true;
+        this.state.addressSelectedIndex= index;
 }
 
   flatBuildChangeHandler = (e) =>{
