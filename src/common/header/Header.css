@@ -4,6 +4,7 @@
   margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
+  width: 92%;
 }
 
 .header-logo-container, .header-search-container, .header-upload-btn-container, .header-profile-btn-container {
@@ -65,6 +66,11 @@
 .red{
   color:red;
 }
+
+.fill-remaining-space {   
+  flex: 1 1 auto;
+}
+
 
 /* @media (max-width: 992px) {
   .flexHeader {
