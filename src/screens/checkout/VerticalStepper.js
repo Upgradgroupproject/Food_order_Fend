@@ -158,6 +158,9 @@ class VerticalLinearStepper extends React.Component {
                 addressProvidedByUser:[],
                 addressSelected:"false",
                 addressSelectedIndex: '',
+                newAddressEnteredByUser: [],
+
+                dummycheck: "hello+you",
 
 
             }
@@ -339,6 +342,11 @@ class VerticalLinearStepper extends React.Component {
 
     
         if(this.state.invalidAddress === false){
+
+            /* Save new address */
+
+            
+
             this.setState(state => ({
                 activeStep: state.activeStep + 1,
              }));
