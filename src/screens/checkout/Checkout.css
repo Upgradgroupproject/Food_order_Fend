@@ -31,3 +31,16 @@
 .addressNotSelected{
     border: '';
 }
+
+.cartSummary{
+        /* float:right;  */
+        margin:10px;
+        display: inline-block;
+}
+.stepperBlock{
+    /* float: left;  */
+    width: 100%;
+    display: inline-block;
+
+    
+}
