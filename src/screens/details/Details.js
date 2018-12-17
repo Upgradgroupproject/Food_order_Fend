@@ -16,7 +16,8 @@ import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Checkout from '../checkout/Checkout';
-
+import Snackbar from '@material-ui/core/Snackbar';
+import Button from '@material-ui/core/Button';
 
 import { restDetailsArray } from './data'; // JSON data
 
@@ -138,7 +139,8 @@ export default class Details extends Component {
 
   storeRestaurantDetails () {
     let restIndex = restDetailsArray.findIndex(
-      (rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
+      //(rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
+      (rest) => rest.id === Number.parseInt(this.props.id)
     );
 
     if (restIndex >= 0) {
