@@ -155,6 +155,8 @@ class VerticalLinearStepper extends React.Component {
                 toggleStateIdHelper: "displayNothing",
                 stateList:[],
                 toggleZipcodeValidator:"displayNothing",
+                addressProvidedByUser:[],
+                addressSelected:"false",
 
 
             }
@@ -247,13 +249,34 @@ class VerticalLinearStepper extends React.Component {
     this.setState({ paymentMode: event.target.value });
   };
 
-  /* click handler for address-selector icon */
-  iconClickHandler = event => {
+  /* click handler for address-selector icon 
+     all cards are selected by document.getElementsByClassName
+     then indexes are match and styling is set/reset
+  */
 
-        event.target.style.color = 'green';
-        //ReactDOM.findDOMNode(GridList).getElementsByClassName("check").style.border = ''; 
+  iconClickHandler = (index)=>(e) =>{
 
+        const selectedIcon = document.getElementsByClassName('selectIcon');
+        const selectedAddress = document.getElementsByClassName('selectAddress');
+
+        for(var i = 0;i < selectedAddress.length; i++){
+   
+            if(i===index){
+                selectedAddress[i].style.border = '2px solid red';
+                selectedIcon[i].style.color = 'green';   
+            }
+            else{
+                selectedAddress[i].style.border = '';
+                selectedIcon[i].style.color = 'grey';  
+            }
+
+        }
+        this.setState.addressProvidedByUser =[];
+        this.setState.addressProvidedByUser = this.state.allAddress[index];
+        console.log(this.state.addressProvidedByUser);
+        this.state.addressSelected = true;
 }
+
   flatBuildChangeHandler = (e) =>{
       this.setState({flatbuilnumber: e.target.value});
       
@@ -312,15 +335,19 @@ class VerticalLinearStepper extends React.Component {
                              :
                              this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing",toggleZipcodeValidator:"displayNothing"});                      
 
-    }
-    else{ //checks to be added for existing address
-        this.setState(state => ({
-            activeStep: state.activeStep + 1,
-        }));
+    
+        if(this.state.invalidAddress === false){
+            this.setState(state => ({
+                activeStep: state.activeStep + 1,
+             }));
+        }
+
     }
 
-
-    if(this.state.invalidAddress === false){
+    /* if address is selected then move to next Step*/
+    else { 
+ 
+        if(this.state.addressSelected === true)
         this.setState(state => ({
             activeStep: state.activeStep + 1,
         }));
@@ -380,13 +407,13 @@ class VerticalLinearStepper extends React.Component {
                                     <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                         {userAddressSource.map((userAdd,index) =>
                                             <GridListTile className="check" key={'mykey' + index}>
-                                            <div style={{ padding:'10px' }}>
+                                            <div className="selectAddress"style={{ padding:'10px',marginTop:'5px' }}>
                                                 <Typography >{userAdd.flatBuilNo}</Typography>
                                                 <Typography >{userAdd.locality}</Typography>
                                                 <Typography >{userAdd.city}</Typography>
                                                 <Typography >{userAdd.states.stateName}</Typography>
                                                 <Typography >{userAdd.zipcode}</Typography>
-                                                <IconButton style={{marginLeft:'20%'}} onClick={this.iconClickHandler}>
+                                                <IconButton className="selectIcon"style={{marginLeft:'20%'}} onClick={this.iconClickHandler(index)}>
                                                     <CheckCircle/>
                                                 </IconButton>
                                     </div>
