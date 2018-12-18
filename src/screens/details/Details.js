@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import logo from '../../assets/FastFood.svg';
 import "./Details.css";
-import ReactDOM from 'react-dom';
-//import mock from "../../assets/mock.jpg";
 
-
-import Header from '../../common/header/Header';
-import { List, ListItemText, ListItemSecondaryAction, Card, CardContent, Badge } from '@material-ui/core';
-
+import Header from '../../common/header/header';
+import { List, ListItemText, ListItemSecondaryAction, Card, CardContent, Badge, Button, Snackbar } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import Add from '@material-ui/icons/Add';
@@ -15,11 +11,13 @@ import Remove from '@material-ui/icons/Remove';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+
 import Checkout from '../checkout/Checkout';
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from '@material-ui/core/Button';
 
-import { restDetailsArray } from './data'; // JSON data
+//import { restDetailsArray } from './data'; // JSON data
+
 
 class CartItem extends Component {
   render () {
@@ -138,24 +136,39 @@ export default class Details extends Component {
   }
 
   storeRestaurantDetails () {
-    let restIndex = restDetailsArray.findIndex(
-      //(rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
-      (rest) => rest.id === Number.parseInt(this.props.id)
-    );
 
-    if (restIndex >= 0) {
-      let infoCategories = [];
-      restDetailsArray[restIndex].categories.map(
-        (category) => infoCategories.push(category.categoryName)
-      );
 
-      this.setState({
-        rest: {
-          ...restDetailsArray[restIndex],
-          infoCategories
+    let restDetailsArray;
+
+    let reataurantData = null;
+    let xhrRestaurant = new XMLHttpRequest();
+
+    xhrRestaurant.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+          restDetailsArray = JSON.parse(this.responseText);
+
+          let restIndex = restDetailsArray.findIndex(
+            (rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
+          );
+
+          if (restIndex >= 0) {
+            let infoCategories = [];
+            restDetailsArray[restIndex].categories.map(
+              (category) => infoCategories.push(category.categoryName)
+            );
+
+            this.setState({
+              rest: {
+                ...restDetailsArray[restIndex],
+                infoCategories
+              }
+            })
+          }
         }
-      })
-    }
+    });
+
+    xhrRestaurant.open("GET", "http://localhost:8080/api/restaurant");
+    xhrRestaurant.send(reataurantData);
   }
 
   updateTotals () {
@@ -266,7 +279,7 @@ export default class Details extends Component {
         {/* Restaurant info */}
         <div className = "restaurant-info">
           <div className = "restaurant-img">
-            {/* <img src = {mock} /> */}
+            <img src = { restInfo.photoUrl } />
           </div>
 
           <div className = "restaurant-text-info">
@@ -302,19 +315,17 @@ export default class Details extends Component {
           {/* Menu */}
           <div className = "restaurant-menu">
             <List component = "div">
-
               {
                 menuData.map(
                   (category, index) => <MenuCategory name = {category.categoryName} items = {category.items} addItemToCart = {this.addItemToCart} categoryId = {category.id} thisReference = {this} key = {index}/>
                 )
               }
-
             </List>
           </div>
 
           {/* Cart */}
-          <div className = "cart" >
-          <Card >
+          <div className = "cart">
+          <Card>
             <CardContent>
               <Badge badgeContent = {this.state.cart.totalItems} color = "primary">
                 <ShoppingCart />
@@ -322,7 +333,6 @@ export default class Details extends Component {
               <span style = {{ fontWeight: "bold", fontSize: "20px", paddingLeft: "25px" }}>My Cart</span>
 
               <List component = "div">
-
                 {
                   this.state.cart.items.map(
                     (item, index) => React.createElement(CartItem, {...item, increaseQuantity: this.increaseCartItemQuantity.bind(this, index), decreaseQuantity: this.decreaseCartItemQuantity.bind(this, index), key: {index}})
@@ -334,7 +344,6 @@ export default class Details extends Component {
 
                   <ListItemSecondaryAction style = {{ fontWeight: "bold" }}>
                     <i className="fa fa-inr" aria-hidden="true"></i> {this.state.cart.totalPrice.toFixed(2)}
-
                   </ListItemSecondaryAction>
                 </ListItem>
               </List>
