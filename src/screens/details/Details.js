@@ -237,7 +237,7 @@ export default class Details extends Component {
   checkoutHandler () {
     if (this.state.cart.totalItems > 0) {
       // items present in the cart
-
+      ReactDOM.render(<Checkout   cartPrepared={this.state.cart}  />, document.getElementById('root'));
     }
     else {
       // no items in the cart
