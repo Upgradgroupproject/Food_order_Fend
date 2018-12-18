@@ -7,10 +7,10 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import {GridListTile} from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
-import IconButton from '@material-ui/core/IconButton';
+// import IconButton from '@material-ui/core/IconButton';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 // import AddressCard from './AddressCard';
 import Tabs from '@material-ui/core/Tabs';
@@ -26,7 +26,15 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+// import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import 'font-awesome/css/font-awesome.min.css';
+import Typography from '@material-ui/core/Typography';
 
 // const styles = theme => ({
 //   root: {
@@ -345,6 +353,8 @@ class VerticalLinearStepper extends React.Component {
 
             /* Save new address */
 
+            //this.props.message = "hello";
+
             
 
             this.setState(state => ({
@@ -374,8 +384,9 @@ class VerticalLinearStepper extends React.Component {
     const stateCodes = this.state.stateList;
 
     return (
-      <div className={classes.root}>
-        <Stepper activeStep={activeStep} orientation="vertical">
+      <div className={classes.root} style={{display:'flex'}}>
+      <div className = "stepperBlock">
+        <Stepper activeStep={activeStep} orientation="vertical" style={{width:'90%'}}>
           {steps.map((label, index) => {
             return (
               <Step key={label}>
@@ -577,7 +588,35 @@ class VerticalLinearStepper extends React.Component {
             </Button>
           </Paper>
         )}
+        </div>
+        <div className="cartSummary" style={{width: '300px'}}>
+                            <Card style={{width: '300px', marginTop: '50px'}}>
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="h2">
+                                        Summary
+                                    </Typography>
+                                        cart items 
+                                        <br></br>
+                                        non-veg <i className="fa fa-inr" aria-hidden="true"></i> 252
+                                        <br></br>
+                                        veg <i className="fa fa-inr" aria-hidden="true"></i> 202
+                                    <Divider/>
+                                    <div >
+                                        <span style={{fontWeight:'bold'}} >Net Amount </span>
+                                        <span ><i className="fa fa-inr" aria-hidden="true"></i> 100</span>
+                                    </div>
+                                    <br />
+                                    <Button variant="contained" color="primary">
+                                        Place Order
+                                    </Button>
+                                    <Snackbar
+                                      done  
+                                    />
+                                </CardContent>
+                            </Card>
+            </div>
       </div>
+      
     );
   }
 }

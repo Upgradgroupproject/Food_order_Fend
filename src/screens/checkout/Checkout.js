@@ -4,21 +4,21 @@ import { withStyles } from '@material-ui/core/styles';
 //import PropTypes from "prop-types";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { white } from 'material-ui/styles/colors';
-import Stepper from "./VerticalStepper";
+import CheckoutPage from "./VerticalStepper";
 import "./Checkout.css";
 import Header from '../../common/header/Header'
 
 
 
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import 'font-awesome/css/font-awesome.min.css';
-import Typography from '@material-ui/core/Typography';
+// import Card from '@material-ui/core/Card';
+// import CardContent from '@material-ui/core/CardContent';
+// import Button from '@material-ui/core/Button';
+// import Divider from '@material-ui/core/Divider';
+// import Snackbar from '@material-ui/core/Snackbar';
+// import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
+// import 'font-awesome/css/font-awesome.min.css';
+// import Typography from '@material-ui/core/Typography';
 
 
 
@@ -62,10 +62,14 @@ import Typography from '@material-ui/core/Typography';
     };
 
 class Checkout extends Component {
-    // constructor() {
-    //     super();
+    constructor() {
+        super();
+
+        this.state={
+            message: "",
+        }
         
-    // }
+    }
     
 
       
@@ -91,6 +95,7 @@ class Checkout extends Component {
                showSearch={false}
                //searchImageByDescription={this.searchImageByDescription}
                showUpload={false}
+               isCheckout={true}
                // uploadNewImage={this.uploadNewImage}
                //showProfile={false}
                //enableMyAccount={true}
@@ -98,11 +103,11 @@ class Checkout extends Component {
             
           <div className= {classes.root}>
             
-                <Stepper style={{width: '60%'}}>
-                
-                </Stepper>
+                <CheckoutPage style={{width: '60%'}}>
+
+                </CheckoutPage>
             
-                <div className="cartSummary">
+                {/* <div className="cartSummary">
                             <Card style={{width: '350px', marginTop:'50px'}}>
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="h2">
@@ -127,7 +132,7 @@ class Checkout extends Component {
                                     />
                                 </CardContent>
                             </Card>
-            </div>
+            </div> */}
           </div>
         </div>
       </MuiThemeProvider>

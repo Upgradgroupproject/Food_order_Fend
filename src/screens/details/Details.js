@@ -12,7 +12,12 @@ import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 
-// import { restDetailsArray } from './data'; // JSON data
+import Checkout from '../checkout/Checkout';
+import Snackbar from '@material-ui/core/Snackbar';
+import Button from '@material-ui/core/Button';
+
+//import { restDetailsArray } from './data'; // JSON data
+
 
 class CartItem extends Component {
   render () {
@@ -132,6 +137,7 @@ export default class Details extends Component {
 
   storeRestaurantDetails () {
 
+
     let restDetailsArray;
 
     let reataurantData = null;
@@ -244,7 +250,7 @@ export default class Details extends Component {
   checkoutHandler () {
     if (this.state.cart.totalItems > 0) {
       // items present in the cart
-
+      ReactDOM.render(<Checkout   cartPrepared={this.state.cart}  />, document.getElementById('root'));
     }
     else {
       // no items in the cart

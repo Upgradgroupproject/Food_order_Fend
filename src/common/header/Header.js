@@ -40,15 +40,15 @@ const customStyles = {
   }
 };
 
-const TabContainer= function(props){
-  return(
-    <Typography Component="div" style={{padding:0 ,textAlign:'center'}}>
-    {props.children}
+const TabContainer = function (props) {
+  return (
+    <Typography Component="div" style={{ padding: 0, textAlign: 'center' }}>
+      {props.children}
     </Typography>
   );
 }
 TabContainer.propTypes = {
-  children : PropTypes.node.isRequired
+  children: PropTypes.node.isRequired
 }
 
 
@@ -74,12 +74,14 @@ class Header extends Component {
   constructor() {
     super();
 
-    this.state={
+    this.state = {
 
       modalIsOpen:false,
       value:0,
       username:"",
-      usernameRequired:"dispName"
+      usernameRequired:"dispName",
+      contactNumber: "",
+      password: ""
 
     };
     this.openUploadImageModal = this.openUploadImageModal.bind(this);
@@ -98,28 +100,7 @@ class Header extends Component {
     this.logoutClickHandler = this.logoutClickHandler.bind(this);
   }
 
-  state = {
-    currentUserDetails: {
-      // object containing details of the currently logged-in user
-      profileImage: "", // profile picture URL of the currently logged-in user
-      username: "" // username of the currently logged-in user
-    },
-    showUserProfileDropDown: false, // boolean value indicating if the user profile dropdown is open; TRUE for open and FALSE for closed
-    isUploadModalOpen: false, // boolean value indicating if the upload image modal is open; TRUE for open and FALSE for closed
-    uploadImageFormValues: {
-      // object containing values filled by the user in the upload image modal
-      imageFile: {}, // image file containing the new image selected by the user from the system
-      imagePreviewUrl: "", // preview URL the new image file selected by the user from the system
-      description: "", // description for the new image to be uploaded
-      hashtags: "" // hashtags for the new image to be uploaded
-    },
-    uploadImageFormValidationClassnames: {
-      // object containing validation classnames for the form fields inside the upload image modal
-      image: Constants.DisplayClassname.DISPLAY_NONE,
-      description: Constants.DisplayClassname.DISPLAY_NONE,
-      hashtags: Constants.DisplayClassname.DISPLAY_NONE
-    }
-  };
+  
 
   /**
    * Function called before the render method
@@ -161,7 +142,7 @@ class Header extends Component {
             JSON.parse(responseText).data.username
           );
         },
-        () => {}
+        () => { }
       );
     }
   };
@@ -319,169 +300,245 @@ class Header extends Component {
       showUserProfileDropDown: !this.state.showUserProfileDropDown
     });
   };
-  
-  openModalHandler =() =>{
-    this.setState({modalIsOpen:true})
+
+  openModalHandler = () => {
+    this.setState({ modalIsOpen: true })
   }
 
-  closeModalHandler=() =>{
-    this.setState({modalIsOpen:false})
+  closeModalHandler = () => {
+    this.setState({ modalIsOpen: false })
   }
 
-  tabChangeHandler=(event,value) =>{
-    this.setState({value})
+  tabChangeHandler = (event, value) => {
+    this.setState({ value })
   }
-  loginClickHandler=() =>{
-    this.state.username==="" ? this.setState({usernameRequired :"dispBlock"}) :this.setState({usernameRequired :"dispNone"})
-  }
-  inputUsernameChangeHandler =(e)=>{
-    this.setState({username:e.target.value})
+  loginClickHandler = () => {
+    if (!this.state.contactNumber || !this.state.password) {
+      alert("Please enter the username and password")
+    } else {
+      var varAPI = "http://localhost:8080/api/user/login?contactNumber='"+this.state.contact+"'&password='"+this.state.password+"'";
+      var postBody = {
+        contactNumber: this.state.contact,
+        password: this.state.password
+      }
+      fetch(varAPI, {
+        method: 'POST',
+        body: JSON.stringify(postBody)
+      })
+        .then(function (response) {
+          //localStorage.setItem('Acces',response.data.token);
+          localStorage.setItem('Acces', '1234');
+          console.log(response);
+          alert(response);
+        }).catch(function (err) {
+          // Error :(
+          console.log(err);
+        });
+      }
+    }
+    inputUsernameChangeHandler = (e) => {
+      console.log("Hii");
+      this.setState({ [e.target.name] : e.target.value});
+      console.log(e.target.name, e.target.value);
+    }
+
+    /**
+     * Event handler called when the logout menu item is clicked inside the user profile dropdown to log a user out of the application
+     * @memberof Header
+     */
+    logoutClickHandler = () => {
+      sessionStorage.removeItem("access-token");
+      sessionStorage.removeItem("user-details");
+      this.props.history.push({
+        pathname: "/"
+      });
+    };
+
+
+    /**
+     * Function called when the component is rendered
+     * @memberof Header
+     */
+    render() {
+      const { classes } = this.props;
+
+      // logo to be rendered inside the header
+      let logoToRender = null;
+      if (this.props.showLink) {
+        logoToRender = (
+          <Link to="/home" className="logo">
+            <img src={LogoImage} className="logo" />
+          </Link>
+        );
+      } else {
+        logoToRender = <img src={LogoImage} className="logo" />;
+      }
+
+      // search box to be rendered inside the header
+      let searchBoxToRender = null;
+
+      // if (this.props.showSearch || !this.props.showSearch) {
+        if (this.props.showSearch) {
+
+        searchBoxToRender = (
+          <div className="header-search-container">
+            <div className="search-icon">
+              <SearchIcon />
+            </div>
+            <Input
+
+              className={classes.searchInput}
+              placeholder="Search by Restaurant Name"
+              disableUnderline
+            />
+          </div>
+        );
+
+      }
+
+      else {
+        searchBoxToRender = (
+          <div className="fill-remaining-space"></div>
+
+
+        );
+      }
+
+      // upload button to be rendered inside the header
+      // let uploadButtonToRender = null;
+      // // if (this.props.showUpload || !this.props.showUpload) {
+      // if (this.props.showUpload) {
+
+      //   uploadButtonToRender = (
+      //     <div className="header-upload-btn-container">
+      //       <Toolbar variant="dense">
+      //         <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+      //           <MenuIcon />
+      //         </IconButton>
+      //         <Typography variant="h6" color="inherit">
+      //           Categories
+      //     </Typography>
+      //       </Toolbar>
+      //     </div>
+      //   );
+      // }
+
+      let viewCategories = null;
+      if (this.props.showSearch || !this.props.showSearch) {
+        if (this.props.showSearch) {
+
+        viewCategories = (
+          <div className="header-upload-btn-container">
+            <Toolbar variant="dense">
+              <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" color="inherit">
+                Categories
+          </Typography>
+            </Toolbar>
+          </div>
+        );
+        }
+      }
+
+      // user profile icon to be rendered inside the header
+      let profileIconButtonToRender = null;
+      if (this.props.showProfile || !this.props.showProfile) {
+        profileIconButtonToRender = (
+
+          <div paddingtop="20px">
+
+            <div className="header-profile-btn-container">
+              <IconButton
+                key="close"
+                aria-label="Close"
+                className={classes.profileIconButton}
+
+              >
+                <Button variant="contained" size="small" className={classes.button} onClick={this.openModalHandler}>
+                  <AccountCircle />
+                  Login
+             </Button>
+              </IconButton>
+
+            </div>
+
+            <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen}
+              contentLabel="Login" onRequestClose={this.closeModalHandler}
+              style={customStyles}>
+              <Tabs className="tabs" value={this.state.value}
+                onChange={this.tabChangeHandler}>
+                <Tab label="Login" />
+                <Tab label="Signup" />
+              </Tabs>
+              {this.state.value === 0 &&
+                <TabContainer>
+                  <FormControl required>
+                    <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
+                    <Input id="contactNumber" type="text" name="contactNumber"
+                      username={this.state.username}
+                      onChange={this.inputUsernameChangeHandler.bind(this)} />
+                    <FormHelperText className={this.state.usernameRequired}><span
+                      className="red">required</span></FormHelperText>
+                  </FormControl><br />
+                  <FormControl required>
+                    <InputLabel htmlFor="password" >Password</InputLabel>
+                    <Input id="password" type="text" name="password"
+                      onChange={this.inputUsernameChangeHandler.bind(this)} />
+                  </FormControl><br /><br />
+                  <Button variant="contained" color="primary"
+                    onClick={this.loginClickHandler}>Login</Button>
+                </TabContainer>}
+              {this.state.value === 1 &&
+                <TabContainer>
+                  <FormControl required>
+                    <InputLabel htmlFor="firstName">First Name</InputLabel>
+                    <Input id="firstName" type="text" />
+                  </FormControl><br /><br />
+                  <FormControl >
+                    <InputLabel htmlFor="lastName">Last name</InputLabel>
+                    <Input id="lastName" type="text" />
+                  </FormControl><br /><br />
+                  <FormControl required >
+                    <InputLabel htmlFor="email">Email</InputLabel>
+                    <Input id="email" type="text" />
+                  </FormControl><br /><br />
+                  <FormControl required>
+                    <InputLabel htmlFor="password">Password</InputLabel>
+                    <Input id="password" type="text" />
+                  </FormControl><br /><br />
+                  <FormControl required>
+                    <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
+                    <Input id="contactNumber" type="text" />
+                  </FormControl><br /><br />
+                  <Button variant="contained" color="primary"
+                    onClick={this.loginClickHandler}>SIGNUP</Button>
+                </TabContainer>}
+
+            </Modal>
+
+
+          </div>
+        );
+      }
+
+      return (
+        <MuiThemeProvider>
+          <div className="header-main-container">
+            <div className="header-logo-container">{logoToRender}</div>
+            {searchBoxToRender}
+            {/* {uploadButtonToRender} */}
+            {viewCategories}
+            {profileIconButtonToRender}
+          </div>
+        </MuiThemeProvider>
+      );
+    }
   }
 
-  /**
-   * Event handler called when the logout menu item is clicked inside the user profile dropdown to log a user out of the application
-   * @memberof Header
-   */
-  logoutClickHandler = () => {
-    sessionStorage.removeItem("access-token");
-    sessionStorage.removeItem("user-details");
-    this.props.history.push({
-      pathname: "/"
-    });
+  Header.propTypes = {
+    classes: PropTypes.object.isRequired
   };
 
-
-  /**
-   * Function called when the component is rendered
-   * @memberof Header
-   */
-  render() {
-    const { classes } = this.props;
-
-    // logo to be rendered inside the header
-    let logoToRender = null;
-    if (this.props.showLink) {
-      logoToRender = (
-        <Link to="/home" className="logo">
-          <img src={LogoImage} className="logo"/>
-        </Link>
-      );
-    } else {
-      logoToRender = <img src={LogoImage} className="logo"/>;
-    }
-
-    // search box to be rendered inside the header
-    let searchBoxToRender = null;
-
-    // if (this.props.showSearch || !this.props.showSearch) {
-    if (this.props.showSearch) {
-
-      searchBoxToRender = (
-        <div className="header-search-container">
-          <div className="search-icon">
-            <SearchIcon />
-          </div>
-          <Input
-            
-            className={classes.searchInput}
-            placeholder="Search by Restaurant Name"
-            disableUnderline
-          />
-        </div>
-      );
-    
-    }
-
-    else{
-      searchBoxToRender = (
-                    <div className="fill-remaining-space"></div>
-                    
-                    
-      );
-    }
-
-    // upload button to be rendered inside the header
-    let uploadButtonToRender = null;
-    // if (this.props.showUpload || !this.props.showUpload) {
-    if (this.props.showUpload) {
-      
-      uploadButtonToRender = (
-        <div className="header-upload-btn-container">
-         <Toolbar variant="dense">
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" color="inherit">
-            Categories
-          </Typography>
-        </Toolbar>
-        </div>
-        );
-    }
-
-    // user profile icon to be rendered inside the header
-    let profileIconButtonToRender = null;
-    if (this.props.showProfile || !this.props.showProfile) {
-      profileIconButtonToRender = (
-
-        <div paddingtop="20px">
-
-        <div className="header-profile-btn-container">
-          <IconButton
-            key="close"
-            aria-label="Close"
-            className={classes.profileIconButton}
-        
-          >
-            <Button variant="contained" size="small" className={classes.button} onClick={this.openModalHandler}>
-            <AccountCircle />
-                Login
-             </Button>
-          </IconButton>
-          
-        </div>
-
-        <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel="Login"onRequestClose={this.closeModalHandler} style={customStyles}>
-          <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
-              <Tab label="Login"/>
-              <Tab label="Register"/>
-           </Tabs> 
-           {this.state.value===0 &&
-           <TabContainer>
-             <FormControl required>
-                <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
-                <Input id="contactNumber" type="text" username={this.state.username} onChange
-                ={this.inputUsernameChangeHandler}/>
-                <FormHelperText className={this.state.usernameRequired}><span 
-                className="red">required</span></FormHelperText>
-              </FormControl><br/>
-              <FormControl required>
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Input id="password" type="text"/>
-              </FormControl><br/><br/>
-              <Button variant="contained" color="primary" onClick={this.loginClickHandler}>Login</Button>
-             </TabContainer>}
-
-        </Modal>
-        </div>
-      );
-    }
-
-    return (
-      <MuiThemeProvider>
-        <div className="header-main-container">
-          <div className="header-logo-container">{logoToRender}</div>
-          {searchBoxToRender}
-          {uploadButtonToRender}
-          {profileIconButtonToRender}
-        </div>
-      </MuiThemeProvider>
-    );
-  }
-}
-
-Header.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(Header);
+  export default withStyles(styles)(Header);
