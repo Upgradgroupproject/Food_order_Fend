@@ -377,8 +377,8 @@ class Header extends Component {
       // search box to be rendered inside the header
       let searchBoxToRender = null;
 
-      if (this.props.showSearch || !this.props.showSearch) {
-        //  if (this.props.showSearch) {
+      // if (this.props.showSearch || !this.props.showSearch) {
+        if (this.props.showSearch) {
 
         searchBoxToRender = (
           <div className="header-search-container">
@@ -405,27 +405,27 @@ class Header extends Component {
       }
 
       // upload button to be rendered inside the header
-      let uploadButtonToRender = null;
-      // if (this.props.showUpload || !this.props.showUpload) {
-      if (this.props.showUpload) {
+      // let uploadButtonToRender = null;
+      // // if (this.props.showUpload || !this.props.showUpload) {
+      // if (this.props.showUpload) {
 
-        uploadButtonToRender = (
-          <div className="header-upload-btn-container">
-            <Toolbar variant="dense">
-              <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit">
-                Categories
-          </Typography>
-            </Toolbar>
-          </div>
-        );
-      }
+      //   uploadButtonToRender = (
+      //     <div className="header-upload-btn-container">
+      //       <Toolbar variant="dense">
+      //         <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+      //           <MenuIcon />
+      //         </IconButton>
+      //         <Typography variant="h6" color="inherit">
+      //           Categories
+      //     </Typography>
+      //       </Toolbar>
+      //     </div>
+      //   );
+      // }
 
       let viewCategories = null;
-      if (this.props.showUpload || !this.props.showUpload) {
-        //if (this.props.showUpload) {
+      if (this.props.showSearch || !this.props.showSearch) {
+        if (this.props.showSearch) {
 
         viewCategories = (
           <div className="header-upload-btn-container">
@@ -439,6 +439,7 @@ class Header extends Component {
             </Toolbar>
           </div>
         );
+        }
       }
 
       // user profile icon to be rendered inside the header
@@ -527,7 +528,7 @@ class Header extends Component {
           <div className="header-main-container">
             <div className="header-logo-container">{logoToRender}</div>
             {searchBoxToRender}
-            {uploadButtonToRender}
+            {/* {uploadButtonToRender} */}
             {viewCategories}
             {profileIconButtonToRender}
           </div>

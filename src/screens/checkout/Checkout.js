@@ -95,6 +95,7 @@ class Checkout extends Component {
                showSearch={false}
                //searchImageByDescription={this.searchImageByDescription}
                showUpload={false}
+               isCheckout={true}
                // uploadNewImage={this.uploadNewImage}
                //showProfile={false}
                //enableMyAccount={true}
