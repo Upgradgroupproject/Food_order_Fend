@@ -12,8 +12,9 @@
 }
 
 .restaurant-img img {
-  width: 300px;
-  height: auto;
+  height: 300px;
+  width: auto;
+  max-width: 500px;
 }
 
 .restaurant-text-info {
@@ -88,6 +89,10 @@
     align-items: center;
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .restaurant-img img {
+    width: 90vw;
   }
 
   .restaurant-text-info {
