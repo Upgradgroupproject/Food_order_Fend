@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from '../../assets/FastFood.svg';
 import "./Details.css";
 
-import Header from '../../common/header/header';
+import Header from '../../common/header/Header';
 import { List, ListItemText, ListItemSecondaryAction, Card, CardContent, Badge, Button, Snackbar } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
@@ -13,8 +13,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 
 import Checkout from '../checkout/Checkout';
-import Snackbar from '@material-ui/core/Snackbar';
-import Button from '@material-ui/core/Button';
+// import Snackbar from '@material-ui/core/Snackbar';
+// import Button from '@material-ui/core/Button';
+import ReactDOM from 'react-dom';
 
 //import { restDetailsArray } from './data'; // JSON data
 
@@ -120,7 +121,8 @@ export default class Details extends Component {
         },
         infoCategories: [],
         categories: []
-      }
+      },
+      
     };
 
     this.updateTotals = this.updateTotals.bind(this);
@@ -138,26 +140,32 @@ export default class Details extends Component {
   storeRestaurantDetails () {
 
 
-    let restDetailsArray;
+    //var restDetailsArray=[];
 
     let reataurantData = null;
     let xhrRestaurant = new XMLHttpRequest();
+    let that = this;
 
     xhrRestaurant.addEventListener("readystatechange", function () {
         if (this.readyState === 4) {
-          restDetailsArray = JSON.parse(this.responseText);
+          
+            let restDetailsArray = JSON.parse(this.responseText)  ; 
+            
+            console.log(restDetailsArray);
 
-          let restIndex = restDetailsArray.findIndex(
-            (rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
-          );
+          // let restIndex = restDetailsArray.findIndex(
+          //   (rest) => rest.id === Number.parseInt(this.props.id)
+          // );
+
+          let restIndex = restDetailsArray.id;
 
           if (restIndex >= 0) {
             let infoCategories = [];
-            restDetailsArray[restIndex].categories.map(
+            restDetailsArray.categories.map(
               (category) => infoCategories.push(category.categoryName)
             );
 
-            this.setState({
+            that.setState({
               rest: {
                 ...restDetailsArray[restIndex],
                 infoCategories
@@ -167,7 +175,7 @@ export default class Details extends Component {
         }
     });
 
-    xhrRestaurant.open("GET", "http://localhost:8080/api/restaurant");
+    xhrRestaurant.open("GET", "http://localhost:8080/api/restaurant/"+this.props.id);
     xhrRestaurant.send(reataurantData);
   }
 
