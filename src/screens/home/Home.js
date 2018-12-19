@@ -7,6 +7,7 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import RestaurantCard from "./RestaurantCard";
 import { white } from 'material-ui/styles/colors';
 import Details from '../details/Details';
+import { createBrowserHistory } from 'history';
 
 
     const styles = {
@@ -87,6 +88,10 @@ class Home extends Component {
     }
 
     getRestaurantDetails(restaurantId){
+        
+        this.props.history.push({
+            pathname: "/restaurant/"+restaurantId
+          });
         ReactDOM.render(<Details   id={restaurantId}  />, document.getElementById('root'));
     }
 
