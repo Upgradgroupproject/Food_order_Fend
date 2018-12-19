@@ -432,7 +432,7 @@ class Header extends Component {
       if (this.props.showLink) {
         logoToRender = (
           <Link to="/home" className="logo">
-            <img src={LogoImage} className="logo" />
+            <img src={LogoImage} className="logo" alt="Food-Orders"/>
           </Link>
         );
       } else {
