@@ -20,7 +20,7 @@ const RestaurantCard = function(props) {
   
 
   return (
-    <Card className={classes.restaurantCard} key={rest.id} style={{width: '280px',margin:'10px 10px 10px 10px'}} >
+    <Card className={classes.restaurantCard} key={rest.id} style={{width: '300px',margin:'5px 5px 5px 5px'}} >
       <CardContent >
             <img
             src={rest.photoUrl}
