@@ -173,6 +173,9 @@ class VerticalLinearStepper extends React.Component {
                 isSnackBarOpen: false,
 
 
+                serverResponse: "",
+
+
                 dummycheck: "hello+you",
 
 
@@ -387,11 +390,51 @@ class VerticalLinearStepper extends React.Component {
 
   handlePlaceOrder = () =>{
     //this.setState({dummycheck: this.cartAdded});
+    const orderDataid = this.props.cartItems.id;
+    const orderQunatity = this.props.cartItems.quantity;
+
+    let orderData =[
+        {
+            "itemId": 1,
+            "quantity": 1
+        }
+    ]
+
+    let xhrOrder = new XMLHttpRequest();
+    let placeOrder = this;
+    
+    xhrOrder.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            placeOrder.setState({
+                
+                serverResponse : JSON.parse(this.responseText)           
+            }); 
+            if(isNaN(placeOrder.state.serverResponse)){
+                placeOrder.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
+            }
+            else{
+                let orderNo = placeOrder.state.serverResponse;
+                placeOrder.setState({ snackBarMsg: "Order placed successfully! Your order ID is "+orderNo });
+                
+            }     
+         }    
+        
+    });
+    
+    xhrOrder.open("POST", "http://localhost:8080/api/order?flatBuilNo=12&locality=12&city=12&zipcode=122122&stateId=12&paymentId=1&bill=232");
+    xhrOrder.setRequestHeader("Cache-Control", "no-cache");
+    xhrOrder.setRequestHeader("Content-Type","application/json");
+    xhrOrder.setRequestHeader("Accept", "application/json");
+    xhrOrder.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630");
+    xhrOrder.send(JSON.stringify(orderData));
+
     this.openSnackBar();
     console.log(this.state.subTotal);
+    console.log(this.state.serverResponse);
 }
 
     openSnackBar () {
+
     this.setState({ isSnackBarOpen: true });
   }
 
