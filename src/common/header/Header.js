@@ -81,7 +81,10 @@ class Header extends Component {
       username:"",
       usernameRequired:"dispName",
       contactNumber: "",
-      password: ""
+      password: "",
+      firstName:"",
+      lastName:"",
+      email:""
 
     };
     this.openUploadImageModal = this.openUploadImageModal.bind(this);
@@ -326,15 +329,57 @@ class Header extends Component {
         body: JSON.stringify(postBody)
       })
         .then(function (response) {
-          //localStorage.setItem('Acces',response.data.token);
-          localStorage.setItem('Acces', '1234');
           console.log(response);
-          alert(response);
-        }).catch(function (err) {
-          // Error :(
-          console.log(err);
+          console.log(response.body);
+          console.log(response.message);
+          console.log(response.errors);
+          alert(response.message)
+         // dispatch(update_errors(response));
+          if(response.status >= 400)
+          {
+            throw new Error("Bad response from server");
+          }
+        }) .then(function(json){
+          console.log("succeed json re");
+          // We can dispatch many times!
+          // Here, we update the app state with the results of the API call.
+
+          //dispatch(update_user(json));
+
         });
       }
+    }
+    signUpClickHandler =()=>
+    {
+     var firstName=this.state.firstName;
+      var lastName=this.state.lastName;
+      var email=this.state.email;
+      var username=this.state.username;
+      var password=this.state.password;
+      var contactNumber=this.state.contactNumber;
+
+      var signUpAPI="http://localhost:8080/api/user/signup?firstName='"+firstName+"'&lastName='"+lastName+"'&email='"+email+"'&contactNumber='"+contactNumber+"'&password='"+password+"'";
+      fetch(signUpAPI, {
+        method: 'POST',
+      })
+        .then(function (response) {
+          console.log(response);
+          console.log(response.body);
+          console.log(response.message);
+          console.log(response.errors);
+          alert(response.message)
+         // dispatch(update_errors(response));
+          if(response.status >= 400)
+          {
+            alert("Bad response from server");
+          }
+        }) .then(function(json){
+          console.log("succeed json response");
+          // We can dispatch many times!
+          // Here, we update the app state with the results of the API call.
+
+        });
+   
     }
     inputUsernameChangeHandler = (e) => {
       console.log("Hii");
@@ -494,26 +539,26 @@ class Header extends Component {
                 <TabContainer>
                   <FormControl required>
                     <InputLabel htmlFor="firstName">First Name</InputLabel>
-                    <Input id="firstName" type="text" />
+                    <Input id="firstName" name="firstName" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
                   </FormControl><br /><br />
                   <FormControl >
                     <InputLabel htmlFor="lastName">Last name</InputLabel>
-                    <Input id="lastName" type="text" />
+                    <Input id="lastName" name="lastName" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
                   </FormControl><br /><br />
                   <FormControl required >
                     <InputLabel htmlFor="email">Email</InputLabel>
-                    <Input id="email" type="text" />
+                    <Input id="email" name="email" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
                   </FormControl><br /><br />
                   <FormControl required>
                     <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input id="password" type="text" />
+                    <Input id="password" name="password" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
                   </FormControl><br /><br />
                   <FormControl required>
                     <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
-                    <Input id="contactNumber" type="text" />
+                    <Input id="contactNumber" name="contactNumber" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
                   </FormControl><br /><br />
                   <Button variant="contained" color="primary"
-                    onClick={this.loginClickHandler}>SIGNUP</Button>
+                    onClick={this.signUpClickHandler}>SIGNUP</Button>
                 </TabContainer>}
 
             </Modal>
