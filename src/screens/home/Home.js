@@ -61,14 +61,20 @@ class Home extends Component {
             address : "" ,
             categories : [],
             restaurantsArray : [],
+            filteredReastaurantArray: [], 
+            currentSearchValue: "",
             //isDataLoaded:false
         }
     }
     
 
       componentWillMount() {
-
         
+        this.getAllRestaurantsDataArray();
+        
+    }
+
+    getAllRestaurantsDataArray(){
         let reataurantData = null;
         let xhrRestaurant = new XMLHttpRequest();
         let that = this;
@@ -83,7 +89,6 @@ class Home extends Component {
 
         xhrRestaurant.open("GET", "http://localhost:8080/api/restaurant");
         xhrRestaurant.send(reataurantData);
-        
     }
 
     getRestaurantDetails(restaurantId){
@@ -94,18 +99,40 @@ class Home extends Component {
         ReactDOM.render(<Details   id={restaurantId}  history={this.props.history}/>, document.getElementById('root'));
     }
 
+    searchRestaurantHandler = (e) => {
+
+        if(e.target.value === ""){
+            
+            this.getAllRestaurantsDataArray();
+        }
+
+        else{
+            let xhrRestSearch = new XMLHttpRequest();
+            let that = this;
+
+            xhrRestSearch.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    that.setState({
+                        restaurantsArray: JSON.parse(this.responseText)
+                    });
+                }
+                
+            });
+
+            xhrRestSearch.open("GET", this.props.baseUrl + "/restaurant/name/" + e.target.value);
+            xhrRestSearch.send();
+        }
+        
+    }
+
     render() {
         const { classes } = this.props;
         const dataSource = this.state.restaurantsArray;
         return (
             <div className="home">
-                {/* <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
-                  ---------------------Check Food App  
-                <br></br>   */}
-
             <MuiThemeProvider>
             <div>
-            <Header
+            <Header {...this.props} 
             showLink={false}
             history={this.props.history}
             showSearch={true}
@@ -114,6 +141,7 @@ class Home extends Component {
             uploadNewImage={this.uploadNewImage}
             showProfile={true}
             enableMyAccount={true}
+            onChange={this.searchRestaurantHandler}
             />
 
 <div className="images-main-container">

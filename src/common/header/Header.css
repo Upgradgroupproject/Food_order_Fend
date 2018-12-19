@@ -15,11 +15,12 @@
   color: #fff;
   font-size: 18px;
   text-decoration: none;
+  background-color: #fff;
 }
 
 .header-search-container {
   display: flex;
-  background: #808080;
+  background: #263238;
   border-radius: 4px;
   width: 300px;
   margin-right: 16px;
@@ -30,6 +31,8 @@
 .search-icon {
   padding: 0 7px;
   align-self: center;
+  color: white;
+  background-color: #263238;
 }
 
 .image-preview-container {

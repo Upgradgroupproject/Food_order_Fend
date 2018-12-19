@@ -8,7 +8,7 @@ import * as UtilsUI from "../../common/UtilsUI";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+// import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
@@ -26,6 +26,26 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+// import {createMuiTheme } from 'material-ui/styles';
+
+// const theme = createMuiTheme({
+//   overrides: {
+//     MuiInput: {
+//       underline: {
+//         '&:before': { //underline color when textfield is inactive
+//           backgroundColor: 'black',
+//         },
+//         '&:hover:not($disabled):before': { //underline color when hovered 
+//           backgroundColor: 'white',
+//         },
+//       }
+//     }
+//   }
+// });
+
+
+
 
 
 // custom styles for upload modal
@@ -55,7 +75,7 @@ TabContainer.propTypes = {
 // inline styles for Material-UI components
 const styles = {
   searchInput: {
-    width: "80%"
+    width: "80%",
   },
   uploadIcon: {
     paddingLeft: 10
@@ -426,17 +446,20 @@ class Header extends Component {
         if (this.props.showSearch) {
 
         searchBoxToRender = (
+          // <MuiThemeProvider theme={theme}>
           <div className="header-search-container">
             <div className="search-icon">
               <SearchIcon />
             </div>
-            <Input
+            <Input style={{color:'white'}}
 
               className={classes.searchInput}
               placeholder="Search by Restaurant Name"
-              disableUnderline
+              // disableUnderline
+              onChange={this.props.onChange}
             />
           </div>
+          // </MuiThemeProvider>
         );
 
       }
