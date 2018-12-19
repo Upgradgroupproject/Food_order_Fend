@@ -114,38 +114,37 @@ class Home extends Component {
             showProfile={true}
             enableMyAccount={true}
             />
-          <div className= {classes.root}>
-            <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15} >
-                {dataSource.map((restaurant, index) =>
-                    <GridListTile key={'mykey' + index} onClick={() => this.getRestaurantDetails(index+1)}>
-                        <RestaurantCard
-                            key={index}
-                            rest={restaurant}
-                            index={index}
-                            classes={classes}
-                                    // likeButtonClickHandler={this.likeButtonClickHandler}
-                                    // commentChangeHandler={this.commentChangeHandler}
-                                    // addCommentClickHandler={this.addCommentClickHandler}
-                                />
-                    </GridListTile>
-                )}
-            </GridList>
-            {/* <div className="left-column">
+
+<div className="images-main-container">
+            <div className="first-row" >
               {dataSource.map((restaurant, index) =>
-                // index % 2 === 0 ? (
+                (index === 0 || index === 1 || index === 2 || index === 3) ? (
+                  <div className="left-column" onClick={() => this.getRestaurantDetails(index+1)}>
                   <RestaurantCard
-                    key={index}
-                    image={restaurant}
-                    index={index}
-                    classes={classes}
-                    // likeButtonClickHandler={this.likeButtonClickHandler}
-                    // commentChangeHandler={this.commentChangeHandler}
-                    // addCommentClickHandler={this.addCommentClickHandler}
+                  key={index}
+                  rest={restaurant}
+                  index={index}
+                  classes={classes}
                   />
-                // ) : null
+                  </div>
+                ) : null
               )}
-            </div> */}
-          </div>
+            </div>
+            <div className="second-row">
+            {dataSource.map((restaurant, index) =>
+                (index === 4 || index === 5 || index === 6 || index === 7) ? (
+                  <div className="left-column" onClick={() => this.getRestaurantDetails(index+1)}>
+                  <RestaurantCard
+                  key={index}
+                  rest={restaurant}
+                  index={index}
+                  classes={classes}
+                  />
+                  </div>
+                ) : null
+              )}
+            </div>
+            </div>
         </div>
       </MuiThemeProvider>
 
