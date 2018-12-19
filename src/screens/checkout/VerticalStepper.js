@@ -138,8 +138,8 @@ function getStepContent(step) {
 
 class VerticalLinearStepper extends React.Component {
   
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
             this.state = {
                 id: "",
                 flatbuilnumber: "",
@@ -167,6 +167,8 @@ class VerticalLinearStepper extends React.Component {
                 addressSelected:"false",
                 addressSelectedIndex: '',
                 newAddressEnteredByUser: [],
+
+                cartPrice: props.cartPrice,
 
                 dummycheck: "hello+you",
 
@@ -374,6 +376,13 @@ class VerticalLinearStepper extends React.Component {
     }
     
   };
+
+
+  handlePlaceOrder = () =>{
+    //this.setState({dummycheck: this.cartAdded});
+}
+
+  
     
 
   render() {
@@ -382,6 +391,7 @@ class VerticalLinearStepper extends React.Component {
     const { activeStep } = this.state;
     const userAddressSource = this.state.allAddress;
     const stateCodes = this.state.stateList;
+    //const cartAdded = this.props.cart;  
 
     return (
       <div className={classes.root} style={{display:'flex'}}>
@@ -595,18 +605,18 @@ class VerticalLinearStepper extends React.Component {
                                     <Typography gutterBottom variant="h5" component="h2">
                                         Summary
                                     </Typography>
-                                        cart items 
+                                        cart items {this.state.cartPrepared}
                                         <br></br>
                                         non-veg <i className="fa fa-inr" aria-hidden="true"></i> 252
                                         <br></br>
                                         veg <i className="fa fa-inr" aria-hidden="true"></i> 202
                                     <Divider/>
                                     <div >
-                                        <span style={{fontWeight:'bold'}} >Net Amount </span>
-                                        <span ><i className="fa fa-inr" aria-hidden="true"></i> 100</span>
+                                        <span style={{fontWeight:'bold'}} >Net Amount  </span>
+                                        <span style={{float:'right'}}><i className="fa fa-inr" aria-hidden="true"></i> {this.state.cartPrice}</span>
                                     </div>
                                     <br />
-                                    <Button variant="contained" color="primary">
+                                    <Button variant="contained" color="primary" onClick={this.handlePlaceOrder()}>
                                         Place Order
                                     </Button>
                                     <Snackbar

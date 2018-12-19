@@ -117,7 +117,7 @@ class Home extends Component {
           <div className= {classes.root}>
             <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15} >
                 {dataSource.map((restaurant, index) =>
-                    <GridListTile key={'mykey' + index} onClick={() => this.getRestaurantDetails(restaurant.id)}>
+                    <GridListTile key={'mykey' + index} onClick={() => this.getRestaurantDetails(index+1)}>
                         <RestaurantCard
                             key={index}
                             rest={restaurant}

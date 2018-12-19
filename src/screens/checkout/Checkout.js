@@ -76,6 +76,7 @@ class Checkout extends Component {
 
     render() {
         const { classes } = this.props;
+        const cartPrice= this.props.cartPrice;
         
         return (
              <div className="home">
@@ -103,7 +104,7 @@ class Checkout extends Component {
             
           <div className= {classes.root}>
             
-                <CheckoutPage style={{width: '60%'}}>
+                <CheckoutPage style={{width: '60%'}} cartPrice={cartPrice}>
 
                 </CheckoutPage>
             
