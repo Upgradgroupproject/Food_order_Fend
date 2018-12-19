@@ -238,6 +238,9 @@ export default class Details extends Component {
     if (this.state.cart.totalItems > 0) {
       // items present in the cart
       console.log(this.state.cart.totalItems,this.state.cart.totalPrice,this.state.cart.items);
+      this.props.history.push({
+        pathname: "/checkout"
+      });
       ReactDOM.render(<Checkout   cartPrice={this.state.cart.totalPrice} cartItems={this.state.cart.items} />, document.getElementById('root'));
     }
     else {
@@ -262,7 +265,7 @@ export default class Details extends Component {
     return (
       <React.Fragment>
         {/* header */}
-        <Header isDetails = {true} />
+        <Header isDetails = {true} history={this.props.history}/>
 
         {/* Restaurant info */}
         <div className = "restaurant-info">
