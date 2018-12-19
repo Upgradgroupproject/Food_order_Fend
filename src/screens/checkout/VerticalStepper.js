@@ -578,9 +578,9 @@ class VerticalLinearStepper extends React.Component {
                                     {this.props.cartItems.map(item => (
                                         <div  key={"item" + item.id}>
                                             <span >{item.type === 'Veg' &&
-                                                <i className="fa fa-stop-circle" style={{color:'green'}}></i>}
+                                                <i className="fa fa-stop-circle-o veg" ></i>}
                                                 {item.type === 'Non-Veg' &&
-                                                    <i className="fa fa-stop-circle" style={{color:'red'}}></i>}   {item.itemName}
+                                                    <i className="fa fa-stop-circle-o nonVeg" ></i>}   {item.itemName}
                                             </span>
                                             <span > {item.quantity}</span>
                                             <span style={{float:'right'}}><i className="fa fa-inr" aria-hidden="true"></i> {item.price}</span>
