@@ -19,8 +19,6 @@ import Checkout from '../checkout/Checkout';
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from '@material-ui/core/Button';
 
-//import { restDetailsArray } from './data'; // JSON data
-
 
 class CartItem extends Component {
   render () {
