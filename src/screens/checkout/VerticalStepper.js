@@ -36,6 +36,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import 'font-awesome/css/font-awesome.min.css';
 import Typography from '@material-ui/core/Typography';
 
+
 // const styles = theme => ({
 //   root: {
 //     width: '90%',
@@ -168,12 +169,17 @@ class VerticalLinearStepper extends React.Component {
                 addressSelectedIndex: '',
                 newAddressEnteredByUser: [],
 
-                cartPrice: props.cartPrice,
+                subTotal: props.cartPrice,
+                isSnackBarOpen: false,
+
 
                 dummycheck: "hello+you",
 
 
             }
+
+            this.openSnackBar = this.openSnackBar.bind(this);
+            this.closeSnackBar = this.closeSnackBar.bind(this);
         
   };
 
@@ -232,6 +238,7 @@ class VerticalLinearStepper extends React.Component {
     xhrPayment.setRequestHeader("Cache-Control", "no-cache");
     xhrPayment.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
     xhrPayment.send(paymentData);
+
 
 
 
@@ -380,7 +387,17 @@ class VerticalLinearStepper extends React.Component {
 
   handlePlaceOrder = () =>{
     //this.setState({dummycheck: this.cartAdded});
+    this.openSnackBar();
+    console.log(this.state.subTotal);
 }
+
+    openSnackBar () {
+    this.setState({ isSnackBarOpen: true });
+  }
+
+    closeSnackBar () {
+    this.setState({ isSnackBarOpen: false });
+  }
 
   
     
@@ -415,25 +432,7 @@ class VerticalLinearStepper extends React.Component {
                                         <Typography >{this.state.noAddressMessage}</Typography> 
                                    </div>     
                                 }
-                                {/* <Typography>{getStepContent(index)}</Typography> */}
-                                    {/* <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
-                                        {userAddressSource.map((address, index) =>
-                                        <GridListTile key={'mykey' + index}> */}
-                                        {/* <AddressCard
-                                            key={index}
-                                            address={address}
-                                            index={index}
-                                            classes={classes}
-                                                    // likeButtonClickHandler={this.likeButtonClickHandler}
-                                                    // commentChangeHandler={this.commentChangeHandler}
-                                                    // addCommentClickHandler={this.addCommentClickHandler}
-                                                /> */}
-
-
-                                                
-                                        {/* </GridListTile>
-                                    )}
-                                    </GridList> */}
+                                
                                 {((this.state.addressTab === 0)&& (userAddressSource.length > 0)) && 
                                     <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                         {userAddressSource.map((userAdd,index) =>
@@ -478,13 +477,6 @@ class VerticalLinearStepper extends React.Component {
                                             </FormHelperText>
                                         </FormControl>
                                             <br></br>
-                                        {/* <FormControl required>
-                                            <InputLabel htmlFor="state">State</InputLabel>
-                                            <Input id="state" type="Select" value={this.state.state_id} onChange={this.stateChangeHandler} />
-                                            <FormHelperText className={this.state.toggleStateIdHelper}>
-                                                <span className="fieldRequired">required</span>
-                                            </FormHelperText>
-                                        </FormControl> */}
 
                                         <FormControl required>
                                             <InputLabel htmlFor="state">State</InputLabel>
@@ -502,28 +494,6 @@ class VerticalLinearStepper extends React.Component {
                                                     <span className="fieldRequired">required</span>
                                                 </FormHelperText>
                                             </FormControl>
-
-
-
-                                        {/* selection API */}
-                                        
-                                        {/* <FormControl variant="filled" className={classes.formControl}>
-                                            <InputLabel htmlFor="filled-age-simple">Age</InputLabel>
-                                            <Select
-                                                value={this.state.age}
-                                                onChange={this.handleChange}
-                                                input={<FilledInput name="age" id="filled-age-simple" />}
-                                            >
-                                                <MenuItem value="">
-                                                <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl> */}
-
-
 
                                             <br></br>
                                         <FormControl required>
@@ -599,28 +569,47 @@ class VerticalLinearStepper extends React.Component {
           </Paper>
         )}
         </div>
-        <div className="cartSummary" style={{width: '300px'}}>
-                            <Card style={{width: '300px', marginTop: '50px'}}>
+        <div className="cartSummary" style={{width: '360px'}}>
+                            <Card style={{width: '350px', marginTop: '50px'}}>
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="h2">
                                         Summary
                                     </Typography>
-                                        cart items {this.state.cartPrepared}
-                                        <br></br>
-                                        non-veg <i className="fa fa-inr" aria-hidden="true"></i> 252
-                                        <br></br>
-                                        veg <i className="fa fa-inr" aria-hidden="true"></i> 202
+                                    {this.props.cartItems.map(item => (
+                                        <div  key={"item" + item.id}>
+                                            <span >{item.type === 'Veg' &&
+                                                <i className="fa fa-stop-circle" style={{color:'green'}}></i>}
+                                                {item.type === 'Non-Veg' &&
+                                                    <i className="fa fa-stop-circle" style={{color:'red'}}></i>}   {item.itemName}
+                                            </span>
+                                            <span > {item.quantity}</span>
+                                            <span style={{float:'right'}}><i className="fa fa-inr" aria-hidden="true"></i> {item.price}</span>
+                                        </div>
+                                    ))}
+                                        <div>
+                                            <span >Sub Total  </span>
+                                            <span style={{float:'right'}}><i className="fa fa-inr" aria-hidden="true"></i> {this.state.subTotal}</span>    
+                                        </div>
                                     <Divider/>
                                     <div >
                                         <span style={{fontWeight:'bold'}} >Net Amount  </span>
-                                        <span style={{float:'right'}}><i className="fa fa-inr" aria-hidden="true"></i> {this.state.cartPrice}</span>
+                                        <span style={{float:'right'}}><i className="fa fa-inr" aria-hidden="true"></i> {this.state.subTotal}</span>
                                     </div>
                                     <br />
-                                    <Button variant="contained" color="primary" onClick={this.handlePlaceOrder()}>
+                                    <Button variant="contained" color="primary" onClick={this.handlePlaceOrder}>
                                         Place Order
                                     </Button>
                                     <Snackbar
-                                      done  
+                                      anchorOrigin = {{ vertical: "bottom", horizontal: "left" }}
+                                      autoHideDuration = {1000}
+                                      open = {this.state.isSnackBarOpen}
+                                      onClose = {this.closeSnackBar}
+                                      message = {this.state.snackBarMsg}
+                                      action = {[
+                                        <IconButton onClick = {this.closeSnackBar}>
+                                          <CloseIcon style = {{ color: "white" }}/>
+                                        </IconButton>
+                                      ]} 
                                     />
                                 </CardContent>
                             </Card>

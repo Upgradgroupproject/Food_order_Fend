@@ -238,7 +238,7 @@ export default class Details extends Component {
     if (this.state.cart.totalItems > 0) {
       // items present in the cart
       console.log(this.state.cart.totalItems,this.state.cart.totalPrice,this.state.cart.items);
-      ReactDOM.render(<Checkout   cartPrice={this.state.cart.totalPrice}  />, document.getElementById('root'));
+      ReactDOM.render(<Checkout   cartPrice={this.state.cart.totalPrice} cartItems={this.state.cart.items} />, document.getElementById('root'));
     }
     else {
       // no items in the cart

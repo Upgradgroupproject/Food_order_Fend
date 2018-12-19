@@ -77,6 +77,7 @@ class Checkout extends Component {
     render() {
         const { classes } = this.props;
         const cartPrice= this.props.cartPrice;
+        const cartItems= this.props.cartItems;
         
         return (
              <div className="home">
@@ -104,36 +105,9 @@ class Checkout extends Component {
             
           <div className= {classes.root}>
             
-                <CheckoutPage style={{width: '60%'}} cartPrice={cartPrice}>
+                <CheckoutPage style={{width: '60%'}} cartPrice={cartPrice} cartItems= {cartItems}>
 
                 </CheckoutPage>
-            
-                {/* <div className="cartSummary">
-                            <Card style={{width: '350px', marginTop:'50px'}}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                        Summary
-                                    </Typography>
-                                        cart items 
-                                        <br></br>
-                                        non-veg <i className="fa fa-inr" aria-hidden="true"></i> 252
-                                        <br></br>
-                                        veg <i className="fa fa-inr" aria-hidden="true"></i> 202
-                                    <Divider/>
-                                    <div >
-                                        <span style={{fontWeight:'bold'}} >Net Amount </span>
-                                        <span ><i className="fa fa-inr" aria-hidden="true"></i> 100</span>
-                                    </div>
-                                    <br />
-                                    <Button variant="contained" color="primary">
-                                        Place Order
-                                    </Button>
-                                    <Snackbar
-                                      done  
-                                    />
-                                </CardContent>
-                            </Card>
-            </div> */}
           </div>
         </div>
       </MuiThemeProvider>
