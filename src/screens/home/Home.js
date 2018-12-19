@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-//import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import './Home.css';
 import Header from '../../common/header/Header';
 import { withStyles } from '@material-ui/core/styles';
-//import PropTypes from "prop-types";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import RestaurantCard from "./RestaurantCard";
-import {GridListTile} from '@material-ui/core';
-import GridList from '@material-ui/core/GridList';
 import { white } from 'material-ui/styles/colors';
+import Details from '../details/Details';
 
 
     const styles = {
@@ -63,14 +61,20 @@ class Home extends Component {
             address : "" ,
             categories : [],
             restaurantsArray : [],
+            filteredReastaurantArray: [], 
+            currentSearchValue: "",
             //isDataLoaded:false
         }
     }
     
 
       componentWillMount() {
-
         
+        this.getAllRestaurantsDataArray();
+        
+    }
+
+    getAllRestaurantsDataArray(){
         let reataurantData = null;
         let xhrRestaurant = new XMLHttpRequest();
         let that = this;
@@ -85,6 +89,39 @@ class Home extends Component {
 
         xhrRestaurant.open("GET", "http://localhost:8080/api/restaurant");
         xhrRestaurant.send(reataurantData);
+    }
+
+    getRestaurantDetails(restaurantId){
+        
+        this.props.history.push({
+            pathname: "/restaurant/"+restaurantId
+          });
+        ReactDOM.render(<Details   id={restaurantId}  history={this.props.history}/>, document.getElementById('root'));
+    }
+
+    searchRestaurantHandler = (e) => {
+
+        if(e.target.value === ""){
+            
+            this.getAllRestaurantsDataArray();
+        }
+
+        else{
+            let xhrRestSearch = new XMLHttpRequest();
+            let that = this;
+
+            xhrRestSearch.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    that.setState({
+                        restaurantsArray: JSON.parse(this.responseText)
+                    });
+                }
+                
+            });
+
+            xhrRestSearch.open("GET", this.props.baseUrl + "/restaurant/name/" + e.target.value);
+            xhrRestSearch.send();
+        }
         
     }
 
@@ -93,13 +130,9 @@ class Home extends Component {
         const dataSource = this.state.restaurantsArray;
         return (
             <div className="home">
-                {/* <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
-                  ---------------------Check Food App  
-                <br></br>   */}
-
             <MuiThemeProvider>
             <div>
-            <Header
+            <Header {...this.props} 
             showLink={false}
             history={this.props.history}
             showSearch={true}
@@ -108,39 +141,39 @@ class Home extends Component {
             uploadNewImage={this.uploadNewImage}
             showProfile={true}
             enableMyAccount={true}
+            onChange={this.searchRestaurantHandler}
             />
-          <div className= {classes.root}>
-            <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
-                {dataSource.map((restaurant, index) =>
-                    <GridListTile key={'mykey' + index}>
-                        <RestaurantCard
-                            key={index}
-                            rest={restaurant}
-                            index={index}
-                            classes={classes}
-                                    // likeButtonClickHandler={this.likeButtonClickHandler}
-                                    // commentChangeHandler={this.commentChangeHandler}
-                                    // addCommentClickHandler={this.addCommentClickHandler}
-                                />
-                    </GridListTile>
-                )}
-            </GridList>
-            {/* <div className="left-column">
+
+<div className="images-main-container">
+            <div className="first-row" >
               {dataSource.map((restaurant, index) =>
-                // index % 2 === 0 ? (
+                (index === 0 || index === 1 || index === 2 || index === 3) ? (
+                  <div className="left-column" onClick={() => this.getRestaurantDetails(dataSource[index].id)}>
                   <RestaurantCard
-                    key={index}
-                    image={restaurant}
-                    index={index}
-                    classes={classes}
-                    // likeButtonClickHandler={this.likeButtonClickHandler}
-                    // commentChangeHandler={this.commentChangeHandler}
-                    // addCommentClickHandler={this.addCommentClickHandler}
+                  key={index}
+                  rest={restaurant}
+                  index={index}
+                  classes={classes}
                   />
-                // ) : null
+                  </div>
+                ) : null
               )}
-            </div> */}
-          </div>
+            </div>
+            <div className="second-row">
+            {dataSource.map((restaurant, index) =>
+                (index === 4 || index === 5 || index === 6 || index === 7) ? (
+                  <div className="left-column" onClick={() => this.getRestaurantDetails(dataSource[index].id)}>
+                  <RestaurantCard
+                  key={index}
+                  rest={restaurant}
+                  index={index}
+                  classes={classes}
+                  />
+                  </div>
+                ) : null
+              )}
+            </div>
+            </div>
         </div>
       </MuiThemeProvider>
 

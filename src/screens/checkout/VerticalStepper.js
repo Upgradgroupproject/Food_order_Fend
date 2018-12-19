@@ -7,10 +7,10 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import {GridListTile} from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
-import IconButton from '@material-ui/core/IconButton';
+// import IconButton from '@material-ui/core/IconButton';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 // import AddressCard from './AddressCard';
 import Tabs from '@material-ui/core/Tabs';
@@ -26,6 +26,15 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+// import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import 'font-awesome/css/font-awesome.min.css';
+import Typography from '@material-ui/core/Typography';
 
 
 // const styles = theme => ({
@@ -130,8 +139,8 @@ function getStepContent(step) {
 
 class VerticalLinearStepper extends React.Component {
   
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
             this.state = {
                 id: "",
                 flatbuilnumber: "",
@@ -155,9 +164,25 @@ class VerticalLinearStepper extends React.Component {
                 toggleStateIdHelper: "displayNothing",
                 stateList:[],
                 toggleZipcodeValidator:"displayNothing",
+                addressProvidedByUser:[],
+                addressSelected:"false",
+                addressSelectedIndex: '',
+                newAddressEnteredByUser: [],
+
+                subTotal: props.cartPrice,
+                isSnackBarOpen: false,
+
+
+                serverResponse: "",
+
+
+                dummycheck: "hello+you",
 
 
             }
+
+            this.openSnackBar = this.openSnackBar.bind(this);
+            this.closeSnackBar = this.closeSnackBar.bind(this);
         
   };
 
@@ -220,6 +245,7 @@ class VerticalLinearStepper extends React.Component {
 
 
 
+
     let req = "http://localhost:8080/api/address?flatBuilNo=%23342&locality=makwoood%20aprtments&city=bangalore&zipcode=560102&type=perm&stateId=21";
 
 
@@ -247,13 +273,35 @@ class VerticalLinearStepper extends React.Component {
     this.setState({ paymentMode: event.target.value });
   };
 
-  /* click handler for address-selector icon */
-  iconClickHandler = event => {
+  /* click handler for address-selector icon 
+     all cards are selected by document.getElementsByClassName
+     then indexes are match and styling is set/reset
+  */
 
-        event.target.style.color = 'green';
-        //ReactDOM.findDOMNode(GridList).getElementsByClassName("check").style.border = ''; 
+  iconClickHandler = (index)=>(e) =>{
 
+        const selectedIcon = document.getElementsByClassName('selectIcon');
+        const selectedAddress = document.getElementsByClassName('selectAddress');
+
+        for(var i = 0;i < selectedAddress.length; i++){
+   
+            if(i===index){
+                selectedAddress[i].style.border = '2px solid red';
+                selectedIcon[i].style.color = 'green';   
+            }
+            else{
+                selectedAddress[i].style.border = '';
+                selectedIcon[i].style.color = 'grey';  
+            }
+
+        }
+        this.setState.addressProvidedByUser =[];
+        this.setState.addressProvidedByUser = this.state.allAddress[index];
+        console.log(this.state.addressProvidedByUser);
+        this.state.addressSelected = true;
+        this.state.addressSelectedIndex= index;
 }
+
   flatBuildChangeHandler = (e) =>{
       this.setState({flatbuilnumber: e.target.value});
       
@@ -312,21 +360,89 @@ class VerticalLinearStepper extends React.Component {
                              :
                              this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing",toggleZipcodeValidator:"displayNothing"});                      
 
-    }
-    else{ //checks to be added for existing address
-        this.setState(state => ({
-            activeStep: state.activeStep + 1,
-        }));
+    
+        if(this.state.invalidAddress === false){
+
+            /* Save new address */
+
+            //this.props.message = "hello";
+
+            
+
+            this.setState(state => ({
+                activeStep: state.activeStep + 1,
+             }));
+        }
+
     }
 
-
-    if(this.state.invalidAddress === false){
+    /* if address is selected then move to next Step*/
+    else { 
+ 
+        if(this.state.addressSelected === true)
         this.setState(state => ({
             activeStep: state.activeStep + 1,
         }));
     }
     
   };
+
+
+  handlePlaceOrder = () =>{
+    //this.setState({dummycheck: this.cartAdded});
+    const orderDataid = this.props.cartItems.id;
+    const orderQunatity = this.props.cartItems.quantity;
+
+    let orderData =[
+        {
+            "itemId": 1,
+            "quantity": 1
+        }
+    ]
+
+    let xhrOrder = new XMLHttpRequest();
+    let placeOrder = this;
+    
+    xhrOrder.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            placeOrder.setState({
+                
+                serverResponse : JSON.parse(this.responseText)           
+            }); 
+            if(isNaN(placeOrder.state.serverResponse)){
+                placeOrder.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
+            }
+            else{
+                let orderNo = placeOrder.state.serverResponse;
+                placeOrder.setState({ snackBarMsg: "Order placed successfully! Your order ID is "+orderNo });
+                
+            }     
+         }    
+        
+    });
+    
+    xhrOrder.open("POST", "http://localhost:8080/api/order?flatBuilNo=12&locality=12&city=12&zipcode=122122&stateId=12&paymentId=1&bill=232");
+    xhrOrder.setRequestHeader("Cache-Control", "no-cache");
+    xhrOrder.setRequestHeader("Content-Type","application/json");
+    xhrOrder.setRequestHeader("Accept", "application/json");
+    xhrOrder.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630");
+    xhrOrder.send(JSON.stringify(orderData));
+
+    this.openSnackBar();
+    console.log(this.state.subTotal);
+    console.log(this.state.serverResponse);
+}
+
+    openSnackBar () {
+
+    this.setState({ isSnackBarOpen: true });
+  }
+
+    closeSnackBar () {
+    this.setState({ isSnackBarOpen: false });
+  }
+
+  
     
 
   render() {
@@ -335,10 +451,12 @@ class VerticalLinearStepper extends React.Component {
     const { activeStep } = this.state;
     const userAddressSource = this.state.allAddress;
     const stateCodes = this.state.stateList;
+    //const cartAdded = this.props.cart;  
 
     return (
-      <div className={classes.root}>
-        <Stepper activeStep={activeStep} orientation="vertical">
+      <div className={classes.root} style={{display:'flex'}}>
+      <div className = "stepperBlock">
+        <Stepper activeStep={activeStep} orientation="vertical" style={{width:'90%'}}>
           {steps.map((label, index) => {
             return (
               <Step key={label}>
@@ -357,36 +475,18 @@ class VerticalLinearStepper extends React.Component {
                                         <Typography >{this.state.noAddressMessage}</Typography> 
                                    </div>     
                                 }
-                                {/* <Typography>{getStepContent(index)}</Typography> */}
-                                    {/* <GridList className={classes.root}cellHeight={"auto"} cols={4} spacing={15}>
-                                        {userAddressSource.map((address, index) =>
-                                        <GridListTile key={'mykey' + index}> */}
-                                        {/* <AddressCard
-                                            key={index}
-                                            address={address}
-                                            index={index}
-                                            classes={classes}
-                                                    // likeButtonClickHandler={this.likeButtonClickHandler}
-                                                    // commentChangeHandler={this.commentChangeHandler}
-                                                    // addCommentClickHandler={this.addCommentClickHandler}
-                                                /> */}
-
-
-                                                
-                                        {/* </GridListTile>
-                                    )}
-                                    </GridList> */}
+                                
                                 {((this.state.addressTab === 0)&& (userAddressSource.length > 0)) && 
                                     <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                         {userAddressSource.map((userAdd,index) =>
                                             <GridListTile className="check" key={'mykey' + index}>
-                                            <div style={{ padding:'10px' }}>
+                                            <div className="selectAddress"style={{ padding:'10px',marginTop:'5px' }}>
                                                 <Typography >{userAdd.flatBuilNo}</Typography>
                                                 <Typography >{userAdd.locality}</Typography>
                                                 <Typography >{userAdd.city}</Typography>
                                                 <Typography >{userAdd.states.stateName}</Typography>
                                                 <Typography >{userAdd.zipcode}</Typography>
-                                                <IconButton style={{marginLeft:'20%'}} onClick={this.iconClickHandler}>
+                                                <IconButton className="selectIcon"style={{marginLeft:'20%'}} onClick={this.iconClickHandler(index)}>
                                                     <CheckCircle/>
                                                 </IconButton>
                                     </div>
@@ -420,13 +520,6 @@ class VerticalLinearStepper extends React.Component {
                                             </FormHelperText>
                                         </FormControl>
                                             <br></br>
-                                        {/* <FormControl required>
-                                            <InputLabel htmlFor="state">State</InputLabel>
-                                            <Input id="state" type="Select" value={this.state.state_id} onChange={this.stateChangeHandler} />
-                                            <FormHelperText className={this.state.toggleStateIdHelper}>
-                                                <span className="fieldRequired">required</span>
-                                            </FormHelperText>
-                                        </FormControl> */}
 
                                         <FormControl required>
                                             <InputLabel htmlFor="state">State</InputLabel>
@@ -444,28 +537,6 @@ class VerticalLinearStepper extends React.Component {
                                                     <span className="fieldRequired">required</span>
                                                 </FormHelperText>
                                             </FormControl>
-
-
-
-                                        {/* selection API */}
-                                        
-                                        {/* <FormControl variant="filled" className={classes.formControl}>
-                                            <InputLabel htmlFor="filled-age-simple">Age</InputLabel>
-                                            <Select
-                                                value={this.state.age}
-                                                onChange={this.handleChange}
-                                                input={<FilledInput name="age" id="filled-age-simple" />}
-                                            >
-                                                <MenuItem value="">
-                                                <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl> */}
-
-
 
                                             <br></br>
                                         <FormControl required>
@@ -540,7 +611,54 @@ class VerticalLinearStepper extends React.Component {
             </Button>
           </Paper>
         )}
+        </div>
+        <div className="cartSummary" style={{width: '360px'}}>
+                            <Card style={{width: '350px', marginTop: '50px'}}>
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="h2">
+                                        Summary
+                                    </Typography>
+                                    {this.props.cartItems.map(item => (
+                                        <div  key={"item" + item.id}>
+                                            <span >{item.type === 'Veg' &&
+                                                <i className="fa fa-stop-circle-o veg" ></i>}
+                                                {item.type === 'Non-Veg' &&
+                                                    <i className="fa fa-stop-circle-o nonVeg" ></i>}   {item.itemName}
+                                            </span>
+                                            <span > {item.quantity}</span>
+                                            <span style={{float:'right'}}><i className="fa fa-inr" aria-hidden="true"></i> {item.price}</span>
+                                        </div>
+                                    ))}
+                                        <div>
+                                            <span >Sub Total  </span>
+                                            <span style={{float:'right'}}><i className="fa fa-inr" aria-hidden="true"></i> {this.state.subTotal}</span>    
+                                        </div>
+                                    <Divider/>
+                                    <div >
+                                        <span style={{fontWeight:'bold'}} >Net Amount  </span>
+                                        <span style={{float:'right'}}><i className="fa fa-inr" aria-hidden="true"></i> {this.state.subTotal}</span>
+                                    </div>
+                                    <br />
+                                    <Button variant="contained" color="primary" onClick={this.handlePlaceOrder}>
+                                        Place Order
+                                    </Button>
+                                    <Snackbar
+                                      anchorOrigin = {{ vertical: "bottom", horizontal: "left" }}
+                                      autoHideDuration = {1000}
+                                      open = {this.state.isSnackBarOpen}
+                                      onClose = {this.closeSnackBar}
+                                      message = {this.state.snackBarMsg}
+                                      action = {[
+                                        <IconButton onClick = {this.closeSnackBar}>
+                                          <CloseIcon style = {{ color: "white" }}/>
+                                        </IconButton>
+                                      ]} 
+                                    />
+                                </CardContent>
+                            </Card>
+            </div>
       </div>
+      
     );
   }
 }

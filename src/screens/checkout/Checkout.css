@@ -15,3 +15,40 @@
 .displayNothing{
     display: none;
 }
+
+.checkSelect{
+    color: green;
+}
+
+.uncheck{
+    color: grey;
+}
+
+.addressSelected{
+    border: 2px solid red;
+}
+
+.addressNotSelected{
+    border: '';
+}
+
+.cartSummary{
+        /* float:right;  */
+        margin:10px;
+        display: inline-block;
+}
+.stepperBlock{
+    /* float: left;  */
+    width: 100%;
+    display: inline-block;
+
+    
+}
+
+.veg{
+    color:green;
+}
+
+.nonVeg{
+    color:red;
+}

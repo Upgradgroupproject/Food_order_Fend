@@ -4,21 +4,21 @@ import { withStyles } from '@material-ui/core/styles';
 //import PropTypes from "prop-types";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { white } from 'material-ui/styles/colors';
-import Stepper from "./VerticalStepper";
+import CheckoutPage from "./VerticalStepper";
 import "./Checkout.css";
 import Header from '../../common/header/Header'
 
 
 
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import 'font-awesome/css/font-awesome.min.css';
-import Typography from '@material-ui/core/Typography';
+// import Card from '@material-ui/core/Card';
+// import CardContent from '@material-ui/core/CardContent';
+// import Button from '@material-ui/core/Button';
+// import Divider from '@material-ui/core/Divider';
+// import Snackbar from '@material-ui/core/Snackbar';
+// import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
+// import 'font-awesome/css/font-awesome.min.css';
+// import Typography from '@material-ui/core/Typography';
 
 
 
@@ -62,16 +62,22 @@ import Typography from '@material-ui/core/Typography';
     };
 
 class Checkout extends Component {
-    // constructor() {
-    //     super();
+    constructor() {
+        super();
+
+        this.state={
+            message: "",
+        }
         
-    // }
+    }
     
 
       
 
     render() {
         const { classes } = this.props;
+        const cartPrice= this.props.cartPrice;
+        const cartItems= this.props.cartItems;
         
         return (
              <div className="home">
@@ -91,6 +97,7 @@ class Checkout extends Component {
                showSearch={false}
                //searchImageByDescription={this.searchImageByDescription}
                showUpload={false}
+               isCheckout={true}
                // uploadNewImage={this.uploadNewImage}
                //showProfile={false}
                //enableMyAccount={true}
@@ -98,36 +105,9 @@ class Checkout extends Component {
             
           <div className= {classes.root}>
             
-                <Stepper style={{width: '60%'}}>
-                
-                </Stepper>
-            
-                <div className="cartSummary">
-                            <Card style={{width: '350px', marginTop:'50px'}}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                        Summary
-                                    </Typography>
-                                        cart items 
-                                        <br></br>
-                                        non-veg <i className="fa fa-inr" aria-hidden="true"></i> 252
-                                        <br></br>
-                                        veg <i className="fa fa-inr" aria-hidden="true"></i> 202
-                                    <Divider/>
-                                    <div >
-                                        <span style={{fontWeight:'bold'}} >Net Amount </span>
-                                        <span ><i className="fa fa-inr" aria-hidden="true"></i> 100</span>
-                                    </div>
-                                    <br />
-                                    <Button variant="contained" color="primary">
-                                        Place Order
-                                    </Button>
-                                    <Snackbar
-                                      done  
-                                    />
-                                </CardContent>
-                            </Card>
-            </div>
+                <CheckoutPage style={{width: '60%'}} cartPrice={cartPrice} cartItems= {cartItems}>
+
+                </CheckoutPage>
           </div>
         </div>
       </MuiThemeProvider>

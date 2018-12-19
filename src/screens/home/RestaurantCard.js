@@ -14,13 +14,11 @@ import 'font-awesome/css/font-awesome.min.css';
 
 const RestaurantCard = function(props) {
   const rest = props.rest;
-  //const index = props.index;
-  //const classes = props.classes;
   const { classes } = props;
   
 
   return (
-    <Card className={classes.restaurantCard} key={rest.id}>
+    <Card className={classes.restaurantCard} key={rest.id} style={{width: '300px',margin:'5px 5px 5px 5px'}} >
       <CardContent >
             <img
             src={rest.photoUrl}

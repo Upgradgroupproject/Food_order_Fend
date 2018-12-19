@@ -16,14 +16,14 @@ class Controller extends Component {
     return (
       <Router>
         <div className="main-container">
-          {/* <Route
+          <Route
             path="/"
             render={props => <Home {...props} baseUrl={this.baseUrl} />}
-          /> */}
-          <Route
+          />
+          {/* <Route
             path="/checkout"
             render={props => <Checkout {...props} baseUrl={this.baseUrl} />}
-          />
+          /> */}
         </div>
       </Router>
     );
