@@ -120,7 +120,7 @@ class Home extends Component {
             <div className="first-row" >
               {dataSource.map((restaurant, index) =>
                 (index === 0 || index === 1 || index === 2 || index === 3) ? (
-                  <div className="left-column" onClick={() => this.getRestaurantDetails(index+1)}>
+                  <div className="left-column" onClick={() => this.getRestaurantDetails(dataSource[index].id)}>
                   <RestaurantCard
                   key={index}
                   rest={restaurant}
@@ -134,7 +134,7 @@ class Home extends Component {
             <div className="second-row">
             {dataSource.map((restaurant, index) =>
                 (index === 4 || index === 5 || index === 6 || index === 7) ? (
-                  <div className="left-column" onClick={() => this.getRestaurantDetails(index+1)}>
+                  <div className="left-column" onClick={() => this.getRestaurantDetails(dataSource[index].id)}>
                   <RestaurantCard
                   key={index}
                   rest={restaurant}

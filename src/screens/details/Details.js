@@ -21,151 +21,6 @@ import Button from '@material-ui/core/Button';
 
 //import { restDetailsArray } from './data'; // JSON data
 
-var restDetailsArray = [
-
-  {
-"id": 1,
-"restaurantName": "Gateway Taproom",
-"photoUrl": "https://b.zmtcdn.com/data/pictures/0/18564740/686000d2b5cfebfad3300f313eaae79c.jpg?output-format=webp",
-"userRating": 4.7,
-"avgPrice": 2200,
-"numberUsersRated": 714,
-"address": {
-  "id": 3,
-  "flatBuilNo": "Godrej BKC, Unit 3, Plot C - 68, G Block, Bandra Kurla Complex",
-  "locality": "Bandra Kurla Complex",
-  "city": "Mumbai",
-  "zipcode": "400112",
-  "states": {
-    "id": 21,
-    "stateName": "Maharashtra"
-  }
-},
-"categories": [
-  {
-    "id": 6,
-    "categoryName": "Chinese",
-    "items": [
-      {
-        "id": 25,
-        "itemName": "chillie chowmine",
-        "price": 210,
-        "type": "Non-Veg"
-      },
-      {
-        "id": 41,
-        "itemName": "Espetada",
-        "price": 210,
-        "type": "Non-Veg"
-      }
-    ]
-  },
-  {
-    "id": 7,
-    "categoryName": "Continental",
-    "items": [
-      {
-        "id": 1,
-        "itemName": "pizza",
-        "price": 200,
-        "type": "Non-Veg"
-      },
-      {
-        "id": 45,
-        "itemName": "Grilled Veg",
-        "price": 203,
-        "type": "Veg"
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "categoryName": "Indian",
-    "items": [
-      {
-        "id": 49,
-        "itemName": "Cataplana Algarve",
-        "price": 245,
-        "type": "Veg"
-      },
-      {
-        "id": 13,
-        "itemName": "pastry",
-        "price": 210,
-        "type": "Veg"
-      },
-      {
-        "id": 29,
-        "itemName": "veg biryani",
-        "price": 203,
-        "type": "Veg"
-      },
-      {
-        "id": 5,
-        "itemName": "chiken burger",
-        "price": 100,
-        "type": "Non-Veg"
-      },
-      {
-        "id": 17,
-        "itemName": "naan",
-        "price": 30,
-        "type": "Veg"
-      },
-      {
-        "id": 21,
-        "itemName": "matar paneer",
-        "price": 270,
-        "type": "Veg"
-      }
-    ]
-  },
-  {
-    "id": 1,
-    "categoryName": "Italian",
-    "items": [
-      {
-        "id": 1,
-        "itemName": "pizza",
-        "price": 200,
-        "type": "Non-Veg"
-      }
-    ]
-  },
-  {
-    "id": 3,
-    "categoryName": "Snacks",
-    "items": [
-      {
-        "id": 37,
-        "itemName": "Corn-On-The-Cob",
-        "price": 270,
-        "type": "Veg"
-      },
-      {
-        "id": 33,
-        "itemName": "Chicken Roll",
-        "price": 150,
-        "type": "Non-Veg"
-      }
-    ]
-  },
-  {
-    "id": 5,
-    "categoryName": "Sweet Dish",
-    "items": [
-      {
-        "id": 9,
-        "itemName": "vanilla icecream",
-        "price": 230,
-        "type": "Veg"
-      }
-    ]
-  }
-]
-},
-
-];
 
 class CartItem extends Component {
   render () {
@@ -243,10 +98,16 @@ class MenuItem extends Component {
 }
 
 export default class Details extends Component {
-  constructor (props) {
-    super(props);
+  constructor () {
+    super();
 
     this.state = {
+      
+      restaurantInfo: '',
+      address: '',
+      categories: [],
+
+
       cart: {
         totalItems: 0,
         totalPrice: 0,
@@ -268,41 +129,67 @@ export default class Details extends Component {
         },
         infoCategories: [],
         categories: []
-      }
+      },
+      
     };
 
     this.updateTotals = this.updateTotals.bind(this);
     this.openSnackBar = this.openSnackBar.bind(this);
     this.closeSnackBar = this.closeSnackBar.bind(this);
-    this.storeRestaurantDetails = this.storeRestaurantDetails.bind(this);
+    //this.storeRestaurantDetails = this.storeRestaurantDetails.bind(this);
     this.checkoutHandler = this.checkoutHandler.bind(this);
   }
 
-  componentDidMount () {
-    this.storeRestaurantDetails();
+  componentWillMount () {
+    //restDetailsArray = [];
+    
+    let reataurantData = null;
+        let xhrRestaurantDetails = new XMLHttpRequest();
+        let restDetails = this;
+        
+        xhrRestaurantDetails.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+              restDetails.setState({
+                    restaurantInfo: JSON.parse(this.responseText),
+                    address: JSON.parse(this.responseText).address,
+                    categories: JSON.parse(this.responseText).categories,
+                      
+               }); 
+               console.log(restDetails.state.address);             
+             }
+        });
+
+        xhrRestaurantDetails.open("GET", "http://localhost:8080/api/restaurant/"+this.props.id);
+        xhrRestaurantDetails.setRequestHeader("Accept", "application/json");
+        xhrRestaurantDetails.send(reataurantData);
+
+        //console.log(JSON.parse(this.responseText) );
+        
+
+    //this.storeRestaurantDetails();
     this.updateTotals();
   }
 
-  storeRestaurantDetails () {
-    let restIndex = restDetailsArray.findIndex(
-      //(rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
-      (rest) => rest.id === Number.parseInt(this.props.id)
-    );
+  // storeRestaurantDetails () {
+  //   let restIndex = restDetailsArray.findIndex(
+  //     //(rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
+  //     (rest) => rest.id === Number.parseInt(this.props.id)
+  //   );
 
-    if (restIndex >= 0) {
-      let infoCategories = [];
-      restDetailsArray[restIndex].categories.map(
-        (category) => infoCategories.push(category.categoryName)
-      );
+  //   if (restIndex >= 0) {
+  //     let infoCategories = [];
+  //     restDetailsArray[restIndex].categories.map(
+  //       (category) => infoCategories.push(category.categoryName)
+  //     );
 
-      this.setState({
-        rest: {
-          ...restDetailsArray[restIndex],
-          infoCategories
-        }
-      })
-    }
-  }
+  //     this.setState({
+  //       rest: {
+  //         ...restDetailsArray[restIndex],
+  //         infoCategories
+  //       }
+  //     })
+  //   }
+  // }
 
   updateTotals () {
     let totalPrice = 0, totalItems = 0, currentCart = this.state.cart;
@@ -405,7 +292,8 @@ export default class Details extends Component {
   }
 
   render () {
-    const restInfo = this.state.rest;
+    const restInfo = this.state.restaurantInfo;
+    const restAddress = this.state.address;
     const menuData = this.state.rest.categories;
 
     return (
@@ -421,7 +309,7 @@ export default class Details extends Component {
 
           <div className = "restaurant-text-info">
             <div className = "restaurant-name">{ restInfo.restaurantName }</div>
-            <div className = "restaurant-locality">{ restInfo.address.locality }</div>
+            <div className = "restaurant-locality">{ restAddress.locality }</div>
             <div className = "restaurant-categories">{
               restInfo.infoCategories
               &&
