@@ -14,8 +14,6 @@ import 'font-awesome/css/font-awesome.min.css';
 
 const RestaurantCard = function(props) {
   const rest = props.rest;
-  //const index = props.index;
-  //const classes = props.classes;
   const { classes } = props;
   
 

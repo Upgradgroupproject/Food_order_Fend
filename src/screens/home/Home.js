@@ -3,11 +3,8 @@ import ReactDOM from 'react-dom';
 import './Home.css';
 import Header from '../../common/header/Header';
 import { withStyles } from '@material-ui/core/styles';
-//import PropTypes from "prop-types";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import RestaurantCard from "./RestaurantCard";
-import {GridListTile} from '@material-ui/core';
-import GridList from '@material-ui/core/GridList';
 import { white } from 'material-ui/styles/colors';
 import Details from '../details/Details';
 
