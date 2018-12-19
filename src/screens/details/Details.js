@@ -136,7 +136,7 @@ export default class Details extends Component {
     this.updateTotals = this.updateTotals.bind(this);
     this.openSnackBar = this.openSnackBar.bind(this);
     this.closeSnackBar = this.closeSnackBar.bind(this);
-    //this.storeRestaurantDetails = this.storeRestaurantDetails.bind(this);
+    this.storeRestaurantDetails = this.storeRestaurantDetails.bind(this);
     this.checkoutHandler = this.checkoutHandler.bind(this);
   }
 
@@ -166,30 +166,32 @@ export default class Details extends Component {
         //console.log(JSON.parse(this.responseText) );
         
 
-    //this.storeRestaurantDetails();
+    this.storeRestaurantDetails();
     this.updateTotals();
   }
 
-  // storeRestaurantDetails () {
-  //   let restIndex = restDetailsArray.findIndex(
-  //     //(rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
-  //     (rest) => rest.id === Number.parseInt(this.props.id)
-  //   );
+  storeRestaurantDetails () {
+    // let restIndex = this.state.restaurantInfo.findIndex(
+    //   //(rest) => rest.id === Number.parseInt(this.props.match.params.restaurantID)
+    //   (rest) => rest.id === Number.parseInt(this.props.id)
+    // );
 
-  //   if (restIndex >= 0) {
-  //     let infoCategories = [];
-  //     restDetailsArray[restIndex].categories.map(
-  //       (category) => infoCategories.push(category.categoryName)
-  //     );
+    
 
-  //     this.setState({
-  //       rest: {
-  //         ...restDetailsArray[restIndex],
-  //         infoCategories
-  //       }
-  //     })
-  //   }
-  // }
+    
+      //let infoCategories = [];
+      this.state.categories.map(
+        (category) => this.state.rest.infoCategories.push(category.categoryName)
+      );
+
+      // this.setState({
+      //   rest: {
+      //     ...restDetailsArray[restIndex],
+      //     infoCategories
+      //   }
+      // })
+    //}
+  }
 
   updateTotals () {
     let totalPrice = 0, totalItems = 0, currentCart = this.state.cart;
@@ -238,7 +240,7 @@ export default class Details extends Component {
   addItemToCart (categoryId, itemId) {
     let currentCart = this.state.cart;
 
-    let itemToBeAdded = this.state.rest.categories.find(
+    let itemToBeAdded = this.state.categories.find(
       category => category.id === categoryId
       )
       .items.find(
@@ -294,7 +296,7 @@ export default class Details extends Component {
   render () {
     const restInfo = this.state.restaurantInfo;
     const restAddress = this.state.address;
-    const menuData = this.state.rest.categories;
+    const menuData = this.state.categories;
 
     return (
       <React.Fragment>
@@ -304,17 +306,19 @@ export default class Details extends Component {
         {/* Restaurant info */}
         <div className = "restaurant-info">
           <div className = "restaurant-img">
-            {/* <img src = {mock} /> */}
+            <img src = { restInfo.photoUrl } />
           </div>
 
           <div className = "restaurant-text-info">
             <div className = "restaurant-name">{ restInfo.restaurantName }</div>
             <div className = "restaurant-locality">{ restAddress.locality }</div>
-            <div className = "restaurant-categories">{
-              restInfo.infoCategories
-              &&
-              restInfo.infoCategories.join(", ")
-            }</div>
+            <div className = "restaurant-categories">
+              {this.state.categories.map((category,index) => (
+                index === 0 ?
+                <span key={"category" + category.id}>{category.categoryName} </span> :
+                <span key={"category" + category.id}>,{category.categoryName} </span>
+            ))}
+            </div>
             <div className = "restaurant-info-footer">
               <div className = "restaurant-rating"><i className="fa fa-star" aria-hidden="true"></i> { restInfo.userRating }
                 <br />
