@@ -75,9 +75,11 @@ class Header extends Component {
             signupcontactNumberRequired: "dispNone",
             isContactNumberValid: "dispNone",
             readyForSignup: false,
-            signUpResponse:"",
+            snackBarMessage:"",
             signupFailInfo:"",
             signupFailed:"dispNone",
+            loginFailInfo:"",
+            loginFailed:"dispNone",
 
             showUserProfileDropDown: false,
             enableMyAccount: false,
@@ -156,40 +158,81 @@ class Header extends Component {
       //alert("Please enter the username and password")
 
     } else {
-      var varAPI = "http://localhost:8080/api/user/login/?contactNumber="+this.state.contactNumber +"&password="+this.state.password;
+      
+        var varAPI = "http://localhost:8080/api/user/login/?contactNumber="+this.state.contactNumber +"&password="+this.state.password;
+      
+        
+        let xhrUserLogin = new XMLHttpRequest();
+        let that = this;
+            xhrUserLogin.addEventListener("readystatechange", function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    
+                    let loggedInUserInfo = JSON.parse(this.responseText);
+
+
+                    that.setState({
+                        loggedIn: true,
+                        loggedInUserName: loggedInUserInfo.firstName,
+                        snackBarMessage: 'Logged in successfully!',
+                        openSnackBar: true,
+                        modalIsOpen: false,
+                    });
+                    sessionStorage.setItem("loggedInUserName", loggedInUserInfo.firstName);
+                    sessionStorage.setItem("access-token", xhrUserLogin.getResponseHeader("access-token"));
+                    that.closeModalHandler();
+                } else {
+                    that.setState({
+                        openSnackBar: false,
+                        snackBarMessage: "",
+                        loginFailInfo: this.responseText,
+                        loginFailed: "dispBlock"
+                    });        
+                }
+            });
+        
+        xhrUserLogin.open("POST", varAPI);
+        xhrUserLogin.setRequestHeader("Content-Type", "application/json");
+        xhrUserLogin.setRequestHeader("Cache-Control", "no-cache");
+        xhrUserLogin.send();
+      
+      
+      
+      
+      
       // var postBody = {
       //   contactNumber: this.state.contactNumber,
       //   password: this.state.password
       // }
-      fetch(varAPI, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        // body: JSON.stringify(postBody)
-      })
-        .then(function (response) {
-          //console.log(response);
-          //localStorage.setItem('Acces',response.data.token);
-          if (response.headers.get("access-token")) {
-            sessionStorage.setItem("access-token", response.headers.get("access-token"));
-            //sessionStorage.setItem("loggedInUserName", response.results.firstName);
-            //console.log(response.results.firstName);
-            this.closeModalHandler();
-            this.setState({ snackBarMsg: "Logged in" });
-            this.setState({ openSnackBar: true})
-          }
-          else if (response.status === 200) {
-            console.log("Hi");
-            //this.setState({ showUserExistMsg: true });
-          }
+    //   fetch(varAPI, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     // body: JSON.stringify(postBody)
+    //   })
+    //     .then(function (response) {
+    //       //console.log(response);
+    //       //localStorage.setItem('Acces',response.data.token);
+    //       if (response.headers.get("access-token")) {
+    //         sessionStorage.setItem("access-token", response.headers.get("access-token"));
+    //         //sessionStorage.setItem("loggedInUserName", response.results.firstName);
+    //         //console.log(response.results.firstName);
+    //         console.log(JSON.parse(response));
+    //         this.closeModalHandler();
+    //         this.setState({ snackBarMsg: "Logged in" });
+    //         this.setState({ openSnackBar: true})
+    //       }
+    //       else if (response.status === 200) {
+    //         console.log("Hi");
+    //         //this.setState({ showUserExistMsg: true });
+    //       }
           
-        }).catch(function (err) {
-          // Error :(ss
-          //console.log(err);
-        });
+    //     }).catch(function (err) {
+    //       // Error :(ss
+    //       //console.log(err);
+    //     });
     }
-    };
+    }
 
     areCredentialsEntered(){
         this.state.password === "" ? 
@@ -200,7 +243,7 @@ class Header extends Component {
             this.setState({ contactNumberRequired: "dispBlock" }) :
              this.setState({ contactNumberRequired: "dispNone" });
 
-             this.setState({ openSnackBar: true})
+            // const contactRegx = /^[0-9]{10}$/;
       }
 
     loginContactNumberChangeHandler = (e) => {
@@ -239,6 +282,7 @@ class Header extends Component {
 
     /**
      * validate the sign up page
+     * 
      * */
     areCredentialsEntered() {
 
@@ -282,45 +326,41 @@ class Header extends Component {
 
     signupClickHandler = () => {
 
-        this.areCredentialsEntered();
-
-        console.log(this.state.readyForSignup);   
+        this.areCredentialsEntered();  
         
-        if(this.state.readyForSignup){
+        if(this.state.readyForSignup){  
 
-         console.log(this.state.readyForSignup);   
+            let cURL = "";
 
-        let cURL = "";
+            cURL = "http://localhost:8080/api/user/signup/?" + 
+            "firstName=" + this.state.firstName + "&lastName=" + this.state.lastName +
+            "&email=" + this.state.email + "&contactNumber=" + this.state.signupcontactNumber + "&password=" + this.state.signupPassword ;
 
-        cURL = "http://localhost:8080/api/user/signup/?" + 
-        "firstName=" + this.state.firstName + "&lastName=" + this.state.lastName +
-        "&email=" + this.state.email + "&contactNumber=" + this.state.signupcontactNumber + "&password=" + this.state.signupPassword ;
+            let xhrSignup = new XMLHttpRequest();
+            let that = this;
 
-        let xhrSignup = new XMLHttpRequest();
-        let that = this;
+            xhrSignup.addEventListener("readystatechange", function () {
+                if (this.readyState === 4 && this.status === 201) {
+                    that.setState({
+                        openSnackBar: true,
+                        value: 0,
+                        snackBarMessage: 'Registered successfully! Please login now!'
+                    });
+                } else {
+                    that.setState({
+                        openSnackBar: false,
+                        snackBarMessage: "",
+                        loginFailInfo: this.responseText,
+                        loginFailed: "dispBlock"
+                    });
+                
+                }
+            });
 
-        xhrSignup.addEventListener("readystatechange", function () {
-            if (this.readyState === 4 && this.status === 201) {
-                that.setState({
-                    openSnackBar: true,
-                    value: 0,
-                    signUpResponse: 'Registered successfully! Please login now!'
-                });
-            } else {
-                that.setState({
-                    openSnackBar: false,
-                    signUpResponse: "",
-                    signupFailInfo: this.responseText,
-                    signupFailed: "dispBlock"
-                });
-               
-            }
-        });
-
-        xhrSignup.open("POST", cURL);
-        xhrSignup.setRequestHeader("Cache-Control", "no-cache");
-        xhrSignup.setRequestHeader("Content-Type", "application/json");
-        xhrSignup.send();
+            xhrSignup.open("POST", cURL);
+            xhrSignup.setRequestHeader("Cache-Control", "no-cache");
+            xhrSignup.setRequestHeader("Content-Type", "application/json");
+            xhrSignup.send();
             
         }
         else
@@ -351,7 +391,7 @@ class Header extends Component {
     };
 
     /* logout handler
-     * clears session info - access-token,user details  
+     * clears session info - access-token,user details 
     */
     logoutClickHandler = () => {
 
@@ -367,10 +407,6 @@ class Header extends Component {
             });     
     };
 
-    /**
-     * Event handler called when the profile menu icon inside the header is clicked to toggle the user profile dropdown
-     * @memberof Header
-     */
     profileIconClickHandler = (event) => {
         this.setState({
             anchorEl: event.currentTarget,
@@ -497,6 +533,11 @@ class Header extends Component {
                       </FormHelperText>
                       </FormControl>
                         <br/><br/>
+                        <FormHelperText className={this.state.loginFailed}>
+                                <span
+                                    className="fieldRequired"> {this.state.loginFailInfo}
+                                </span>
+                        </FormHelperText>
                         <Button variant="contained" color="primary"
                                 onClick={this.loginClickHandler}>LOGIN</Button>
                     </TabContainer>
@@ -597,7 +638,7 @@ class Header extends Component {
                         ContentProps={{
                             'aria-describedby': 'message-id',
                         }}
-                        message={<span id="message-id">{this.state.signUpResponse}</span>}
+                        message={<span id="message-id">{this.state.snackBarMessage}</span>}
                     />
                 </div> 
             
