@@ -19,6 +19,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from "@material-ui/core/Menu/Menu";
 
+
+
 const customStyles = {
     content: {
         top: '50%',
@@ -52,33 +54,7 @@ class Header extends Component {
             modalIsOpen: false,
             value: 0,
             anchorEl: null,
-            usernameRequired: "dispNone",
-            username: "",
-            loginPasswordRequired: "dispNone",
-            loginPassword: "",
-            firstnameRequired: "dispNone",
-            firstname: "",
-            lastnameRequired: "dispNone",
-            lastname: "",
-            emailRequired: "dispNone",
-            isEmailValid: "dispNone",
-            isPassValid: "dispNone",
-            isContactValid: "dispNone",
-            email: "",
-            registerPasswordRequired: "dispNone",
-            registerPassword: "",
-            contactRequired: "dispNone",
-            contact: "",
-            registrationSuccess: false,
-            formValid: false,
-            loggedInUserName: '',
-            isLoggedInContactValid: "dispNone",
-            successMessage: "",
-            errorResponse: "",
-            showUserProfileDropDown: false,
-            enableMyAccount: false,
 
-            userLoggedIn: (sessionStorage.getItem("access-token") !== null),
             contactNumber: "",
             password: "",
             contactNumberRequired: "dispNone",
@@ -98,23 +74,34 @@ class Header extends Component {
             signupcontactNumber: "",
             signupcontactNumberRequired: "dispNone",
             isContactNumberValid: "dispNone",
+            readyForSignup: false,
+            signUpResponse:"",
+            signupFailInfo:"",
+            signupFailed:"dispNone",
 
+            showUserProfileDropDown: false,
+            enableMyAccount: false,
+
+            userLoggedIn: (sessionStorage.getItem("access-token") !== null),
 
         }
     }
+
+    tabChangeHandler = (event, value) => {
+        this.setState({
+            value
+        });
+    };
 
     openModalHandler = () => {
         this.setState({
             modalIsOpen: true,
             value: 0,
-            usernameRequired: "dispNone",
+            contactNumberRequired: "dispNone",
             isLoggedInContactValid: "dispNone",
-            username: "",
-            loginPasswordRequired: "dispNone",
-            loginPassword: "",
-
-
-
+            contactNumber: "",
+            passwordasswordRequired: "dispNone",
+            password: "",
             firstNameRequired: "dispNone",
             firstName: "",
             lastNameRequired: "dispNone",
@@ -128,23 +115,36 @@ class Header extends Component {
             signupcontactNumber: "",
             signupcontactNumberRequired: "dispNone",
             isContactNumberValid: "dispNone",
+            readyForSignup: false,
 
-            openSnackBar: false,
-            errorResponse: "",
-            successMessage: ""
         });
     };
 
     closeModalHandler = () => {
-        this.setState({modalIsOpen: false});
-    };
-
-    tabChangeHandler = (event, value) => {
         this.setState({
-            value
-
+            modalIsOpen: false,
+            // value: 0,
+            // contactNumberRequired: "dispNone",
+            // isLoggedInContactValid: "dispNone",
+            // contactNumber: "",
+            // passwordasswordRequired: "dispNone",
+            // password: "",
+            // firstNameRequired: "dispNone",
+            // firstName: "",
+            // lastNameRequired: "dispNone",
+            // lastName: "",
+            // emailRequired: "dispNone",
+            // email: "",
+            // isEmailValid: "dispNone",
+            // signupPasswordRequired: "dispNone",
+            // signupPassword: "",
+            // isPasswordValid: "dispNone",
+            // signupcontactNumber: "",
+            // signupcontactNumberRequired: "dispNone",
+            // isContactNumberValid: "dispNone",
         });
     };
+
 
     loginClickHandler = () => {
         
@@ -212,151 +212,134 @@ class Header extends Component {
         this.setState({password: e.target.value});
     };
 
+        /*
+        SignUp handlers
+        */
+
+    firstNameChangeHandler = (e) => {
+        this.setState({firstName: e.target.value});
+    };
+
+    lastNameChangeHandler = (e) => {
+        this.setState({lastName: e.target.value});
+    };
+
+    emailChangeHandler = (e) => {
+        this.setState({email: e.target.value});
+    };
+
+    signupPasswordChangeHandler = (e) => {
+        this.setState({signupPassword: e.target.value});
+    };
+
+    signupcontactNumberChangeHandler = (e) => {
+        this.setState({signupcontactNumber: e.target.value});
+    };
+
+
     /**
      * validate the sign up page
      * */
-    validateSignUp() {
+    areCredentialsEntered() {
 
         const emailRegx = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
         const passwordRegx = /^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)(?=.*[#@$%&*!^]+.*)[a-zA-Z0-9#@$&*!]{4,}$/;
         const contactRegx = /^[0-9]{10}$/;
 
-        this.setState({errorResponse: '', formValid: false});
-        this.state.firstname === "" ? this.setState({
-            firstnameRequired: "dispBlock",
-            formValid: this.state.formValid ? false : false
-        }) : this.setState({
-            firstnameRequired: "dispNone",
-            formValid: this.state.formValid ? true : true
-        });
+        this.setState({readyForSignup: false});
+        
+        this.state.firstName === "" ? this.setState({firstNameRequired: "dispBlock",readyForSignup: false})
+                                    : this.setState({firstNameRequired: "dispNone",readyForSignup: true});
 
-        this.state.email === "" ? this.setState({
-            emailRequired: "dispBlock",
-            isEmailValid: "dispNone",
-            formValid: this.state.formValid ? false : false
-        }) : this.state.email.match(emailRegx) ? this.setState({
-            isEmailValid: "dispNone",
-            emailRequired: "dispNone",
-            formValid: this.state.formValid ? true : true
-        }) : this.setState({
-            isEmailValid: "dispBlock",
-            emailRequired: "dispNone",
-            formValid: this.state.formValid ? false : false
-        });
+        this.state.email === "" ? this.setState({emailRequired: "dispBlock",isEmailValid: "dispNone",readyForSignup: false})
+                                : !this.state.email.match(emailRegx) ? 
+                                      this.setState({isEmailValid: "dispBlock",emailRequired: "dispNone",readyForSignup: false})
+                                            :  this.setState({isEmailValid: "dispNone",emailRequired: "dispNone",readyForSignup: true});
 
-        this.state.registerPassword === "" ? this.setState({
-                registerPasswordRequired: "dispBlock",
-                isPassValid: "dispNone",
-                formValid: this.state.formValid ? false : false
-            }) :
-            this.state.registerPassword.match(passwordRegx) ? this.setState({
-                isPassValid: "dispNone",
-                registerPasswordRequired: "dispNone",
-                formValid: this.state.formValid ? true : true
-            }) : this.setState({
-                isPassValid: "dispBlock",
-                registerPasswordRequired: "dispNone",
-                formValid: this.state.formValid ? false : false
-            });
+        this.state.signupPassword === "" ? this.setState({signupPasswordRequired: "dispBlock",isPasswordValid: "dispNone",readyForSignup: false})
+                :
+                 !this.state.signupPassword.match(passwordRegx) ? 
+                    this.setState({ isPasswordValid: "dispBlock",signupPasswordRequired: "dispNone",readyForSignup: false})
+                    :    
+                        this.setState({ isPasswordValid: "dispNone",signupPasswordRequired: "dispNone",readyForSignup: true});
 
-        this.state.contact === "" ? this.setState({
-                contactRequired: "dispBlock",
-                isContactValid: "dispNone",
-                formValid: this.state.formValid ? false : false
-            }) :
-            this.state.contact.match(contactRegx) ? this.setState({
-                isContactValid: "dispNone",
-                contactRequired: "dispNone",
-                formValid: this.state.formValid ? true : true
-            }) : this.setState({
-                isContactValid: "dispBlock",
-                contactRequired: "dispNone",
-                formValid: this.state.formValid ? false : false
-            });
-        return this.state.formValid;
+        this.state.signupcontactNumber === "" ? this.setState({signupcontactNumberRequired: "dispBlock",isContactNumberValid: "dispNone",readyForSignup: false})
+            :
+            !this.state.signupcontactNumber.match(contactRegx) ? this.setState({isContactNumberValid: "dispBlock",signupcontactNumberRequired: "dispNone",
+                readyForSignup: false})
+            :
+            this.setState({isContactNumberValid: "dispNone",signupcontactNumberRequired: "dispNone",readyForSignup: true }) 
 
     }
 
     /**
-     * user sign up api call
-     */
-    signUp(dataSignup) {
+     * singup click handler to perform
+     *    check form inputs entered?
+     *    form inputs valid?
+     *    API call to user/signup
+     *    response to user 
+     * */
 
-        let resourcePath = "/user/signup";
+    signupClickHandler = () => {
+
+        this.areCredentialsEntered();
+
+        console.log(this.state.readyForSignup);   
+        
+        if(this.state.readyForSignup){
+
+         console.log(this.state.readyForSignup);   
+
+        let cURL = "";
+
+        cURL = "http://localhost:8080/api/user/signup/?" + 
+        "firstName=" + this.state.firstName + "&lastName=" + this.state.lastName +
+        "&email=" + this.state.email + "&contactNumber=" + this.state.signupcontactNumber + "&password=" + this.state.signupPassword ;
+
         let xhrSignup = new XMLHttpRequest();
         let that = this;
 
-        console.log("baseurl : " + this.props.baseUrl + resourcePath);
-        console.log("signUp Data : " + dataSignup);
         xhrSignup.addEventListener("readystatechange", function () {
             if (this.readyState === 4 && this.status === 201) {
                 that.setState({
-                    registrationSuccess: true,
                     openSnackBar: true,
                     value: 0,
-                    errorResponse: this.responseText,
-                    successMessage: 'Registered successfully! Please login now!'
+                    signUpResponse: 'Registered successfully! Please login now!'
                 });
             } else {
-                that.setState({errorResponse: this.responseText});
-                console.log(this.responseText);
+                that.setState({
+                    openSnackBar: false,
+                    signUpResponse: "",
+                    signupFailInfo: this.responseText,
+                    signupFailed: "dispBlock"
+                });
+               
             }
         });
 
-        xhrSignup.open("POST", this.props.baseUrl + resourcePath + "?" + dataSignup.toString());
-        xhrSignup.setRequestHeader("Content-Type", "application/json");
+        xhrSignup.open("POST", cURL);
         xhrSignup.setRequestHeader("Cache-Control", "no-cache");
+        xhrSignup.setRequestHeader("Content-Type", "application/json");
         xhrSignup.send();
-
-    }
-
-    /**
-     * singup click handler to call the sign up method
-     * */
-    signUpClickHandler = () => {
-
-        if (!this.validateSignUp()) {
-            return;
+            
         }
-        let dataSignup =
-            "firstName=" + this.state.firstname +
-            "&lastName=" + this.state.lastname +
-            "&email=" + this.state.email +
-            "&contactNumber=" + this.state.contact +
-            "&password=" + this.state.registerPassword
-        ;
-        this.signUp(dataSignup);
+        else
+        {
+
+        }
+        
     };
+
+
     handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-
         this.setState({openSnackBar: false});
     };
 
-    inputFirstNameChangeHandler = (e) => {
-        this.setState({firstname: e.target.value});
-    };
-
-    inputLastNameChangeHandler = (e) => {
-        this.setState({lastname: e.target.value});
-    };
-
-    inputEmailChangeHandler = (e) => {
-        this.setState({email: e.target.value});
-    };
-
-    inputRegisterPasswordChangeHandler = (e) => {
-        this.setState({registerPassword: e.target.value});
-    };
-
-    inputContactChangeHandler = (e) => {
-        this.setState({contact: e.target.value});
-    };
-
+    
     handleCloseMenu = () => {
-
 
         this.setState({showUserProfileDropDown: false, anchorEl: null});
     };
@@ -366,10 +349,10 @@ class Header extends Component {
             pathname: "/profile"
         });
     };
-    /**
-     * this is method is logout the user from current session and navigates him to home page
-     *
-     */
+
+    /* logout handler
+     * clears session info - access-token,user details  
+    */
     logoutClickHandler = () => {
 
             sessionStorage.removeItem("access-token");
@@ -381,9 +364,7 @@ class Header extends Component {
             });
             this.props.history.push({
               pathname: "/"
-            });
-            
-        
+            });     
     };
 
     /**
@@ -592,8 +573,14 @@ class Header extends Component {
                         <br/><br/>
                         
                         <br/><br/>
+                        <FormHelperText className={this.state.signupFailed}>
+                                <span
+                                    className="fieldRequired"> {this.state.signupFailInfo}
+                                </span>
+                        </FormHelperText>
+                        
                         <Button variant="contained" color="primary"
-                                onClick={this.signUpClickHandler}>SIGNUP</Button>
+                                onClick={this.signupClickHandler}>SIGNUP</Button>
                     </TabContainer>
                     }
                 </Modal>
@@ -610,7 +597,7 @@ class Header extends Component {
                         ContentProps={{
                             'aria-describedby': 'message-id',
                         }}
-                        message={<span id="message-id">{this.state.snackBarMsg}</span>}
+                        message={<span id="message-id">{this.state.signUpResponse}</span>}
                     />
                 </div> 
             
