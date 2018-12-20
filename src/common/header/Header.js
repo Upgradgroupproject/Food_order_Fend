@@ -524,9 +524,9 @@ class Header extends Component {
                     {this.state.value === 0 &&
                     <TabContainer>
                     <FormControl required>
-                      <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
-                      <Input id="contactNumber" type="text" name="contactNumber"
-                        contactNumber={this.state.contactNumber}
+                      <InputLabel htmlFor="contactnumber">Contact No.</InputLabel>
+                      <Input id="contactnumber" type="text" name="contactnumber"
+                        contactnumber={this.state.contactNumber}
                         onChange={this.loginContactNumberChangeHandler} 
                         />
                       <FormHelperText
@@ -568,8 +568,8 @@ class Header extends Component {
                     {this.state.value === 1 &&
                     <TabContainer>
                         <FormControl required >
-                            <InputLabel htmlFor="firstName">First Name</InputLabel>
-                            <Input id="firstName" type="text" firstName={this.state.firstName}
+                            <InputLabel htmlFor="firstname">First Name</InputLabel>
+                            <Input id="firstname" type="text" firstname={this.state.firstName}
                                    onChange={this.firstNameChangeHandler}
                                    />
                             <FormHelperText className={this.state.firstNameRequired}>
@@ -578,8 +578,8 @@ class Header extends Component {
                         </FormControl>
                         <br/><br/>
                         <FormControl >
-                            <InputLabel htmlFor="lastName">Last Name</InputLabel>
-                            <Input id="lastName" type="text" lastname={this.state.lastName}
+                            <InputLabel htmlFor="lastname">Last Name</InputLabel>
+                            <Input id="lastname" type="text" lastname={this.state.lastName}
                                    onChange={this.LastNameChangeHandler}
                                    />
                             <FormHelperText className={this.state.lastNameRequired}>
@@ -601,9 +601,9 @@ class Header extends Component {
                         </FormControl>
                         <br/><br/>
                         <FormControl required >
-                            <InputLabel htmlFor="signupPassword">Password</InputLabel>
-                            <Input id="signupPassword" type="password"
-                                   signupPassword={this.state.signupPassword}
+                            <InputLabel htmlFor="signuppassword">Password</InputLabel>
+                            <Input id="signuppassword" type="password"
+                                   signuppassword={this.state.signupPassword}
                                    onChange={this.signupPasswordChangeHandler}
                                    />
                             <FormHelperText className={this.state.signupPasswordRequired}>
@@ -617,9 +617,9 @@ class Header extends Component {
                         </FormControl>
                         <br/><br/>
                         <FormControl required >
-                            <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
-                            <Input id="contactNumber" type="text" 
-                                   contactNumber={this.state.signupcontactNumber}
+                            <InputLabel htmlFor="contactnumber">Contact No.</InputLabel>
+                            <Input id="contactnumber" type="text" 
+                                   contactnumber={this.state.signupcontactNumber}
                                    onChange={this.signupcontactNumberChangeHandler} 
                                    />
                             <FormHelperText className={this.state.signupPasswordRequired}>
