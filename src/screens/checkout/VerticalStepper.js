@@ -166,7 +166,8 @@ class VerticalLinearStepper extends React.Component {
                 addressProvidedByUser:[],
                 addressSelected:"false",
                 addressSelectedIndex: '',
-                newAddressEnteredByUser: [],
+
+                newAddressEnteredByUser: "",
 
                 subTotal: props.cartPrice,
                 isSnackBarOpen: false,
@@ -370,9 +371,15 @@ class VerticalLinearStepper extends React.Component {
     
         if(this.state.invalidAddress === false){
 
-            /* Save new address */
-
-            //this.props.message = "hello";
+                this.state.newAddressEnteredByUser = {
+                        "id": "",
+                        "flatBuilNo": this.state.flatbuilnumber,
+                        "locality": this.state.locality,
+                        "city": this.state.city,
+                        "zipcode": this.state.zipcode,
+                        "stateId": this.state.state_id,
+                }
+          }
 
             
 
@@ -380,8 +387,6 @@ class VerticalLinearStepper extends React.Component {
                 activeStep: state.activeStep + 1,
              }));
         }
-
-    }
 
     /* if address is selected then move to next Step*/
     else { 
@@ -397,8 +402,11 @@ class VerticalLinearStepper extends React.Component {
 
   handlePlaceOrder = () =>{
     //this.setState({dummycheck: this.cartAdded});
-    // const orderDataid = this.props.cartItems.id;
-    // const orderQunatity = this.props.cartItems.quantity;
+    //  const orderDataid = this.props.cartItems.id;
+    //  const orderQunatity = this.props.cartItems.quantity;
+
+
+     console.log(this.props.cartItems);
 
     let orderData =[
         {
@@ -411,6 +419,28 @@ class VerticalLinearStepper extends React.Component {
 
         let xhrOrder = new XMLHttpRequest();
         let placeOrder = this;
+
+        let apiParams="";
+
+        if(this.state.addressSelected === true){
+             apiParams = "http://localhost:8080/api/order?"+
+                                       "addressId="+placeOrder.state.addressProvidedByUser.id+
+                                       "&paymentId="+2+
+                                       "&bill="+2;                               
+        }
+        else{
+
+             apiParams = "http://localhost:8080/api/order?"+
+                                       "flatBuilNo="+this.state.flatbuilnumber+
+                                       "&locality="+this.state.locality+
+                                       "&city="+this.state.city+
+                                       "&zipcode="+this.state.zipcode+
+                                       "&stateId="+this.state.state_id+
+                                       "&paymentId="+2+
+                                       "&bill="+2;
+        }
+                                
+
         
         xhrOrder.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
@@ -430,7 +460,7 @@ class VerticalLinearStepper extends React.Component {
             
         });
         
-        xhrOrder.open("POST", "http://localhost:8080/api/order?flatBuilNo=12&locality=12&city=12&zipcode=122122&stateId=12&paymentId=1&bill=232");
+        xhrOrder.open("POST", apiParams);
         xhrOrder.setRequestHeader("Cache-Control", "no-cache");
         xhrOrder.setRequestHeader("Content-Type","application/json");
         xhrOrder.setRequestHeader("Accept", "application/json");
