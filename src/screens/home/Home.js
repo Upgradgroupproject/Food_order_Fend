@@ -7,6 +7,9 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import RestaurantCard from "./RestaurantCard";
 import { white } from 'material-ui/styles/colors';
 import Details from '../details/Details';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 
     const styles = {
@@ -63,6 +66,7 @@ class Home extends Component {
             restaurantsArray : [],
             filteredReastaurantArray: [], 
             currentSearchValue: "",
+            
             //isDataLoaded:false
         }
     }
@@ -132,15 +136,13 @@ class Home extends Component {
             <div className="home">
             <MuiThemeProvider>
             <div>
-            <Header {...this.props} 
+            <Header 
             showLink={false}
             history={this.props.history}
             showSearch={true}
-            searchImageByDescription={this.searchImageByDescription}
-            showUpload={true}
-            uploadNewImage={this.uploadNewImage}
             showProfile={true}
             enableMyAccount={true}
+            isHomePage={true}
             onChange={this.searchRestaurantHandler}
             />
 
@@ -175,8 +177,8 @@ class Home extends Component {
             </div>
             </div>
         </div>
+        
       </MuiThemeProvider>
-
             </div>
         ) }
 

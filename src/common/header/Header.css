@@ -1,11 +1,30 @@
-.header-main-container {
-  background-color: #263238;
-  padding: 16px;
-  margin-bottom: 16px;
+.header-icon-group {
   display: flex;
+  padding: 16px;
   justify-content: space-between;
-  width: 92%;
+  width: 90%;
+  height: 50px;
 }
+
+.mainHeader {
+  color: #ffffff;
+  padding: 15px 15px 15px 15px;
+}
+
+.search-field {
+  display: flex;
+  margin-right: 30px;
+  padding: 4px;
+  height: 50%;
+}
+
+.fieldRequired {
+  color:red;
+}
+
+
+
+
 
 .header-logo-container, .header-search-container, .header-upload-btn-container, .header-profile-btn-container {
   align-self: center;
@@ -74,6 +93,15 @@
   flex: 1 1 auto;
 }
 
+.dispNone{
+  display: none;
+}
+
+.dispInfo{
+  display: block;
+}
+
+
 
 /* @media (max-width: 992px) {
   .flexHeader {
@@ -86,3 +114,7 @@
     height: 64px;
   }
 } */
+
+
+
+
