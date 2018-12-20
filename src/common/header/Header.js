@@ -87,6 +87,7 @@ class Header extends Component {
             loginFailInfo:"",
             loginFailed:"dispNone",
             signinContactNumberRequired:"dispNone",
+            contactNumberRequired1:"dispNone",
 
             showUserProfileDropDown: false,
             enableMyAccount: false,
@@ -263,7 +264,7 @@ class Header extends Component {
           
              const contactRegx = /^[0-9]{10}$/;
           
-            this.state.contactNumber === "" ? this.setState({contactNumberRequired: "dispBlock",contactNumberRequired: "dispNone"})
+            this.state.contactNumber === "" ? this.setState({contactNumberRequired1: "dispBlock"})
             :
             !this.state.contactNumber.match(contactRegx) ? this.setState({contactNumberRequired: "dispBlock",signinContactNumberRequired: "dispNone",
                 readyForSignup: false})
@@ -537,7 +538,7 @@ class Header extends Component {
                         />
                       <FormHelperText
                         className={
-                          this.state.contactNumberRequired
+                          this.state.contactNumberRequired1
                         }
                       >
                         <span className="fieldRequired">required</span>
