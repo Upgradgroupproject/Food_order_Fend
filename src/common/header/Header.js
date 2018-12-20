@@ -135,46 +135,46 @@ class Header extends Component {
   * Function called before the render method
   * @memberof Header
   */
-  componentDidMount() {
-    this.getUserInformation();
-  }
+  // componentDidMount() {
+  //   this.getUserInformation();
+  // }
 
   /**
   * Function to get all the information about the currently logged-in user
   * @memberof Header
   */
-  getUserInformation = () => {
-    if (
-      !Utils.isUndefinedOrNullOrEmpty(sessionStorage.getItem("access-token"))
-    ) {
-      const requestUrl =
-        "https://api.instagram.com/v1/users/self/?access_token=" +
-        sessionStorage.getItem("access-token");
-      const that = this;
-      Utils.makeApiCall(
-        requestUrl,
-        null,
-        null,
-        Constants.ApiRequestTypeEnum.GET,
-        null,
-        responseText => {
-          const userDetails = { ...this.state.currentUserDetails };
-          userDetails.profileImage = JSON.parse(
-            responseText
-          ).data.profile_picture;
-          userDetails.username = JSON.parse(responseText).data.username;
-          that.setState({
-            currentUserDetails: userDetails
-          });
-          sessionStorage.setItem(
-            "user-details",
-            JSON.parse(responseText).data.username
-          );
-        },
-        () => { }
-      );
-    }
-  };
+  // getUserInformation = () => {
+  //   if (
+  //     !Utils.isUndefinedOrNullOrEmpty(sessionStorage.getItem("access-token"))
+  //   ) {
+  //     const requestUrl =
+  //       "https://api.instagram.com/v1/users/self/?access_token=" +
+  //       sessionStorage.getItem("access-token");
+  //     const that = this;
+  //     Utils.makeApiCall(
+  //       requestUrl,
+  //       null,
+  //       null,
+  //       Constants.ApiRequestTypeEnum.GET,
+  //       null,
+  //       responseText => {
+  //         const userDetails = { ...this.state.currentUserDetails };
+  //         userDetails.profileImage = JSON.parse(
+  //           responseText
+  //         ).data.profile_picture;
+  //         userDetails.username = JSON.parse(responseText).data.username;
+  //         that.setState({
+  //           currentUserDetails: userDetails
+  //         });
+  //         sessionStorage.setItem(
+  //           "user-details",
+  //           JSON.parse(responseText).data.username
+  //         );
+  //       },
+  //       () => { }
+  //     );
+  //   }
+  // };
 
   /**
   * Event handler called when the upload button inside the header is
@@ -354,7 +354,7 @@ class Header extends Component {
     if (!this.state.contactNumber || !this.state.password) {
       alert("Please enter the username and password")
     } else {
-      var varAPI = "http://localhost:8080/api/user/login";
+      var varAPI = "http://localhost:8080/api/user/login/?contactNumber="+this.state.contactNumber +"&password="+this.state.password;
       var postBody = {
         contactNumber: this.state.contactNumber,
         password: this.state.password
@@ -364,7 +364,7 @@ class Header extends Component {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(postBody)
+        // body: JSON.stringify(postBody)
       })
         .then(function (response) {
           console.log(response);
@@ -372,6 +372,7 @@ class Header extends Component {
           if (response.headers.get("access-token")) {
             sessionStorage.setItem("access-token", response.headers.get("access-token"));
             console.log(response.status);
+            console.log(sessionStorage.getItem("access-token"));
           }
           else if (response.status === 200) {
             console.log("Hi");

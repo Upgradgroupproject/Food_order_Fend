@@ -171,7 +171,7 @@ class VerticalLinearStepper extends React.Component {
 
                 subTotal: props.cartPrice,
                 isSnackBarOpen: false,
-
+                snackBarMsg: "Unable to place your order! Please try again!",
 
                 serverResponse: "",
 
@@ -205,42 +205,49 @@ class VerticalLinearStepper extends React.Component {
         xhrRestaurant.send(statesData);
 
     // access-Token to be set from session-storage    
-    
-    let adressData = null;
-    let xhrAddress = new XMLHttpRequest();
-    let addThat = this;
-    
-    xhrAddress.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            addThat.setState({
-                allAddress : JSON.parse(this.responseText)           
-            });      
-         }    
+    if(sessionStorage.getItem("access-token")){
+
+        let adressData = null;
+        let xhrAddress = new XMLHttpRequest();
+        let addThat = this;
         
-    });
-    
-    xhrAddress.open("GET", "http://localhost:8080/api/address/user?accessToken=62f43a69-e749-4a6a-ac58-536b19ce5630");
-    xhrAddress.setRequestHeader("Cache-Control", "no-cache");
-    xhrAddress.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
-    xhrAddress.send(adressData);
-    
-    let paymentData = null;
-    let xhrPayment = new XMLHttpRequest();
-    let payThat = this;
-    
-    xhrPayment.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            payThat.setState({
-                paymentOptions : JSON.parse(this.responseText)           
-            });      
-         }    
+        xhrAddress.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                addThat.setState({
+                    allAddress : JSON.parse(this.responseText)           
+                });      
+            }    
+            
+        });
         
-    });
+        xhrAddress.open("GET", "http://localhost:8080/api/address/user?accessToken=62f43a69-e749-4a6a-ac58-536b19ce5630");
+        xhrAddress.setRequestHeader("Cache-Control", "no-cache");
+        xhrAddress.setRequestHeader('accessToken', sessionStorage.getItem("access-token"))
+        xhrAddress.send(adressData);
+    }
+
     
-    xhrPayment.open("GET", "http://localhost:8080/api/payment");
-    xhrPayment.setRequestHeader("Cache-Control", "no-cache");
-    xhrPayment.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630")
-    xhrPayment.send(paymentData);
+    
+    if(sessionStorage.getItem("access-token")){
+        let paymentData = null;
+        let xhrPayment = new XMLHttpRequest();
+        let payThat = this;
+        
+        xhrPayment.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                payThat.setState({
+                    paymentOptions : JSON.parse(this.responseText)           
+                });      
+            }    
+            
+        });
+        
+        xhrPayment.open("GET", "http://localhost:8080/api/payment");
+        xhrPayment.setRequestHeader("Cache-Control", "no-cache");
+        xhrPayment.setRequestHeader('accessToken', sessionStorage.getItem("access-token"))
+        xhrPayment.send(paymentData);
+    }
+    
 
 
 
@@ -400,33 +407,39 @@ class VerticalLinearStepper extends React.Component {
         }
     ]
 
-    let xhrOrder = new XMLHttpRequest();
-    let placeOrder = this;
-    
-    xhrOrder.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            placeOrder.setState({
-                
-                serverResponse : JSON.parse(this.responseText)           
-            }); 
-            if(isNaN(placeOrder.state.serverResponse)){
-                placeOrder.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
-            }
-            else{
-                let orderNo = placeOrder.state.serverResponse;
-                placeOrder.setState({ snackBarMsg: "Order placed successfully! Your order ID is "+orderNo });
-                
-            }     
-         }    
+    if(sessionStorage.getItem("access-token")){
+
+        let xhrOrder = new XMLHttpRequest();
+        let placeOrder = this;
         
-    });
-    
-    xhrOrder.open("POST", "http://localhost:8080/api/order?flatBuilNo=12&locality=12&city=12&zipcode=122122&stateId=12&paymentId=1&bill=232");
-    xhrOrder.setRequestHeader("Cache-Control", "no-cache");
-    xhrOrder.setRequestHeader("Content-Type","application/json");
-    xhrOrder.setRequestHeader("Accept", "application/json");
-    xhrOrder.setRequestHeader('accessToken', "62f43a69-e749-4a6a-ac58-536b19ce5630");
-    xhrOrder.send(JSON.stringify(orderData));
+        xhrOrder.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                placeOrder.setState({
+                    
+                    serverResponse : JSON.parse(this.responseText)           
+                }); 
+                if(isNaN(placeOrder.state.serverResponse)){
+                    placeOrder.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
+                }
+                else{
+                    let orderNo = placeOrder.state.serverResponse;
+                    placeOrder.setState({ snackBarMsg: "Order placed successfully! Your order ID is "+orderNo });
+                    
+                }     
+             }    
+            
+        });
+        
+        xhrOrder.open("POST", "http://localhost:8080/api/order?flatBuilNo=12&locality=12&city=12&zipcode=122122&stateId=12&paymentId=1&bill=232");
+        xhrOrder.setRequestHeader("Cache-Control", "no-cache");
+        xhrOrder.setRequestHeader("Content-Type","application/json");
+        xhrOrder.setRequestHeader("Accept", "application/json");
+        xhrOrder.setRequestHeader('accessToken', sessionStorage.getItem("access-token"));
+        xhrOrder.send(JSON.stringify(orderData));
+
+    }
+
+
 
     this.openSnackBar();
     console.log(this.state.subTotal);
