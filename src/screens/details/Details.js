@@ -152,7 +152,7 @@ export default class Details extends Component {
                     categories: JSON.parse(this.responseText).categories,
                       
                }); 
-               console.log(restDetails.state.address);             
+               //console.log(restDetails.state.address);             
              }
         });
 
@@ -269,7 +269,7 @@ export default class Details extends Component {
   checkoutHandler () {
     if (this.state.cart.totalItems > 0) {
       // items present in the cart
-      console.log(this.state.cart.totalItems,this.state.cart.totalPrice,this.state.cart.items);
+      //console.log(this.state.cart.totalItems,this.state.cart.totalPrice,this.state.cart.items);
       this.props.history.push({
         pathname: "/checkout"
       });

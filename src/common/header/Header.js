@@ -279,7 +279,7 @@ class Header extends Component {
 
     loginContactNumberChangeHandler = (e) => {
         this.setState({contactNumber: e.target.value});
-        console.log(this.state.contactNumber);
+        //console.log(this.state.contactNumber);
     };
 
     loginPasswordChangeHandler = (e) => {
