@@ -597,7 +597,7 @@ class Header extends Component {
                   </FormControl><br />
                   <FormControl required>
                     <InputLabel htmlFor="password" >Password</InputLabel>
-                    <Input id="password" type="text" name="password"
+                    <Input id="password" type="password" name="password"
                       onChange={this.inputUsernameChangeHandler.bind(this)} />
                   </FormControl>
                   <br />
@@ -636,7 +636,7 @@ not be registered!</div> : null}
                   <FormControl required>
                     <InputLabel htmlFor="password">Password</InputLabel>
                     <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input id="password" type="text" name="password"
+                    <Input id="password" type="password" name="password"
                       onChange={this.inputUsernameChangeHandler.bind(this)} />
                     <br />
                     <FormControl>
