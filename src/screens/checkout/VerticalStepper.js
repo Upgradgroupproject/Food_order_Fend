@@ -173,6 +173,7 @@ class VerticalLinearStepper extends React.Component {
                 snackBarMsg: "Unable to place your order! Please try again!",
 
                 serverResponse: "",
+                selectedIndex:"",
 
 
                 dummycheck: "hello+you",
@@ -293,7 +294,11 @@ class VerticalLinearStepper extends React.Component {
    
             if(i===index){
                 selectedAddress[i].style.border = '2px solid red';
-                selectedIcon[i].style.color = 'green';   
+                selectedIcon[i].style.color = 'green';
+                this.setState({addressProvidedByUser : this.state.allAddress[index]}); 
+                this.setState({addressSelectedIndex: index});
+                this.setState({addressSelected :true});
+                
             }
             else{
                 selectedAddress[i].style.border = '';
@@ -301,11 +306,7 @@ class VerticalLinearStepper extends React.Component {
             }
 
         }
-        this.setState.addressProvidedByUser =[];
-        this.setState.addressProvidedByUser = this.state.allAddress[index];
-        console.log(this.state.addressProvidedByUser);
-        this.setState.addressSelected = true;
-        this.setState.addressSelectedIndex= index;
+        
 }
 
   flatBuildChangeHandler = (e) =>{
@@ -499,7 +500,7 @@ class VerticalLinearStepper extends React.Component {
                                                 <Typography >{userAdd.states.stateName}</Typography>
                                                 <Typography >{userAdd.zipcode}</Typography>
                                                 <IconButton className="selectIcon"style={{marginLeft:'20%'}} onClick={this.iconClickHandler(index)}>
-                                                    <CheckCircle/>
+                                                    <CheckCircle className={this.state.addressSelectedIndex === index ? 'checkSelect' : 'uncheck'}/>
                                                 </IconButton>
                                     </div>
                                     </GridListTile>
