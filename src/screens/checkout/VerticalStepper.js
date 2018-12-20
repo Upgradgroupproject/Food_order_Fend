@@ -7,10 +7,10 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-// import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography';
 import {GridListTile} from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
-// import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@material-ui/core/IconButton';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 // import AddressCard from './AddressCard';
 import Tabs from '@material-ui/core/Tabs';
@@ -26,15 +26,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-// import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import 'font-awesome/css/font-awesome.min.css';
-import Typography from '@material-ui/core/Typography';
+
 
 // const styles = theme => ({
 //   root: {
@@ -115,6 +107,18 @@ const styles = theme => ({
     },
     button: {
         margin: '20px'
+    },
+    formWrap: {
+      [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        flexDirection: 'column'
+      }
+    },
+    actionsContainer: {
+      [theme.breakpoints.down('md')]: {
+        display: 'flex',
+        justifyContent: 'center'
+      }
     }
 });
 
@@ -163,12 +167,6 @@ class VerticalLinearStepper extends React.Component {
                 toggleStateIdHelper: "displayNothing",
                 stateList:[],
                 toggleZipcodeValidator:"displayNothing",
-                addressProvidedByUser:[],
-                addressSelected:"false",
-                addressSelectedIndex: '',
-                newAddressEnteredByUser: [],
-
-                dummycheck: "hello+you",
 
 
             }
@@ -261,35 +259,13 @@ class VerticalLinearStepper extends React.Component {
     this.setState({ paymentMode: event.target.value });
   };
 
-  /* click handler for address-selector icon 
-     all cards are selected by document.getElementsByClassName
-     then indexes are match and styling is set/reset
-  */
+  /* click handler for address-selector icon */
+  iconClickHandler = event => {
 
-  iconClickHandler = (index)=>(e) =>{
+        event.target.style.color = 'green';
+        //ReactDOM.findDOMNode(GridList).getElementsByClassName("check").style.border = ''; 
 
-        const selectedIcon = document.getElementsByClassName('selectIcon');
-        const selectedAddress = document.getElementsByClassName('selectAddress');
-
-        for(var i = 0;i < selectedAddress.length; i++){
-   
-            if(i===index){
-                selectedAddress[i].style.border = '2px solid red';
-                selectedIcon[i].style.color = 'green';   
-            }
-            else{
-                selectedAddress[i].style.border = '';
-                selectedIcon[i].style.color = 'grey';  
-            }
-
-        }
-        this.setState.addressProvidedByUser =[];
-        this.setState.addressProvidedByUser = this.state.allAddress[index];
-        console.log(this.state.addressProvidedByUser);
-        this.state.addressSelected = true;
-        this.state.addressSelectedIndex= index;
 }
-
   flatBuildChangeHandler = (e) =>{
       this.setState({flatbuilnumber: e.target.value});
       
@@ -348,26 +324,15 @@ class VerticalLinearStepper extends React.Component {
                              :
                              this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing",toggleZipcodeValidator:"displayNothing"});                      
 
-    
-        if(this.state.invalidAddress === false){
-
-            /* Save new address */
-
-            //this.props.message = "hello";
-
-            
-
-            this.setState(state => ({
-                activeStep: state.activeStep + 1,
-             }));
-        }
-
+    }
+    else{ //checks to be added for existing address
+        this.setState(state => ({
+            activeStep: state.activeStep + 1,
+        }));
     }
 
-    /* if address is selected then move to next Step*/
-    else { 
- 
-        if(this.state.addressSelected === true)
+
+    if(this.state.invalidAddress === false){
         this.setState(state => ({
             activeStep: state.activeStep + 1,
         }));
@@ -384,9 +349,8 @@ class VerticalLinearStepper extends React.Component {
     const stateCodes = this.state.stateList;
 
     return (
-      <div className={classes.root} style={{display:'flex'}}>
-      <div className = "stepperBlock">
-        <Stepper activeStep={activeStep} orientation="vertical" style={{width:'90%'}}>
+      <div className={classes.root}>
+        <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((label, index) => {
             return (
               <Step key={label}>
@@ -428,13 +392,13 @@ class VerticalLinearStepper extends React.Component {
                                     <GridList cellHeight={"auto"} className={classes.gridListMain} cols={3}>
                                         {userAddressSource.map((userAdd,index) =>
                                             <GridListTile className="check" key={'mykey' + index}>
-                                            <div className="selectAddress"style={{ padding:'10px',marginTop:'5px' }}>
+                                            <div style={{ padding:'10px' }}>
                                                 <Typography >{userAdd.flatBuilNo}</Typography>
                                                 <Typography >{userAdd.locality}</Typography>
                                                 <Typography >{userAdd.city}</Typography>
                                                 <Typography >{userAdd.states.stateName}</Typography>
                                                 <Typography >{userAdd.zipcode}</Typography>
-                                                <IconButton className="selectIcon"style={{marginLeft:'20%'}} onClick={this.iconClickHandler(index)}>
+                                                <IconButton style={{marginLeft:'20%'}} onClick={this.iconClickHandler}>
                                                     <CheckCircle/>
                                                 </IconButton>
                                     </div>
@@ -443,7 +407,7 @@ class VerticalLinearStepper extends React.Component {
                                     </GridList>
                                 }
                                 {(this.state.addressTab === 1) && 
-                                    <div >
+                                    <div className = {classes.formWrap} >
                                         <FormControl required>
                                             <InputLabel htmlFor="flatBuilNo">Flat/Building No.</InputLabel>
                                             <Input id="flatBuilNo" type="text" value={this.state.flatbuilnumber} onChange={this.flatBuildChangeHandler} />
@@ -557,7 +521,6 @@ class VerticalLinearStepper extends React.Component {
 
 
                   <div className={classes.actionsContainer}>
-                    <div>
                       <Button
                         disabled={activeStep === 0}
                         onClick={this.handleBack}
@@ -573,7 +536,6 @@ class VerticalLinearStepper extends React.Component {
                       >
                         {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                       </Button>
-                    </div>
                   </div>
                 </StepContent>
               </Step>
@@ -588,35 +550,7 @@ class VerticalLinearStepper extends React.Component {
             </Button>
           </Paper>
         )}
-        </div>
-        <div className="cartSummary" style={{width: '300px'}}>
-                            <Card style={{width: '300px', marginTop: '50px'}}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                        Summary
-                                    </Typography>
-                                        cart items 
-                                        <br></br>
-                                        non-veg <i className="fa fa-inr" aria-hidden="true"></i> 252
-                                        <br></br>
-                                        veg <i className="fa fa-inr" aria-hidden="true"></i> 202
-                                    <Divider/>
-                                    <div >
-                                        <span style={{fontWeight:'bold'}} >Net Amount </span>
-                                        <span ><i className="fa fa-inr" aria-hidden="true"></i> 100</span>
-                                    </div>
-                                    <br />
-                                    <Button variant="contained" color="primary">
-                                        Place Order
-                                    </Button>
-                                    <Snackbar
-                                      done  
-                                    />
-                                </CardContent>
-                            </Card>
-            </div>
       </div>
-      
     );
   }
 }

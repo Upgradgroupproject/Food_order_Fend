@@ -4,26 +4,26 @@ import { withStyles } from '@material-ui/core/styles';
 //import PropTypes from "prop-types";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { white } from 'material-ui/styles/colors';
-import CheckoutPage from "./VerticalStepper";
+import Stepper from "./VerticalStepper";
 import "./Checkout.css";
 import Header from '../../common/header/Header'
 
 
 
-// import Card from '@material-ui/core/Card';
-// import CardContent from '@material-ui/core/CardContent';
-// import Button from '@material-ui/core/Button';
-// import Divider from '@material-ui/core/Divider';
-// import Snackbar from '@material-ui/core/Snackbar';
-// import IconButton from '@material-ui/core/IconButton';
-// import CloseIcon from '@material-ui/icons/Close';
-// import 'font-awesome/css/font-awesome.min.css';
-// import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import 'font-awesome/css/font-awesome.min.css';
+import Typography from '@material-ui/core/Typography';
 
 
 
 
-    const styles = {
+    const styles = theme => ({
         root: {
             display: 'flex',
             flexWrap: 'wrap',
@@ -31,7 +31,10 @@ import Header from '../../common/header/Header'
             overflow: 'hidden',
             backgroundColor: white,
             width:'95%',
-            
+
+            [theme.breakpoints.down('sm')]: {
+              width: '100%',
+            },
           },
           gridList: {
             flexWrap: 'nowrap',
@@ -59,17 +62,21 @@ import Header from '../../common/header/Header'
           marginBottom: 40,
           margintop: 40
         },
-    };
+        cart: {
+          width: '350px',
+          marginTop:'50px',
+
+          [theme.breakpoints.down('md')]: {
+            width: '90%'
+          }
+        }
+    });
 
 class Checkout extends Component {
-    constructor() {
-        super();
-
-        this.state={
-            message: "",
-        }
+    // constructor() {
+    //     super();
         
-    }
+    // }
     
 
       
@@ -95,7 +102,6 @@ class Checkout extends Component {
                showSearch={false}
                //searchImageByDescription={this.searchImageByDescription}
                showUpload={false}
-               isCheckout={true}
                // uploadNewImage={this.uploadNewImage}
                //showProfile={false}
                //enableMyAccount={true}
@@ -103,12 +109,12 @@ class Checkout extends Component {
             
           <div className= {classes.root}>
             
-                <CheckoutPage style={{width: '60%'}}>
-
-                </CheckoutPage>
+                <Stepper style={{width: '60%'}}>
+                
+                </Stepper>
             
-                {/* <div className="cartSummary">
-                            <Card style={{width: '350px', marginTop:'50px'}}>
+                <div className = {classes.cart}>
+                            <Card >
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="h2">
                                         Summary
@@ -132,7 +138,7 @@ class Checkout extends Component {
                                     />
                                 </CardContent>
                             </Card>
-            </div> */}
+            </div>
           </div>
         </div>
       </MuiThemeProvider>
