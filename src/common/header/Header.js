@@ -147,6 +147,12 @@ class Header extends Component {
         });
     };
 
+    /**
+     * login click handler to perform
+     *    check credentials entered?
+     *    API call to user/login
+     *    response to user , set sessionItems
+     * */
 
     loginClickHandler = () => {
         
@@ -246,6 +252,8 @@ class Header extends Component {
             // const contactRegx = /^[0-9]{10}$/;
       }
 
+      /* Login Handlers */
+
     loginContactNumberChangeHandler = (e) => {
         this.setState({contactNumber: e.target.value});
         console.log(this.state.contactNumber);
@@ -281,8 +289,8 @@ class Header extends Component {
 
 
     /**
-     * validate the sign up page
-     * 
+     * validate the user entries in signup page
+     *     email,password and contact are for length and mentioned combination/structure
      * */
     areCredentialsEntered() {
 
@@ -391,12 +399,11 @@ class Header extends Component {
     };
 
     /* logout handler
-     * clears session info - access-token,user details 
+     * clears session info - access-token,user name 
     */
     logoutClickHandler = () => {
 
             sessionStorage.removeItem("access-token");
-            sessionStorage.removeItem("user-details");
             sessionStorage.removeItem("loggedInUserName");
             this.setState({
                 userLoggedIn: false,
@@ -416,7 +423,6 @@ class Header extends Component {
 
     render() {
 
-    
         return (
             <div > 
                 <header className="mainHeader" style={{backgroundColor: '#263238'}}>
