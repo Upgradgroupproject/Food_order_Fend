@@ -86,6 +86,7 @@ class Header extends Component {
             signupFailed:"dispNone",
             loginFailInfo:"",
             loginFailed:"dispNone",
+            signinContactNumberRequired:"dispNone",
 
             showUserProfileDropDown: false,
             enableMyAccount: false,
@@ -259,11 +260,16 @@ class Header extends Component {
           this.setState({ passwordRequired: "dispBlock" }) :
               this.setState({ passwordRequired: "dispNone" });
               
-          this.state.contactNumber === "" ? 
-            this.setState({ contactNumberRequired: "dispBlock" }) :
-             this.setState({ contactNumberRequired: "dispNone" });
+          
+             const contactRegx = /^[0-9]{10}$/;
+          
+            this.state.contactNumber === "" ? this.setState({contactNumberRequired: "dispBlock",contactNumberRequired: "dispNone"})
+            :
+            !this.state.contactNumber.match(contactRegx) ? this.setState({contactNumberRequired: "dispBlock",signinContactNumberRequired: "dispNone",
+                readyForSignup: false})
+            :
+            this.setState({contactNumberRequired: "dispNone",signinContactNumberRequired: "dispNone" }) 
 
-            // const contactRegx = /^[0-9]{10}$/;
       }
 
       /* Login Handlers */
@@ -439,7 +445,7 @@ class Header extends Component {
 
         return (
             <div > 
-                <header className="mainHeader" style={{backgroundColor: '#263238'}}>
+                <header className="mainHeader" style={{backgroundColor: '#263238'}} >
                     <div className="header-icon-group">
                         <div>
                             <IconButton color="inherit" aria-label="Open drawer">
@@ -536,6 +542,11 @@ class Header extends Component {
                       >
                         <span className="fieldRequired">required</span>
                       </FormHelperText>
+                      <FormHelperText className={this.state.contactNumberRequired}>
+                                <span
+                                    className="fieldRequired">Contact No. must contain only numbers and must be 10 digits long
+                                </span>
+                            </FormHelperText>
                     </FormControl><br />
                     <FormControl required>
                       <InputLabel htmlFor="password" >Password</InputLabel>
