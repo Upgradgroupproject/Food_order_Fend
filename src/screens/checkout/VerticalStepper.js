@@ -166,13 +166,17 @@ class VerticalLinearStepper extends React.Component {
                 addressProvidedByUser:[],
                 addressSelected:"false",
                 addressSelectedIndex: '',
-                newAddressEnteredByUser: [],
+
+                newAddressEnteredByUser: "",
 
                 subTotal: props.cartPrice,
                 isSnackBarOpen: false,
                 snackBarMsg: "Unable to place your order! Please try again!",
 
                 serverResponse: "",
+                selectedIndex:"",
+                paymentSelected:0,
+                userHaveSelectedPayMode: false,
 
 
                 dummycheck: "hello+you",
@@ -274,9 +278,21 @@ class VerticalLinearStepper extends React.Component {
     this.setState({ addressTab});
   };
 
-  /* Function For material Radio button selection change handler*/
+  /* Function For Radio button change handler 
+   * for payment options selection
+  */
   handleChange = event => {
     this.setState({ paymentMode: event.target.value });
+
+    for(var i = 0;i < this.state.paymentOptions.length; i++){
+   
+        if(event.target.value === this.state.paymentOptions[i].paymentName){
+            
+            this.setState({paymentSelected : this.state.paymentOptions[i].id});
+            this.setState({userHaveSelectedPayMode : true});   
+        }
+
+    }
   };
 
   /* click handler for address-selector icon 
@@ -293,7 +309,11 @@ class VerticalLinearStepper extends React.Component {
    
             if(i===index){
                 selectedAddress[i].style.border = '2px solid red';
-                selectedIcon[i].style.color = 'green';   
+                selectedIcon[i].style.color = 'green';
+                this.setState({addressProvidedByUser : this.state.allAddress[index]}); 
+                this.setState({addressSelectedIndex: index});
+                this.setState({addressSelected :true});
+                
             }
             else{
                 selectedAddress[i].style.border = '';
@@ -301,11 +321,7 @@ class VerticalLinearStepper extends React.Component {
             }
 
         }
-        this.setState.addressProvidedByUser =[];
-        this.setState.addressProvidedByUser = this.state.allAddress[index];
-        console.log(this.state.addressProvidedByUser);
-        this.setState.addressSelected = true;
-        this.setState.addressSelectedIndex= index;
+        
 }
 
   flatBuildChangeHandler = (e) =>{
@@ -327,6 +343,14 @@ class VerticalLinearStepper extends React.Component {
     zipcodeChangeHandler = (e) =>{
         this.setState({zipcode: e.target.value});
     }
+
+/*
+    * The function to check all selection steps in Stepper
+    * Address check, existing address selected ?
+    * New address entered correctly ?
+    * Payment mode selected ?
+
+*/
 
 
   handleNext = () => {
@@ -369,9 +393,15 @@ class VerticalLinearStepper extends React.Component {
     
         if(this.state.invalidAddress === false){
 
-            /* Save new address */
-
-            //this.props.message = "hello";
+                this.state.newAddressEnteredByUser = {
+                        "id": "",
+                        "flatBuilNo": this.state.flatbuilnumber,
+                        "locality": this.state.locality,
+                        "city": this.state.city,
+                        "zipcode": this.state.zipcode,
+                        "stateId": this.state.state_id,
+                }
+          }
 
             
 
@@ -380,8 +410,6 @@ class VerticalLinearStepper extends React.Component {
              }));
         }
 
-    }
-
     /* if address is selected then move to next Step*/
     else { 
  
@@ -389,15 +417,27 @@ class VerticalLinearStepper extends React.Component {
         this.setState(state => ({
             activeStep: state.activeStep + 1,
         }));
+        
     }
     
   };
 
 
+/*
+    * The function checks all stepper selections and proceed for order
+    * address selected /entered ?
+    * XHR response is displayed with order id if successfully placed
+
+*/
+
+
   handlePlaceOrder = () =>{
     //this.setState({dummycheck: this.cartAdded});
-    // const orderDataid = this.props.cartItems.id;
-    // const orderQunatity = this.props.cartItems.quantity;
+    //  const orderDataid = this.props.cartItems.id;
+    //  const orderQunatity = this.props.cartItems.quantity;
+
+
+     console.log(this.props.cartItems);
 
     let orderData =[
         {
@@ -410,39 +450,78 @@ class VerticalLinearStepper extends React.Component {
 
         let xhrOrder = new XMLHttpRequest();
         let placeOrder = this;
-        
-        xhrOrder.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                placeOrder.setState({
-                    
-                    serverResponse : JSON.parse(this.responseText)           
-                }); 
-                if(isNaN(placeOrder.state.serverResponse)){
-                    placeOrder.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
-                }
-                else{
-                    let orderNo = placeOrder.state.serverResponse;
-                    placeOrder.setState({ snackBarMsg: "Order placed successfully! Your order ID is "+orderNo });
-                    
-                }     
-             }    
-            
-        });
-        
-        xhrOrder.open("POST", "http://localhost:8080/api/order?flatBuilNo=12&locality=12&city=12&zipcode=122122&stateId=12&paymentId=1&bill=232");
-        xhrOrder.setRequestHeader("Cache-Control", "no-cache");
-        xhrOrder.setRequestHeader("Content-Type","application/json");
-        xhrOrder.setRequestHeader("Accept", "application/json");
-        xhrOrder.setRequestHeader('accessToken', sessionStorage.getItem("access-token"));
-        xhrOrder.send(JSON.stringify(orderData));
+
+        let apiParams="";
+
+        if(this.state.userHaveSelectedPayMode && (this.state.activeStep > 1)){
+
+            if(this.state.addressSelected === true ){
+                apiParams = "http://localhost:8080/api/order?"+
+                                          "addressId="+this.state.addressProvidedByUser.id+
+                                          "&paymentId="+this.state.paymentSelected+
+                                          "&bill="+2;                               
+           }
+           else{
+   
+                apiParams = "http://localhost:8080/api/order?"+
+                                          "flatBuilNo="+this.state.flatbuilnumber+
+                                          "&locality="+this.state.locality+
+                                          "&city="+this.state.city+
+                                          "&zipcode="+this.state.zipcode+
+                                          "&stateId="+this.state.state_id+
+                                          "&paymentId="+this.state.paymentSelected+
+                                          "&bill="+2;
+           }
+                                   
+   
+           
+           xhrOrder.addEventListener("readystatechange", function () {
+               if (this.readyState === 4) {
+                   placeOrder.setState({
+                       
+                       serverResponse : JSON.parse(this.responseText)           
+                   }); 
+                   if(isNaN(placeOrder.state.serverResponse)){
+                       placeOrder.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
+                   }
+                   else{
+                       let orderNo = placeOrder.state.serverResponse;
+                       placeOrder.setState({ snackBarMsg: "Order placed successfully! Your order ID is "+orderNo });
+                       
+                   }     
+                }    
+               
+           });
+           
+           xhrOrder.open("POST", apiParams);
+           xhrOrder.setRequestHeader("Cache-Control", "no-cache");
+           xhrOrder.setRequestHeader("Content-Type","application/json");
+           xhrOrder.setRequestHeader("Accept", "application/json");
+           xhrOrder.setRequestHeader('accessToken', sessionStorage.getItem("access-token"));
+           xhrOrder.send(JSON.stringify(orderData));
+   
+       
+       this.openSnackBar();
 
     }
 
+    else{
+        if(this.state.userHaveSelectedPayMode){
+            
+            this.setState({ snackBarMsg: "Unable to place your order! Please try again!" }); 
+        }
+        else{
+            this.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
+        } 
+        this.openSnackBar();
+    }
 
-
-    this.openSnackBar();
-    console.log(this.state.subTotal);
-    console.log(this.state.serverResponse);
+    }
+    else{
+        this.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
+        this.openSnackBar();
+    }
+        
 }
 
     openSnackBar () {
@@ -468,6 +547,9 @@ class VerticalLinearStepper extends React.Component {
     return (
       <div className={classes.root} style={{display:'flex'}}>
       <div className = "stepperBlock">
+
+      {/* Stepper to check all steps for address and payment selection */}
+      
         <Stepper activeStep={activeStep} orientation="vertical" style={{width:'90%'}}>
           {steps.map((label, index) => {
             return (
@@ -499,7 +581,7 @@ class VerticalLinearStepper extends React.Component {
                                                 <Typography >{userAdd.states.stateName}</Typography>
                                                 <Typography >{userAdd.zipcode}</Typography>
                                                 <IconButton className="selectIcon"style={{marginLeft:'20%'}} onClick={this.iconClickHandler(index)}>
-                                                    <CheckCircle/>
+                                                    <CheckCircle className={this.state.addressSelectedIndex === index ? 'checkSelect' : 'uncheck'}/>
                                                 </IconButton>
                                     </div>
                                     </GridListTile>
