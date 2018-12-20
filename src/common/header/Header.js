@@ -80,6 +80,7 @@ class Header extends Component {
             signupFailed:"dispNone",
             loginFailInfo:"",
             loginFailed:"dispNone",
+            userLoggedIn: false,
 
             showUserProfileDropDown: false,
             enableMyAccount: false,
@@ -177,7 +178,7 @@ class Header extends Component {
 
 
                     that.setState({
-                        loggedIn: true,
+                        userLoggedIn: true,
                         loggedInUserName: loggedInUserInfo.firstName,
                         snackBarMessage: 'Logged in successfully!',
                         openSnackBar: true,
