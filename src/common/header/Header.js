@@ -30,18 +30,18 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 // import {createMuiTheme } from 'material-ui/styles';
 
 // const theme = createMuiTheme({
-//   overrides: {
-//     MuiInput: {
-//       underline: {
-//         '&:before': { //underline color when textfield is inactive
-//           backgroundColor: 'black',
-//         },
-//         '&:hover:not($disabled):before': { //underline color when hovered 
-//           backgroundColor: 'white',
-//         },
-//       }
-//     }
-//   }
+// overrides: {
+// MuiInput: {
+// underline: {
+// '&:before': { //underline color when textfield is inactive
+// backgroundColor: 'black',
+// },
+// '&:hover:not($disabled):before': { //underline color when hovered
+// backgroundColor: 'white',
+// },
+// }
+// }
+// }
 // });
 
 
@@ -86,57 +86,63 @@ const styles = {
 };
 
 /**
- * Class component for the header
- * @class Header
- * @extends {Component}
- */
+* Class component for the header
+* @class Header
+* @extends {Component}
+*/
 class Header extends Component {
   constructor() {
     super();
 
     this.state = {
 
-      modalIsOpen:false,
-      value:0,
-      username:"",
-      usernameRequired:"dispName",
+      modalIsOpen: false,
+      value: 0,
+      username: "",
+      usernameRequired: "dispNone",
       contactNumber: "",
       password: "",
-      firstName:"",
-      lastName:"",
-      email:""
+      firstName: "",
+      lastName: "",
+      email: "",
+      isLoggedIn: "",
+      showParagraph: false,
+      showUserExistMsg: false
 
     };
     this.openUploadImageModal = this.openUploadImageModal.bind(this);
     this.closeUploadImageModal = this.closeUploadImageModal.bind(this);
     this.selectImageForUpload = this.selectImageForUpload.bind(this);
-    this.changeDescriptionHandlerInUploadImageModal = this.changeDescriptionHandlerInUploadImageModal.bind(
-      this
-    );
-    this.changeHashtagsHandlerInUploadImageModal = this.changeHashtagsHandlerInUploadImageModal.bind(
-      this
-    );
-    this.uploadClickHandlerInUploadModal = this.uploadClickHandlerInUploadModal.bind(
-      this
-    );
+    this.changeDescriptionHandlerInUploadImageModal =
+      this.changeDescriptionHandlerInUploadImageModal.bind(
+        this
+      );
+    this.changeHashtagsHandlerInUploadImageModal =
+      this.changeHashtagsHandlerInUploadImageModal.bind(
+        this
+      );
+    this.uploadClickHandlerInUploadModal =
+      this.uploadClickHandlerInUploadModal.bind(
+        this
+      );
     this.profileIconClickHandler = this.profileIconClickHandler.bind(this);
     this.logoutClickHandler = this.logoutClickHandler.bind(this);
   }
 
-  
+
 
   /**
-   * Function called before the render method
-   * @memberof Header
-   */
+  * Function called before the render method
+  * @memberof Header
+  */
   componentDidMount() {
     this.getUserInformation();
   }
 
   /**
-   * Function to get all the information about the currently logged-in user
-   * @memberof Header
-   */
+  * Function to get all the information about the currently logged-in user
+  * @memberof Header
+  */
   getUserInformation = () => {
     if (
       !Utils.isUndefinedOrNullOrEmpty(sessionStorage.getItem("access-token"))
@@ -171,9 +177,10 @@ class Header extends Component {
   };
 
   /**
-   * Event handler called when the upload button inside the header is clicked to open the upload image modal
-   * @memberof Header
-   */
+  * Event handler called when the upload button inside the header is
+  clicked to open the upload image modal
+  * @memberof Header
+  */
   openUploadImageModal = () => {
     this.setState({
       isUploadModalOpen: true
@@ -181,9 +188,9 @@ class Header extends Component {
   };
 
   /**
-   * Event handler called to close upload image modal
-   * @memberof Header
-   */
+  * Event handler called to close upload image modal
+  * @memberof Header
+  */
   closeUploadImageModal = () => {
     let newUploadImageModalFormValues = { ...this.state.uploadImageFormValues };
     Utils.assignEmptyStringToAllKeysInObj(newUploadImageModalFormValues);
@@ -206,10 +213,10 @@ class Header extends Component {
   };
 
   /**
-   * Event handler called when an image is selected by a user to be uploaded
-   * @param event default parameter on which the event handler is called
-   * @memberof Header
-   */
+  * Event handler called when an image is selected by a user to be uploaded
+  * @param event default parameter on which the event handler is called
+  * @memberof Header
+  */
   selectImageForUpload = event => {
     event.preventDefault();
 
@@ -231,10 +238,11 @@ class Header extends Component {
   };
 
   /**
-   * Event handler called when the description input field is changed inside the upload image modal
-   * @param event default parameter on which the event handler is called
-   * @memberof Header
-   */
+  * Event handler called when the description input field is changed
+  inside the upload image modal
+  * @param event default parameter on which the event handler is called
+  * @memberof Header
+  */
   changeDescriptionHandlerInUploadImageModal = event => {
     let currentUploadImageFormValues = { ...this.state.uploadImageFormValues };
     currentUploadImageFormValues.description = event.target.value;
@@ -244,10 +252,11 @@ class Header extends Component {
   };
 
   /**
-   * Event handler called when the hashtags input field is changed inside the upload image modal
-   * @param event default parameter on which the event handler is called
-   * @memberof Header
-   */
+  * Event handler called when the hashtags input field is changed inside
+  the upload image modal
+  * @param event default parameter on which the event handler is called
+  * @memberof Header
+  */
   changeHashtagsHandlerInUploadImageModal = event => {
     let currentUploadImageFormValues = { ...this.state.uploadImageFormValues };
     currentUploadImageFormValues.hashtags = event.target.value;
@@ -257,11 +266,13 @@ class Header extends Component {
   };
 
   /**
-   * Event handler called when the 'Upload' button inside the upload image modal is clicked
-   * @memberof Header
-   */
+  * Event handler called when the 'Upload' button inside the upload
+  image modal is clicked
+  * @memberof Header
+  */
   uploadClickHandlerInUploadModal = () => {
     // finding the class names for the desciption and hashtags validation messages - to be displayed or not
+
     const image_validation_classname = UtilsUI.findValidationMessageClassname(
       this.state.uploadImageFormValues.imagePreviewUrl,
       Constants.ValueTypeEnum.FORM_FIELD
@@ -276,12 +287,15 @@ class Header extends Component {
     );
 
     // setting the class names for the desciption and hashtags validation messages - to be displayed or not
+
     let currentUploadImageFormValidationClassnames = {
       ...this.state.uploadImageFormValidationClassnames
     };
     currentUploadImageFormValidationClassnames.image = image_validation_classname;
-    currentUploadImageFormValidationClassnames.description = description_validation_classname;
-    currentUploadImageFormValidationClassnames.hashtags = hashtags_validation_classname;
+    currentUploadImageFormValidationClassnames.description =
+      description_validation_classname;
+    currentUploadImageFormValidationClassnames.hashtags =
+      hashtags_validation_classname;
 
     if (
       Utils.isAnyValueOfObjectUndefinedOrNullOrEmpty(
@@ -315,9 +329,10 @@ class Header extends Component {
   };
 
   /**
-   * Event handler called when the profile icon inside the header is clicked to toggle the user profile dropdown
-   * @memberof Header
-   */
+  * Event handler called when the profile icon inside the header is
+  clicked to toggle the user profile dropdown
+  * @memberof Header
+  */
   profileIconClickHandler = () => {
     this.setState({
       showUserProfileDropDown: !this.state.showUserProfileDropDown
@@ -335,165 +350,187 @@ class Header extends Component {
   tabChangeHandler = (event, value) => {
     this.setState({ value })
   }
-  loginClickHandler = () => {
+  loginClickHandler = (e) => {
     if (!this.state.contactNumber || !this.state.password) {
       alert("Please enter the username and password")
     } else {
-      var varAPI = "http://localhost:8080/api/user/login?contactNumber='"+this.state.contact+"'&password='"+this.state.password+"'";
+      var varAPI = "http://localhost:8080/api/user/login";
       var postBody = {
-        contactNumber: this.state.contact,
+        contactNumber: this.state.contactNumber,
         password: this.state.password
       }
       fetch(varAPI, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(postBody)
       })
         .then(function (response) {
           console.log(response);
-          console.log(response.body);
-          console.log(response.message);
-          console.log(response.errors);
-          alert(response.message)
-         // dispatch(update_errors(response));
-          if(response.status >= 400)
-          {
-            throw new Error("Bad response from server");
+          //localStorage.setItem('Acces',response.data.token);
+          if (response.headers.get("access-token")) {
+            sessionStorage.setItem("access-token", response.headers.get("access-token"));
+            console.log(response.status);
           }
-        }) .then(function(json){
-          console.log("succeed json re");
-          // We can dispatch many times!
-          // Here, we update the app state with the results of the API call.
-
-          //dispatch(update_user(json));
-
-        });
-      }
-    }
-    signUpClickHandler =()=>
-    {
-     var firstName=this.state.firstName;
-      var lastName=this.state.lastName;
-      var email=this.state.email;
-      var username=this.state.username;
-      var password=this.state.password;
-      var contactNumber=this.state.contactNumber;
-
-      var signUpAPI="http://localhost:8080/api/user/signup?firstName='"+firstName+"'&lastName='"+lastName+"'&email='"+email+"'&contactNumber='"+contactNumber+"'&password='"+password+"'";
-      fetch(signUpAPI, {
-        method: 'POST',
-      })
-        .then(function (response) {
-          console.log(response);
-          console.log(response.body);
-          console.log(response.message);
-          console.log(response.errors);
-          alert(response.message)
-         // dispatch(update_errors(response));
-          if(response.status >= 400)
-          {
-            alert("Bad response from server");
+          else if (response.status === 200) {
+            console.log("Hi");
+            this.setState({ showUserExistMsg: true });
           }
-        }) .then(function(json){
-          console.log("succeed json response");
-          // We can dispatch many times!
-          // Here, we update the app state with the results of the API call.
-
+        }).catch(function (err) {
+          // Error :(ss
+          console.log(err);
         });
-   
     }
-    inputUsernameChangeHandler = (e) => {
-      console.log("Hii");
-      this.setState({ [e.target.name] : e.target.value});
-      console.log(e.target.name, e.target.value);
-    }
+  }
+  signUpClickHandler = () => {
+    var firstName = this.state.firstName;
+    var lastName = this.state.lastName;
+    var email = this.state.email;
+    var username = this.state.username;
+    var password = this.state.password;
+    var contactNumber = this.state.contactNumber;
 
-    /**
-     * Event handler called when the logout menu item is clicked inside the user profile dropdown to log a user out of the application
-     * @memberof Header
-     */
-    logoutClickHandler = () => {
-      sessionStorage.removeItem("access-token");
-      sessionStorage.removeItem("user-details");
-      this.props.history.push({
-        pathname: "/"
+    var signUpAPI = "http://localhost:8080/api/user/signup?firstName='" +
+      firstName + "'&lastName='" + lastName + "'&email='" + email +
+      "'&contactNumber='" + contactNumber + "'&password='" + password + "'";
+    fetch(signUpAPI, {
+      method: 'POST',
+    })
+      .then(function (response) {
+        console.log(response);
+        console.log(response.body);
+        console.log(response.message);
+        console.log(response.errors);
+        alert(response.message)
+        // dispatch(update_errors(response));
+        if (response.status >= 400) {
+          alert("Bad response from server");
+        }
+      }).then(function (json) {
+        console.log("succeed json response");
+        // We can dispatch many times!
+        // Here, we update the app state with the results of the API call.
+
       });
-    };
 
-
-    /**
-     * Function called when the component is rendered
-     * @memberof Header
-     */
-    render() {
-      const { classes } = this.props;
-
-      // logo to be rendered inside the header
-      let logoToRender = null;
-      if (this.props.showLink) {
-        logoToRender = (
-          <Link to="/home" className="logo">
-            <img src={LogoImage} className="logo" alt="Food-Orders"/>
-          </Link>
-        );
-      } else {
-        logoToRender = <img src={LogoImage} className="logo" />;
+  }
+  inputUsernameChangeHandler = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+    if (e.target.name === "password") {
+      var value = e.target.value;
+      var pass = new RegExp("((?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&*!^]).{8,20})");
+      var valid = pass.test(value);
+      if (valid != true) {
+        this.setState({ showParagraph: true });
       }
-
-      // search box to be rendered inside the header
-      let searchBoxToRender = null;
-
-      // if (this.props.showSearch || !this.props.showSearch) {
-        if (this.props.showSearch) {
-
-        searchBoxToRender = (
-          // <MuiThemeProvider theme={theme}>
-          <div className="header-search-container">
-            <div className="search-icon">
-              <SearchIcon />
-            </div>
-            <Input style={{color:'white'}}
-
-              className={classes.searchInput}
-              placeholder="Search by Restaurant Name"
-              // disableUnderline
-              onChange={this.props.onChange}
-            />
-          </div>
-          // </MuiThemeProvider>
-        );
-
-      }
-
       else {
-        searchBoxToRender = (
-          <div className="fill-remaining-space"></div>
-
-
-        );
+        this.setState({ showParagraph: false });
+      }
+    }
+    else if (e.target.name === "contactNumber") {
+      var value = e.target.value;
+      var pass = new RegExp("\\d{10}");
+      var valid = pass.test(value);
+      if (valid != true) {
+        this.setState({ showContactParagraph: true });
+      }
+      else {
+        this.setState({ showContactParagraph: false });
       }
 
-      // upload button to be rendered inside the header
-      // let uploadButtonToRender = null;
-      // // if (this.props.showUpload || !this.props.showUpload) {
-      // if (this.props.showUpload) {
+    }
+    console.log(e.target.name, e.target.value);
+  }
 
-      //   uploadButtonToRender = (
-      //     <div className="header-upload-btn-container">
-      //       <Toolbar variant="dense">
-      //         <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-      //           <MenuIcon />
-      //         </IconButton>
-      //         <Typography variant="h6" color="inherit">
-      //           Categories
-      //     </Typography>
-      //       </Toolbar>
-      //     </div>
-      //   );
-      // }
+  /**
+  * Event handler called when the logout menu item is clicked inside the
+  user profile dropdown to log a user out of the application
+  * @memberof Header
+  */
+  logoutClickHandler = () => {
+    sessionStorage.removeItem("access-token");
+    sessionStorage.removeItem("user-details");
+    this.props.history.push({
+      pathname: "/"
+    });
+  };
 
-      let viewCategories = null;
-      if (this.props.showSearch || !this.props.showSearch) {
-        if (this.props.showSearch) {
+
+  /**
+  * Function called when the component is rendered
+  * @memberof Header
+  */
+  render() {
+    const { classes } = this.props;
+
+    // logo to be rendered inside the header
+    let logoToRender = null;
+    if (this.props.showLink) {
+      logoToRender = (
+        <Link to="/home" className="logo">
+          <img src={LogoImage} className="logo" alt="Food-Orders" />
+        </Link>
+      );
+    } else {
+      logoToRender = <img src={LogoImage} className="logo" />;
+    }
+
+    // search box to be rendered inside the header
+    let searchBoxToRender = null;
+
+    // if (this.props.showSearch || !this.props.showSearch) {
+    if (this.props.showSearch) {
+
+      searchBoxToRender = (
+        // <MuiThemeProvider theme={theme}>
+        <div className="header-search-container">
+          <div className="search-icon">
+            <SearchIcon />
+          </div>
+          <Input style={{ color: 'white' }}
+
+            className={classes.searchInput}
+            placeholder="Search by Restaurant Name"
+            // disableUnderline
+            onChange={this.props.onChange}
+          />
+        </div>
+        // </MuiThemeProvider>
+      );
+
+    }
+
+    else {
+      searchBoxToRender = (
+        <div className="fill-remaining-space"></div>
+
+
+      );
+    }
+
+    // upload button to be rendered inside the header
+    // let uploadButtonToRender = null;
+    // // if (this.props.showUpload || !this.props.showUpload) {
+    // if (this.props.showUpload) {
+
+    // uploadButtonToRender = (
+    // <div className="header-upload-btn-container">
+    // <Toolbar variant="dense">
+    // <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+    // <MenuIcon />
+    // </IconButton>
+    // <Typography variant="h6" color="inherit">
+    // Categories
+    // </Typography>
+    // </Toolbar>
+    // </div>
+    // );
+    // }
+
+    let viewCategories = null;
+    if (this.props.showSearch || !this.props.showSearch) {
+      if (this.props.showSearch) {
 
         viewCategories = (
           <div className="header-upload-btn-container">
@@ -503,15 +540,16 @@ class Header extends Component {
               </IconButton>
               <Typography variant="h6" color="inherit">
                 Categories
-          </Typography>
+</Typography>
             </Toolbar>
           </div>
         );
-        }
       }
+    }
 
-      // user profile icon to be rendered inside the header
-      let profileIconButtonToRender = null;
+    // user profile icon to be rendered inside the header
+    let profileIconButtonToRender = null;
+    if (!sessionStorage.getItem("access-token")) {
       if (this.props.showProfile || !this.props.showProfile) {
         profileIconButtonToRender = (
 
@@ -524,10 +562,11 @@ class Header extends Component {
                 className={classes.profileIconButton}
 
               >
-                <Button variant="contained" size="small" className={classes.button} onClick={this.openModalHandler}>
+                <Button variant="contained" size="small" className={classes.button}
+                  onClick={this.openModalHandler}>
                   <AccountCircle />
                   Login
-             </Button>
+</Button>
               </IconButton>
 
             </div>
@@ -545,43 +584,80 @@ class Header extends Component {
                   <FormControl required>
                     <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
                     <Input id="contactNumber" type="text" name="contactNumber"
-                      username={this.state.username}
+                      contactno={this.state.contactNo}
                       onChange={this.inputUsernameChangeHandler.bind(this)} />
-                    <FormHelperText className={this.state.usernameRequired}><span
-                      className="red">required</span></FormHelperText>
+                    <FormHelperText
+                      className={
+                        this.state.contactNoRequired
+                      }
+                    >
+                      <span className="red">required</span>
+                    </FormHelperText>
                   </FormControl><br />
                   <FormControl required>
                     <InputLabel htmlFor="password" >Password</InputLabel>
                     <Input id="password" type="text" name="password"
                       onChange={this.inputUsernameChangeHandler.bind(this)} />
-                  </FormControl><br /><br />
+                  </FormControl>
+                  <br />
+                  <FormControl>
+                    {this.state.showParagraph === true ?
+                      <div className='red' style={{ width: "200px" }}>Password must
+                      contain Minimum eight characters, at least one uppercase letter, one
+lowercase letter, one number and one special character</div> : null}
+                  </FormControl>
+                  <br /><br />
                   <Button variant="contained" color="primary"
-                    onClick={this.loginClickHandler}>Login</Button>
+                    onClick={this.loginClickHandler}>Login</Button><br />
+                  <FormControl>
+                    {this.state.showUserExistMsg === true ?
+                      <div className='red' style={{ width: "200px" }}>This contact No. has
+not be registered!</div> : null}
+                  </FormControl>
                 </TabContainer>}
               {this.state.value === 1 &&
                 <TabContainer>
                   <FormControl required>
                     <InputLabel htmlFor="firstName">First Name</InputLabel>
-                    <Input id="firstName" name="firstName" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
+                    <Input id="firstName" name="firstName" type="text"
+                      onChange={this.inputUsernameChangeHandler.bind(this)} />
                   </FormControl><br /><br />
                   <FormControl >
                     <InputLabel htmlFor="lastName">Last name</InputLabel>
-                    <Input id="lastName" name="lastName" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
+                    <Input id="lastName" name="lastName" type="text"
+                      onChange={this.inputUsernameChangeHandler.bind(this)} />
                   </FormControl><br /><br />
                   <FormControl required >
                     <InputLabel htmlFor="email">Email</InputLabel>
-                    <Input id="email" name="email" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
+                    <Input id="email" name="email" type="text"
+                      onChange={this.inputUsernameChangeHandler.bind(this)} />
                   </FormControl><br /><br />
                   <FormControl required>
                     <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input id="password" name="password" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
-                  </FormControl><br /><br />
+                    <InputLabel htmlFor="password">Password</InputLabel>
+                    <Input id="password" type="text" name="password"
+                      onChange={this.inputUsernameChangeHandler.bind(this)} />
+                    <br />
+                    <FormControl>
+                      {this.state.showParagraph === true ?
+                        <div className='red' style={{ width: "200px" }}>Password must
+                        contain Minimum eight characters, at least one uppercase letter, one
+lowercase letter, one number and one special character</div> : null}
+                    </FormControl>
+                  </FormControl><br />
                   <FormControl required>
                     <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
-                    <Input id="contactNumber" name="contactNumber" type="text"  onChange={this.inputUsernameChangeHandler.bind(this)}/>
-                  </FormControl><br /><br />
+                    <Input id="contactNumber" type="text" name="contactNumber"
+                      onChange={this.inputUsernameChangeHandler.bind(this)} />
+                    <br />
+                    <FormControl>
+                      {this.state.showContactParagraph === true ?
+                        <div className='red' style={{ width: "200px" }}>Contact number must
+contains 10 digit and must contains numbers only</div> : null}
+                    </FormControl>
+                  </FormControl><br />
                   <Button variant="contained" color="primary"
-                    onClick={this.signUpClickHandler}>SIGNUP</Button>
+                    onClick={this.loginClickHandler}>SIGNUP</Button>
                 </TabContainer>}
 
             </Modal>
@@ -590,23 +666,55 @@ class Header extends Component {
           </div>
         );
       }
+    }
+    else {
+      profileIconButtonToRender = (
+        <div className="header-profile-btn-container">
+          <IconButton
+            key="close"
+            aria-label="Close"
+            onClick={this.profileIconClickHandler}
+            className={classes.profileIconButton}
+          >
+            <AccountCircle />
+          </IconButton>
 
-      return (
-        <MuiThemeProvider>
-          <div className="header-main-container">
-            <div className="header-logo-container">{logoToRender}</div>
-            {searchBoxToRender}
-            {/* {uploadButtonToRender} */}
-            {viewCategories}
-            {profileIconButtonToRender}
-          </div>
-        </MuiThemeProvider>
+          {this.state.showUserProfileDropDown ? (
+            <div className="user-profile-drop-down">
+              <div>
+                <Link to="/profile" className="my-account-dropdown-menu-item">
+                  My Account
+</Link>
+                <hr />
+              </div>
+              <div
+                onClick={this.logoutClickHandler}
+                className="logout-dropdown-menu-item"
+              >
+                Logout
+</div>
+            </div>
+          ) : null}
+        </div>
       );
     }
+
+    return (
+      <MuiThemeProvider>
+        <div className="header-main-container">
+          <div className="header-logo-container">{logoToRender}</div>
+          {searchBoxToRender}
+          {/* {uploadButtonToRender} */}
+          {viewCategories}
+          {profileIconButtonToRender}
+        </div>
+      </MuiThemeProvider>
+    );
   }
+}
 
-  Header.propTypes = {
-    classes: PropTypes.object.isRequired
-  };
+Header.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
-  export default withStyles(styles)(Header);
+export default withStyles(styles)(Header);
