@@ -80,37 +80,24 @@ class Checkout extends Component {
         const cartItems= this.props.cartItems;
         
         return (
-             <div className="home">
-            {/*      <img src={logo}  className={classes.headerImage} alt="AppLogo"/>
-                   ---------------------Check Food App  
-                <br></br>   */}
-                
-
-                <MuiThemeProvider>
-            <div className={classes.root}>
+             <div>
             
              {/* To be integrated later */}
             
-            <Header
-               showLink={false}
-               history={this.props.history}
-               showSearch={false}
-               //searchImageByDescription={this.searchImageByDescription}
-               showUpload={false}
-               isCheckout={true}
-               // uploadNewImage={this.uploadNewImage}
-               //showProfile={false}
-               //enableMyAccount={true}
-            />
+                <Header
+                showLink={true}
+                history={this.props.history}
+                isHome={false}
+                showProfile={true}
+                enableMyAccount={true}
+                />
             
-          <div className= {classes.root}>
-            
-                <CheckoutPage style={{width: '60%'}} cartPrice={cartPrice} cartItems= {cartItems}>
+                <div className= {classes.root}>
+                    
+                        <CheckoutPage  cartPrice={cartPrice} cartItems= {cartItems}>
 
-                </CheckoutPage>
-          </div>
-        </div>
-      </MuiThemeProvider>
+                        </CheckoutPage>
+                </div>
 
             </div>
         ) }
