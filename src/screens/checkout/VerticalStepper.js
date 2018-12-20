@@ -178,6 +178,8 @@ class VerticalLinearStepper extends React.Component {
                 paymentSelected:0,
                 userHaveSelectedPayMode: false,
 
+                cartItems:[],
+
 
                 dummycheck: "hello+you",
 
@@ -437,21 +439,33 @@ class VerticalLinearStepper extends React.Component {
     //  const orderQunatity = this.props.cartItems.quantity;
 
 
-     console.log(this.props.cartItems);
-
-    let orderData =[
-        {
-            "itemId": 1,
-            "quantity": 1
-        }
-    ]
-
     if(sessionStorage.getItem("access-token")){
 
         let xhrOrder = new XMLHttpRequest();
         let placeOrder = this;
 
+        let orderData ="";
+
         let apiParams="";
+
+        if (this.props.cartItems !== undefined) {
+
+            this.props.cartItems.map(item => {
+                this.state.cartItems.push({
+                    "itemId": item.id,
+                    "quantity": item.quantity
+                });
+            });
+    
+            orderData = JSON.stringify(this.state.cartItems);
+            
+        } else {
+            this.setState({
+                open: true,
+                snackBarMsg: "Unable to place your order! Please try again!"
+            });
+            return;   
+        }
 
         if(this.state.userHaveSelectedPayMode && (this.state.activeStep > 1)){
 
@@ -498,7 +512,7 @@ class VerticalLinearStepper extends React.Component {
            xhrOrder.setRequestHeader("Content-Type","application/json");
            xhrOrder.setRequestHeader("Accept", "application/json");
            xhrOrder.setRequestHeader('accessToken', sessionStorage.getItem("access-token"));
-           xhrOrder.send(JSON.stringify(orderData));
+           xhrOrder.send(orderData);
    
        
        this.openSnackBar();
