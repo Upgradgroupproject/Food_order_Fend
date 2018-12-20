@@ -44,6 +44,12 @@ TabContainer.propTypes = {
     children: PropTypes.node.isRequired
 };
 
+ /**		
+  * Class component for the header		
+  * @class Header		
+  * @extends {Component}		
+  */
+
 class Header extends Component {
 
 
