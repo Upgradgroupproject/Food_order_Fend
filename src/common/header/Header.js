@@ -93,12 +93,16 @@ class Header extends Component {
       usernameRequired: "dispNone",
       contactNumber: "",
       password: "",
+      contactNumberRequired: "dispNone",
+      passwordRequired: "dispNone",
       firstName: "",
       lastName: "",
       email: "",
       isLoggedIn: "",
       showParagraph: false,
-      showUserExistMsg: false
+      showUserExistMsg: false,
+      usersFirstName:"",
+      credentialsEntered: false,
 
     };
     this.profileIconClickHandler = this.profileIconClickHandler.bind(this);
@@ -127,9 +131,14 @@ class Header extends Component {
   tabChangeHandler = (event, value) => {
     this.setState({ value })
   }
-  loginClickHandler = (e) => {
-    if (!this.state.contactNumber || !this.state.password) {
-      alert("Please enter the username and password")
+  loginClickHandler = () => {
+
+    this.areCredentialsEntered();
+
+
+    if (!this.state.password || !this.state.contactNumber) {
+      //alert("Please enter the username and password")
+
     } else {
       var varAPI = "http://localhost:8080/api/user/login/?contactNumber="+this.state.contactNumber +"&password="+this.state.password;
       // var postBody = {
@@ -193,33 +202,50 @@ class Header extends Component {
       });
 
   }
-  inputUsernameChangeHandler = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-    if (e.target.name === "password") {
-      var value = e.target.value;
-      var pass = new RegExp("((?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&*!^]).{8,20})");
-      var valid = pass.test(value);
-      if (valid !== true) {
-        this.setState({ showParagraph: true });
-      }
-      else {
-        this.setState({ showParagraph: false });
-      }
-    }
-    else if (e.target.name === "contactNumber") {
-       value = e.target.value;
-       pass = new RegExp("\\d{10}");
-       valid = pass.test(value);
-      if (valid !== true) {
-        this.setState({ showContactParagraph: true });
-      }
-      else {
-        this.setState({ showContactParagraph: false });
-      }
+//   inputUsernameChangeHandler (e){
+//     this.setState({ [e.target.name]: e.target.value });
+//     if (e.target.name === "password") {
+//      var value = e.target.value;
+//       var pass = new RegExp("((?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&*!^]).{8,20})");
+//       var valid = pass.test(this.state.password);
+//       if(this.state.password === ""){
+//         this.setState({passwordRequired : "dispInfo"});
+//       }
+//       else{
 
-    }
-    console.log(e.target.name, e.target.value);
-  }
+//         if (valid !== true) {
+//           this.setState({ showParagraph: true });
+//           this.setState({passwordRequired : "dispNone"});
+//         }
+//         else {
+//             this.setState({ showParagraph: false });
+//             this.setState({passwordRequired : "dispNone"});
+//           }
+          
+//         }
+      
+//       }
+    
+//     else if (e.target.name === "contactNumber") {
+//        var contactNoCheck = this.state.contactNumber;
+//        pass = new RegExp("\\d{10}");
+//        valid = pass.test(contactNoCheck);
+//        if(this.state.password === ""){
+//         this.setState({contactNumberRequired : "dispInfo"});
+//       }
+//       else{
+//         if (valid !== true) {
+//           this.setState({ showContactParagraph: true });
+//           this.setState({contactNumberRequired : "dispNone"});
+//         }
+//           else{
+//           this.setState({ showContactParagraph: false });
+//           this.setState({contactNumberRequired : "dispNone"});
+//         }
+//       }
+    
+//   }
+// }
 
   /**
   * Event handler called when the logout menu item is clicked inside the
@@ -233,6 +259,36 @@ class Header extends Component {
       pathname: "/"
     });
   };
+
+  loginContactNumberChangeHandler = (e) =>{
+    
+    this.setState({contactNumber : e.target.value});
+
+    
+  };
+
+  loginPasswordChangeHandler = (e) =>{
+
+    this.setState({password : e.target.value});
+    
+    
+  };
+
+  areCredentialsEntered(){
+    this.state.password === "" ? 
+      this.setState({ passwordRequired: "dispBlock" }) :
+          this.setState({ passwordRequired: "dispNone" });
+          
+      this.state.contactNumber === "" ? 
+        this.setState({ contactNumberRequired: "dispBlock" }) :
+         this.setState({ contactNumberRequired: "dispNone" });
+  }
+
+
+
+
+
+
 
 
   /**
@@ -325,7 +381,7 @@ class Header extends Component {
                   onClick={this.openModalHandler}>
                   <AccountCircle />
                   Login
-</Button>
+                </Button>
               </IconButton>
 
             </div>
@@ -343,11 +399,12 @@ class Header extends Component {
                   <FormControl required>
                     <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
                     <Input id="contactNumber" type="text" name="contactNumber"
-                      contactno={this.state.contactNo}
-                      onChange={this.inputUsernameChangeHandler.bind(this)} />
+                      contactNumber={this.state.contactNumber}
+                      onChange={this.loginContactNumberChangeHandler} 
+                      />
                     <FormHelperText
                       className={
-                        this.state.contactNoRequired
+                        this.state.contactNumberRequired
                       }
                     >
                       <span className="red">required</span>
@@ -356,8 +413,18 @@ class Header extends Component {
                   <FormControl required>
                     <InputLabel htmlFor="password" >Password</InputLabel>
                     <Input id="password" type="password" name="password"
-                      onChange={this.inputUsernameChangeHandler.bind(this)} />
-                  </FormControl>
+                      password={this.state.password}
+                      onChange={this.loginPasswordChangeHandler} 
+                      />
+                  
+                    <FormHelperText
+                      className={
+                        this.state.passwordRequired
+                      }
+                    >
+                      <span className="red">required</span>
+                    </FormHelperText>
+                    </FormControl>
                   <br />
                   <FormControl>
                     {this.state.showParagraph === true ?
@@ -443,7 +510,7 @@ contains 10 digit and must contains numbers only</div> : null}
               <div>
                 <Link to="/profile" className="my-account-dropdown-menu-item">
                   My Account
-</Link>
+                </Link>
                 <hr />
               </div>
               <div
@@ -451,7 +518,7 @@ contains 10 digit and must contains numbers only</div> : null}
                 className="logout-dropdown-menu-item"
               >
                 Logout
-</div>
+              </div>
             </div>
           ) : null}
         </div>
