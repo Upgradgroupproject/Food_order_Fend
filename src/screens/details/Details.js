@@ -303,7 +303,7 @@ export default class Details extends Component {
         {/* Restaurant info */}
         <div className = "restaurant-info">
           <div className = "restaurant-img">
-            <img src = { restInfo.photoUrl } />
+            <img src = { restInfo.photoUrl } alt="Restaurant Details"/>
           </div>
 
           <div className = "restaurant-text-info">
