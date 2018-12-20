@@ -391,17 +391,17 @@ class VerticalLinearStepper extends React.Component {
                              this.setState({  invalidAddress:false,toggleZipcodeHelper:"displayNothing",toggleZipcodeValidator:"displayNothing"});                      
 
     
-        if(this.state.invalidAddress === false){
+        // if(this.state.invalidAddress === false){
 
-                this.state.newAddressEnteredByUser = {
-                        "id": "",
-                        "flatBuilNo": this.state.flatbuilnumber,
-                        "locality": this.state.locality,
-                        "city": this.state.city,
-                        "zipcode": this.state.zipcode,
-                        "stateId": this.state.state_id,
-                }
-          }
+        //         this.state.newAddressEnteredByUser = {
+        //                 "id": "",
+        //                 "flatBuilNo": this.state.flatbuilnumber,
+        //                 "locality": this.state.locality,
+        //                 "city": this.state.city,
+        //                 "zipcode": this.state.zipcode,
+        //                 "stateId": this.state.state_id,
+        //         }
+        //   }
 
             
 
@@ -507,7 +507,7 @@ class VerticalLinearStepper extends React.Component {
 
     else{
         if(this.state.userHaveSelectedPayMode){
-            
+
             this.setState({ snackBarMsg: "Unable to place your order! Please try again!" }); 
         }
         else{
