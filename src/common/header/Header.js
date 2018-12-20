@@ -525,7 +525,7 @@ class Header extends Component {
                     <TabContainer>
                     <FormControl required>
                       <InputLabel htmlFor="contactnumber">Contact No.</InputLabel>
-                      <Input id="contactnumber" type="text" name="contactnumber"
+                      <Input id="contactnumber" type="text"
                         contactnumber={this.state.contactNumber}
                         onChange={this.loginContactNumberChangeHandler} 
                         />
@@ -539,7 +539,7 @@ class Header extends Component {
                     </FormControl><br />
                     <FormControl required>
                       <InputLabel htmlFor="password" >Password</InputLabel>
-                      <Input id="password" type="password" name="password"
+                      <Input id="password" type="password"
                         password={this.state.password}
                         onChange={this.loginPasswordChangeHandler} 
                         />
