@@ -7,9 +7,6 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import RestaurantCard from "./RestaurantCard";
 import { white } from 'material-ui/styles/colors';
 import Details from '../details/Details';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 
 
     const styles = {
@@ -50,6 +47,12 @@ import CloseIcon from '@material-ui/icons/Close';
         },
     };
 
+/**		
+  * Class component for the header		
+  * @class Home		
+  * @extends {Component}		
+  */
+
 class Home extends Component {
     constructor() {
         super();
@@ -78,6 +81,13 @@ class Home extends Component {
         
     }
 
+    /**
+     * function to get 
+     *    All restaurants
+     *    rendered at home page
+     *    
+     * */
+
     getAllRestaurantsDataArray(){
         let reataurantData = null;
         let xhrRestaurant = new XMLHttpRequest();
@@ -95,6 +105,13 @@ class Home extends Component {
         xhrRestaurant.send(reataurantData);
     }
 
+    /**
+     * function to get 
+     *     restaurants details as per id
+     *    rendered at Details page
+     *    
+     * */
+
     getRestaurantDetails(restaurantId){
         
         this.props.history.push({
@@ -102,6 +119,14 @@ class Home extends Component {
           });
         ReactDOM.render(<Details   id={restaurantId}  history={this.props.history}/>, document.getElementById('root'));
     }
+
+
+
+    /**
+     * Search handler to perform
+     *    API call to get all restaurant based on search string passed
+     *    rendered at home page with estaurant card updated
+     * */
 
     searchRestaurantHandler = (e) => {
 
@@ -146,7 +171,7 @@ class Home extends Component {
             onChange={this.searchRestaurantHandler}
             />
 
-<div className="images-main-container">
+            <div className="images-main-container">
             <div className="first-row" >
               {dataSource.map((restaurant, index) =>
                 (index === 0 || index === 1 || index === 2 || index === 3) ? (

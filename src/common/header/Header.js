@@ -86,7 +86,6 @@ class Header extends Component {
             signupFailed:"dispNone",
             loginFailInfo:"",
             loginFailed:"dispNone",
-            userLoggedIn: false,
 
             showUserProfileDropDown: false,
             enableMyAccount: false,
@@ -153,12 +152,12 @@ class Header extends Component {
             signupcontactNumberRequired: "dispNone",
             isContactNumberValid: "dispNone",
             readyForSignup: false,
-            snackBarMessage:"",
+            //snackBarMessage:"",
             signupFailInfo:"",
             signupFailed:"dispNone",
             loginFailInfo:"",
             loginFailed:"dispNone",
-            userLoggedIn: false,
+            //userLoggedIn: false,
         });
     };
 
@@ -171,7 +170,7 @@ class Header extends Component {
 
     loginClickHandler = () => {
         
-        this.areCredentialsEntered();
+        this.areLoginCredentialsEntered();
 
         //validate contact no.?
 
@@ -255,7 +254,7 @@ class Header extends Component {
     }
     }
 
-    areCredentialsEntered(){
+    areLoginCredentialsEntered(){
         this.state.password === "" ? 
           this.setState({ passwordRequired: "dispBlock" }) :
               this.setState({ passwordRequired: "dispNone" });
