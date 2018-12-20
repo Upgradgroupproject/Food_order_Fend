@@ -273,7 +273,7 @@ export default class Details extends Component {
       this.props.history.push({
         pathname: "/checkout"
       });
-      ReactDOM.render(<Checkout   cartPrice={this.state.cart.totalPrice} cartItems={this.state.cart.items} />, document.getElementById('root'));
+      ReactDOM.render(<Checkout   cartPrice={this.state.cart.totalPrice} cartItems={this.state.cart.items} history={this.props.history}/>, document.getElementById('root'));
     }
     else {
       // no items in the cart
