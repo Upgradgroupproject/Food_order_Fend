@@ -423,6 +423,13 @@ class VerticalLinearStepper extends React.Component {
   };
 
 
+/*
+    * The function checks all stepper selections and proceed for order
+    * address selected /entered ?
+    * XHR response is displayed with order id if successfully placed
+
+*/
+
 
   handlePlaceOrder = () =>{
     //this.setState({dummycheck: this.cartAdded});
@@ -500,10 +507,11 @@ class VerticalLinearStepper extends React.Component {
 
     else{
         if(this.state.userHaveSelectedPayMode){
-            this.setState({ snackBarMsg: "Please click Finish! and try again" }); 
+            
+            this.setState({ snackBarMsg: "Unable to place your order! Please try again!" }); 
         }
         else{
-            this.setState({ snackBarMsg: "Unable to place your order! Please select address and payment mode then try again!" });
+            this.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
         } 
         this.openSnackBar();
     }
@@ -539,6 +547,9 @@ class VerticalLinearStepper extends React.Component {
     return (
       <div className={classes.root} style={{display:'flex'}}>
       <div className = "stepperBlock">
+
+      {/* Stepper to check all steps for address and payment selection */}
+      
         <Stepper activeStep={activeStep} orientation="vertical" style={{width:'90%'}}>
           {steps.map((label, index) => {
             return (
