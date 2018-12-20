@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from '../../assets/FastFood.svg';
 import "./Details.css";
 import ReactDOM from 'react-dom';
 //import mock from "../../assets/mock.jpg";

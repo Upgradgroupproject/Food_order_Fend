@@ -1,17 +1,12 @@
 import React, { Component } from "react";
 import "./Header.css";
 
-import * as Constants from "../../common/Constants";
-import * as Utils from "../../common/Utils";
-import * as UtilsUI from "../../common/UtilsUI";
-
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
 // import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Typography from "@material-ui/core/Typography";
 import Modal from "react-modal";
 import Input from "@material-ui/core/Input";
@@ -43,10 +38,6 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 // }
 // }
 // });
-
-
-
-
 
 // custom styles for upload modal
 const customStyles = {
@@ -110,223 +101,9 @@ class Header extends Component {
       showUserExistMsg: false
 
     };
-    this.openUploadImageModal = this.openUploadImageModal.bind(this);
-    this.closeUploadImageModal = this.closeUploadImageModal.bind(this);
-    this.selectImageForUpload = this.selectImageForUpload.bind(this);
-    this.changeDescriptionHandlerInUploadImageModal =
-      this.changeDescriptionHandlerInUploadImageModal.bind(
-        this
-      );
-    this.changeHashtagsHandlerInUploadImageModal =
-      this.changeHashtagsHandlerInUploadImageModal.bind(
-        this
-      );
-    this.uploadClickHandlerInUploadModal =
-      this.uploadClickHandlerInUploadModal.bind(
-        this
-      );
     this.profileIconClickHandler = this.profileIconClickHandler.bind(this);
     this.logoutClickHandler = this.logoutClickHandler.bind(this);
   }
-
-
-
-  /**
-  * Function called before the render method
-  * @memberof Header
-  */
-  // componentDidMount() {
-  //   this.getUserInformation();
-  // }
-
-  /**
-  * Function to get all the information about the currently logged-in user
-  * @memberof Header
-  */
-  // getUserInformation = () => {
-  //   if (
-  //     !Utils.isUndefinedOrNullOrEmpty(sessionStorage.getItem("access-token"))
-  //   ) {
-  //     const requestUrl =
-  //       "https://api.instagram.com/v1/users/self/?access_token=" +
-  //       sessionStorage.getItem("access-token");
-  //     const that = this;
-  //     Utils.makeApiCall(
-  //       requestUrl,
-  //       null,
-  //       null,
-  //       Constants.ApiRequestTypeEnum.GET,
-  //       null,
-  //       responseText => {
-  //         const userDetails = { ...this.state.currentUserDetails };
-  //         userDetails.profileImage = JSON.parse(
-  //           responseText
-  //         ).data.profile_picture;
-  //         userDetails.username = JSON.parse(responseText).data.username;
-  //         that.setState({
-  //           currentUserDetails: userDetails
-  //         });
-  //         sessionStorage.setItem(
-  //           "user-details",
-  //           JSON.parse(responseText).data.username
-  //         );
-  //       },
-  //       () => { }
-  //     );
-  //   }
-  // };
-
-  /**
-  * Event handler called when the upload button inside the header is
-  clicked to open the upload image modal
-  * @memberof Header
-  */
-  openUploadImageModal = () => {
-    this.setState({
-      isUploadModalOpen: true
-    });
-  };
-
-  /**
-  * Event handler called to close upload image modal
-  * @memberof Header
-  */
-  closeUploadImageModal = () => {
-    let newUploadImageModalFormValues = { ...this.state.uploadImageFormValues };
-    Utils.assignEmptyStringToAllKeysInObj(newUploadImageModalFormValues);
-    const currentUploadImageFormValidationClassnames = {
-      ...this.uploadImageFormValidationClassnames
-    };
-
-    currentUploadImageFormValidationClassnames.image =
-      Constants.DisplayClassname.DISPLAY_NONE;
-    currentUploadImageFormValidationClassnames.description =
-      Constants.DisplayClassname.DISPLAY_NONE;
-    currentUploadImageFormValidationClassnames.hashtags =
-      Constants.DisplayClassname.DISPLAY_NONE;
-
-    this.setState({
-      isUploadModalOpen: false,
-      uploadImageFormValues: newUploadImageModalFormValues,
-      uploadImageFormValidationClassnames: currentUploadImageFormValidationClassnames
-    });
-  };
-
-  /**
-  * Event handler called when an image is selected by a user to be uploaded
-  * @param event default parameter on which the event handler is called
-  * @memberof Header
-  */
-  selectImageForUpload = event => {
-    event.preventDefault();
-
-    const reader = new FileReader();
-    const file = event.target.files[0];
-
-    reader.onloadend = () => {
-      const currentUploadImageFormValues = {
-        ...this.state.uploadImageFormValues
-      };
-      currentUploadImageFormValues.imageFile = file;
-      currentUploadImageFormValues.imagePreviewUrl = reader.result;
-      this.setState({
-        uploadImageFormValues: currentUploadImageFormValues
-      });
-    };
-
-    reader.readAsDataURL(file);
-  };
-
-  /**
-  * Event handler called when the description input field is changed
-  inside the upload image modal
-  * @param event default parameter on which the event handler is called
-  * @memberof Header
-  */
-  changeDescriptionHandlerInUploadImageModal = event => {
-    let currentUploadImageFormValues = { ...this.state.uploadImageFormValues };
-    currentUploadImageFormValues.description = event.target.value;
-    this.setState({
-      uploadImageFormValues: currentUploadImageFormValues
-    });
-  };
-
-  /**
-  * Event handler called when the hashtags input field is changed inside
-  the upload image modal
-  * @param event default parameter on which the event handler is called
-  * @memberof Header
-  */
-  changeHashtagsHandlerInUploadImageModal = event => {
-    let currentUploadImageFormValues = { ...this.state.uploadImageFormValues };
-    currentUploadImageFormValues.hashtags = event.target.value;
-    this.setState({
-      uploadImageFormValues: currentUploadImageFormValues
-    });
-  };
-
-  /**
-  * Event handler called when the 'Upload' button inside the upload
-  image modal is clicked
-  * @memberof Header
-  */
-  uploadClickHandlerInUploadModal = () => {
-    // finding the class names for the desciption and hashtags validation messages - to be displayed or not
-
-    const image_validation_classname = UtilsUI.findValidationMessageClassname(
-      this.state.uploadImageFormValues.imagePreviewUrl,
-      Constants.ValueTypeEnum.FORM_FIELD
-    );
-    const description_validation_classname = UtilsUI.findValidationMessageClassname(
-      this.state.uploadImageFormValues.description,
-      Constants.ValueTypeEnum.FORM_FIELD
-    );
-    const hashtags_validation_classname = UtilsUI.findValidationMessageClassname(
-      this.state.uploadImageFormValues.hashtags,
-      Constants.ValueTypeEnum.FORM_FIELD
-    );
-
-    // setting the class names for the desciption and hashtags validation messages - to be displayed or not
-
-    let currentUploadImageFormValidationClassnames = {
-      ...this.state.uploadImageFormValidationClassnames
-    };
-    currentUploadImageFormValidationClassnames.image = image_validation_classname;
-    currentUploadImageFormValidationClassnames.description =
-      description_validation_classname;
-    currentUploadImageFormValidationClassnames.hashtags =
-      hashtags_validation_classname;
-
-    if (
-      Utils.isAnyValueOfObjectUndefinedOrNullOrEmpty(
-        this.state.uploadImageFormValues
-      )
-    ) {
-      this.setState({
-        uploadImageFormValidationClassnames: currentUploadImageFormValidationClassnames
-      });
-    } else {
-      const imageDetails = {
-        id: Math.floor(new Date().getTime() / 1000),
-        caption: { text: this.state.uploadImageFormValues.description },
-        tags: this.state.uploadImageFormValues.hashtags.split(","),
-        images: {
-          standard_resolution: {
-            url: this.state.uploadImageFormValues.imagePreviewUrl
-          }
-        },
-        user: {
-          profile_picture: this.state.currentUserDetails.profileImage,
-          username: this.state.currentUserDetails.username
-        },
-        likes: { count: 0 },
-        created_time: Math.floor(new Date().getTime() / 1000)
-      };
-
-      this.props.uploadNewImage(imageDetails);
-      this.closeUploadImageModal();
-    }
-  };
 
   /**
   * Event handler called when the profile icon inside the header is
@@ -355,10 +132,10 @@ class Header extends Component {
       alert("Please enter the username and password")
     } else {
       var varAPI = "http://localhost:8080/api/user/login/?contactNumber="+this.state.contactNumber +"&password="+this.state.password;
-      var postBody = {
-        contactNumber: this.state.contactNumber,
-        password: this.state.password
-      }
+      // var postBody = {
+      //   contactNumber: this.state.contactNumber,
+      //   password: this.state.password
+      // }
       fetch(varAPI, {
         method: 'POST',
         headers: {
@@ -388,7 +165,7 @@ class Header extends Component {
     var firstName = this.state.firstName;
     var lastName = this.state.lastName;
     var email = this.state.email;
-    var username = this.state.username;
+    // var username = this.state.username;
     var password = this.state.password;
     var contactNumber = this.state.contactNumber;
 
@@ -422,7 +199,7 @@ class Header extends Component {
       var value = e.target.value;
       var pass = new RegExp("((?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&*!^]).{8,20})");
       var valid = pass.test(value);
-      if (valid != true) {
+      if (valid !== true) {
         this.setState({ showParagraph: true });
       }
       else {
@@ -430,10 +207,10 @@ class Header extends Component {
       }
     }
     else if (e.target.name === "contactNumber") {
-      var value = e.target.value;
-      var pass = new RegExp("\\d{10}");
-      var valid = pass.test(value);
-      if (valid != true) {
+       value = e.target.value;
+       pass = new RegExp("\\d{10}");
+       valid = pass.test(value);
+      if (valid !== true) {
         this.setState({ showContactParagraph: true });
       }
       else {
@@ -474,7 +251,7 @@ class Header extends Component {
         </Link>
       );
     } else {
-      logoToRender = <img src={LogoImage} className="logo" />;
+      logoToRender = <img src={LogoImage} className="logo" alt="Food-Orders"/>;
     }
 
     // search box to be rendered inside the header
@@ -509,25 +286,6 @@ class Header extends Component {
 
       );
     }
-
-    // upload button to be rendered inside the header
-    // let uploadButtonToRender = null;
-    // // if (this.props.showUpload || !this.props.showUpload) {
-    // if (this.props.showUpload) {
-
-    // uploadButtonToRender = (
-    // <div className="header-upload-btn-container">
-    // <Toolbar variant="dense">
-    // <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-    // <MenuIcon />
-    // </IconButton>
-    // <Typography variant="h6" color="inherit">
-    // Categories
-    // </Typography>
-    // </Toolbar>
-    // </div>
-    // );
-    // }
 
     let viewCategories = null;
     if (this.props.showSearch || !this.props.showSearch) {
