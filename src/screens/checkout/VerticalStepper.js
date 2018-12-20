@@ -20,7 +20,6 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import ReactDOM from 'react-dom';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -125,16 +124,16 @@ function getSteps() {
   return ['Delivery', 'Payment',];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return `List of addresses`;
-    case 1:
-      return 'List of payment options';
-    default:
-      return 'Unknown step';
-  }
-}
+// function getStepContent(step) {
+//   switch (step) {
+//     case 0:
+//       return `List of addresses`;
+//     case 1:
+//       return 'List of payment options';
+//     default:
+//       return 'Unknown step';
+//   }
+// }
 
 
 class VerticalLinearStepper extends React.Component {
@@ -253,7 +252,7 @@ class VerticalLinearStepper extends React.Component {
 
 
 
-    let req = "http://localhost:8080/api/address?flatBuilNo=%23342&locality=makwoood%20aprtments&city=bangalore&zipcode=560102&type=perm&stateId=21";
+    //let req = "http://localhost:8080/api/address?flatBuilNo=%23342&locality=makwoood%20aprtments&city=bangalore&zipcode=560102&type=perm&stateId=21";
 
 
 }
@@ -305,8 +304,8 @@ class VerticalLinearStepper extends React.Component {
         this.setState.addressProvidedByUser =[];
         this.setState.addressProvidedByUser = this.state.allAddress[index];
         console.log(this.state.addressProvidedByUser);
-        this.state.addressSelected = true;
-        this.state.addressSelectedIndex= index;
+        this.setState.addressSelected = true;
+        this.setState.addressSelectedIndex= index;
 }
 
   flatBuildChangeHandler = (e) =>{
@@ -397,8 +396,8 @@ class VerticalLinearStepper extends React.Component {
 
   handlePlaceOrder = () =>{
     //this.setState({dummycheck: this.cartAdded});
-    const orderDataid = this.props.cartItems.id;
-    const orderQunatity = this.props.cartItems.quantity;
+    // const orderDataid = this.props.cartItems.id;
+    // const orderQunatity = this.props.cartItems.quantity;
 
     let orderData =[
         {
