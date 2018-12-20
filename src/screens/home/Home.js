@@ -136,9 +136,7 @@ class Home extends Component {
             showLink={false}
             history={this.props.history}
             showSearch={true}
-            searchImageByDescription={this.searchImageByDescription}
             showUpload={true}
-            uploadNewImage={this.uploadNewImage}
             showProfile={true}
             enableMyAccount={true}
             onChange={this.searchRestaurantHandler}
