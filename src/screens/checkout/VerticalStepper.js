@@ -175,6 +175,8 @@ class VerticalLinearStepper extends React.Component {
 
                 serverResponse: "",
                 selectedIndex:"",
+                paymentSelected:0,
+                userHaveSelectedPayMode: false,
 
 
                 dummycheck: "hello+you",
@@ -276,9 +278,21 @@ class VerticalLinearStepper extends React.Component {
     this.setState({ addressTab});
   };
 
-  /* Function For material Radio button selection change handler*/
+  /* Function For Radio button change handler 
+   * for payment options selection
+  */
   handleChange = event => {
     this.setState({ paymentMode: event.target.value });
+
+    for(var i = 0;i < this.state.paymentOptions.length; i++){
+   
+        if(event.target.value === this.state.paymentOptions[i].paymentName){
+            
+            this.setState({paymentSelected : this.state.paymentOptions[i].id});
+            this.setState({userHaveSelectedPayMode : true});   
+        }
+
+    }
   };
 
   /* click handler for address-selector icon 
@@ -329,6 +343,14 @@ class VerticalLinearStepper extends React.Component {
     zipcodeChangeHandler = (e) =>{
         this.setState({zipcode: e.target.value});
     }
+
+/*
+    * The function to check all selection steps in Stepper
+    * Address check, existing address selected ?
+    * New address entered correctly ?
+    * Payment mode selected ?
+
+*/
 
 
   handleNext = () => {
@@ -395,9 +417,11 @@ class VerticalLinearStepper extends React.Component {
         this.setState(state => ({
             activeStep: state.activeStep + 1,
         }));
+        
     }
     
   };
+
 
 
   handlePlaceOrder = () =>{
@@ -422,58 +446,74 @@ class VerticalLinearStepper extends React.Component {
 
         let apiParams="";
 
-        if(this.state.addressSelected === true){
-             apiParams = "http://localhost:8080/api/order?"+
-                                       "addressId="+placeOrder.state.addressProvidedByUser.id+
-                                       "&paymentId="+2+
-                                       "&bill="+2;                               
-        }
-        else{
+        if(this.state.userHaveSelectedPayMode && (this.state.activeStep > 1)){
 
-             apiParams = "http://localhost:8080/api/order?"+
-                                       "flatBuilNo="+this.state.flatbuilnumber+
-                                       "&locality="+this.state.locality+
-                                       "&city="+this.state.city+
-                                       "&zipcode="+this.state.zipcode+
-                                       "&stateId="+this.state.state_id+
-                                       "&paymentId="+2+
-                                       "&bill="+2;
-        }
-                                
-
-        
-        xhrOrder.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                placeOrder.setState({
-                    
-                    serverResponse : JSON.parse(this.responseText)           
-                }); 
-                if(isNaN(placeOrder.state.serverResponse)){
-                    placeOrder.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
-                }
-                else{
-                    let orderNo = placeOrder.state.serverResponse;
-                    placeOrder.setState({ snackBarMsg: "Order placed successfully! Your order ID is "+orderNo });
-                    
-                }     
-             }    
-            
-        });
-        
-        xhrOrder.open("POST", apiParams);
-        xhrOrder.setRequestHeader("Cache-Control", "no-cache");
-        xhrOrder.setRequestHeader("Content-Type","application/json");
-        xhrOrder.setRequestHeader("Accept", "application/json");
-        xhrOrder.setRequestHeader('accessToken', sessionStorage.getItem("access-token"));
-        xhrOrder.send(JSON.stringify(orderData));
+            if(this.state.addressSelected === true ){
+                apiParams = "http://localhost:8080/api/order?"+
+                                          "addressId="+this.state.addressProvidedByUser.id+
+                                          "&paymentId="+this.state.paymentSelected+
+                                          "&bill="+2;                               
+           }
+           else{
+   
+                apiParams = "http://localhost:8080/api/order?"+
+                                          "flatBuilNo="+this.state.flatbuilnumber+
+                                          "&locality="+this.state.locality+
+                                          "&city="+this.state.city+
+                                          "&zipcode="+this.state.zipcode+
+                                          "&stateId="+this.state.state_id+
+                                          "&paymentId="+this.state.paymentSelected+
+                                          "&bill="+2;
+           }
+                                   
+   
+           
+           xhrOrder.addEventListener("readystatechange", function () {
+               if (this.readyState === 4) {
+                   placeOrder.setState({
+                       
+                       serverResponse : JSON.parse(this.responseText)           
+                   }); 
+                   if(isNaN(placeOrder.state.serverResponse)){
+                       placeOrder.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
+                   }
+                   else{
+                       let orderNo = placeOrder.state.serverResponse;
+                       placeOrder.setState({ snackBarMsg: "Order placed successfully! Your order ID is "+orderNo });
+                       
+                   }     
+                }    
+               
+           });
+           
+           xhrOrder.open("POST", apiParams);
+           xhrOrder.setRequestHeader("Cache-Control", "no-cache");
+           xhrOrder.setRequestHeader("Content-Type","application/json");
+           xhrOrder.setRequestHeader("Accept", "application/json");
+           xhrOrder.setRequestHeader('accessToken', sessionStorage.getItem("access-token"));
+           xhrOrder.send(JSON.stringify(orderData));
+   
+       
+       this.openSnackBar();
 
     }
 
+    else{
+        if(this.state.userHaveSelectedPayMode){
+            this.setState({ snackBarMsg: "Please click Finish! and try again" }); 
+        }
+        else{
+            this.setState({ snackBarMsg: "Unable to place your order! Please select address and payment mode then try again!" });
+        } 
+        this.openSnackBar();
+    }
 
-
-    this.openSnackBar();
-    console.log(this.state.subTotal);
-    console.log(this.state.serverResponse);
+    }
+    else{
+        this.setState({ snackBarMsg: "Unable to place your order! Please try again!" });
+        this.openSnackBar();
+    }
+        
 }
 
     openSnackBar () {
