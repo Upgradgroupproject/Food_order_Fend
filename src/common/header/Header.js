@@ -87,6 +87,7 @@ class Header extends Component {
             loginFailInfo:"",
             loginFailed:"dispNone",
             signinContactNumberRequired:"dispNone",
+            readyForLogin: false,
 
             showUserProfileDropDown: false,
             enableMyAccount: false,
@@ -175,7 +176,7 @@ class Header extends Component {
 
         //validate contact no.?
 
-    if (!this.state.password || !this.state.contactNumber) {
+    if (this.state.readyForLogin===false) {
       //alert("Please enter the username and password")
 
     } else {
@@ -197,6 +198,7 @@ class Header extends Component {
                         snackBarMessage: 'Logged in successfully!',
                         openSnackBar: true,
                         modalIsOpen: false,
+                        readyForLogin: false
                     });
                     sessionStorage.setItem("loggedInUserName", loggedInUserInfo.firstName);
                     sessionStorage.setItem("access-token", xhrUserLogin.getResponseHeader("access-token"));
@@ -206,7 +208,8 @@ class Header extends Component {
                         openSnackBar: false,
                         snackBarMessage: "",
                         loginFailInfo: this.responseText,
-                        loginFailed: "dispBlock"
+                        loginFailed: "dispBlock",
+                        readyForLogin: false
                     });        
                 }
             });
@@ -263,12 +266,12 @@ class Header extends Component {
           
              const contactRegx = /^[0-9]{10}$/;
           
-            this.state.contactNumber === "" ? this.setState({contactNumberRequired: "dispBlock",contactNumberRequired: "dispNone"})
+            this.state.contactNumber === "" ? this.setState({contactNumberRequired: "dispBlock",signinContactNumberRequired: "dispNone",readyForLogin: false})
             :
-            !this.state.contactNumber.match(contactRegx) ? this.setState({contactNumberRequired: "dispBlock",signinContactNumberRequired: "dispNone",
-                readyForSignup: false})
+            !this.state.contactNumber.match(contactRegx) ? this.setState({contactNumberRequired: "dispNone",signinContactNumberRequired: "dispBlock",
+            readyForLogin: false})
             :
-            this.setState({contactNumberRequired: "dispNone",signinContactNumberRequired: "dispNone" }) 
+            this.setState({contactNumberRequired: "dispNone",signinContactNumberRequired: "dispNone" ,readyForLogin: true}) 
 
       }
 
@@ -542,7 +545,7 @@ class Header extends Component {
                       >
                         <span className="fieldRequired">required</span>
                       </FormHelperText>
-                      <FormHelperText className={this.state.contactNumberRequired}>
+                      <FormHelperText className={this.state.signinContactNumberRequired}>
                                 <span
                                     className="fieldRequired">Contact No. must contain only numbers and must be 10 digits long
                                 </span>
